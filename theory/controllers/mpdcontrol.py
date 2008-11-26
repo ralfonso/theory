@@ -1,0 +1,148 @@
+# theory MPD client
+# Copyright (C) 2008  Ryan Roemmich <ralfonso@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import logging
+import mpd
+
+from pylons import request, response, session
+from pylons import tmpl_context as c
+from pylons import app_globals as g
+from pylons.controllers.util import abort, redirect_to
+from pylons.decorators import jsonify
+
+from theory.lib.base import BaseController, render
+
+log = logging.getLogger(__name__)
+
+class MpdcontrolController(BaseController):
+    @jsonify
+    def status(self):
+        # Return a rendered template
+        #   return render('/template.mako')
+        # or, Return a response
+       
+        m = g.p.connect()
+        current = m.currentsong()
+        status = m.status()
+
+        return dict(track=current,status=status)
+ 
+    def setvolume(self,id):
+        m = g.p.connect()
+
+        try:
+            volume = id
+            m.setvol(volume)
+        except ValueError:
+            pass
+
+    def seek(self,id,val):
+        m = g.p.connect()
+        try:
+            id = id
+            pos = val
+            m.seekid(id,pos)
+        except ValueError:
+            pass
+
+    def stop(self):
+        m = g.p.connect()
+        m.stop()
+    
+    def previous(self):
+        m = g.p.connect()
+        m.previous()
+    
+    def next(self):
+        m = g.p.connect()
+        m.next()
+
+    def play(self):
+        m = g.p.connect()
+        status = m.status()
+        if status['state'] == 'play':
+            m.pause()
+        else:
+            m.play()
+
+
+    def reorderplaylist(self):
+        tracklist = request.POST.getall('track[]')
+        m = g.p.connect()
+
+        iter = 0
+
+        for t in tracklist:
+            parts = t.split(':')
+            if iter != parts[1]:
+                m.moveid(parts[0],iter)
+                
+            iter += 1
+
+    def addtoplaylist(self):
+        file = request.POST.get('file')
+
+        m = g.p.connect()
+        m.add(file)
+
+    def addalbumtoplaylist(self,id,val):
+        artist = id
+        album = val
+
+        m = g.p.connect()
+        tracks = m.tracks(artist,album)
+        
+        for t in tracks:
+            m.add(t['file'])
+
+    def removetrack(self,id):
+        m = g.p.connect()
+        m.deleteid(id)
+
+    def playnow(self,id):
+        m = g.p.connect()
+        m.playid(id)
+        m.play()
+        
+
+    def repeat(self,id):
+        m = g.p.connect()
+        m.repeat(id)
+
+    def random(self,id):
+        m = g.p.connect()
+        m.random(id)
+
+    def clearplaylist(self):
+        m = g.p.connect()
+        m.clear()
+        
+    
+    def shuffle(self):
+        m = g.p.connect()
+        m.shuffle()
+        
+    def trimplaylist(self):
+        m = g.p.connect()
+        current = m.status()
+        playlist = m.playlistinfo()
+
+        for t in playlist:
+            if current['songid'] != t['id']:
+                self.removetrack(t['id'])
+            else:
+                return 
+

@@ -1,0 +1,33 @@
+<%inherit file="body.html"/>
+<script language="javascript">
+    $(document).ready(
+        function() {
+            $('#list li:odd a').addClass('oddrow');
+            $('#list li:even a').addClass('evenrow');
+        }
+    );
+</script>
+
+<style>
+    body {
+        margin:0;
+        padding:0;
+    }
+</style>
+
+<div id="container-artists">
+    <ul id="list">
+        <a name='jump#'></a>
+        <% lastlead = '' %>
+
+        % for a in c.artists:
+            <li>
+                % if a[0].lower() != lastlead:
+                    <a name="jump${a[0].lower()}"></a>
+                % endif
+                <a onclick="artistAlbums('${a.replace("'","\\'")}')">${a}</a>
+            </li>
+            <% lastlead = a[0].lower() %>
+        % endfor
+    </ul>
+</div>

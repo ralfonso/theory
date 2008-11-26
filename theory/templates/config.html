@@ -1,0 +1,81 @@
+<%inherit file="body.html"/>
+<script language="javascript">
+    $(document).ready(function() {
+                        if ($('#errors').children().length > 0) 
+                            $('#errors').addClass('kolored');
+                     });
+</script>
+<style>
+    body {
+        background-color:#555555;
+    }
+
+    #configtable td {
+        color:white;
+    }
+
+    a:link {color:#dedede}
+    a:visited {color:#dedede}
+
+
+    .error-message {
+        color:white;
+    }
+
+    .kolored {
+        width:400px;
+        background-color:red;
+        padding:5px;
+    }
+</style>
+% if c.firsttime:
+    <div style="color:white;margin:auto;font-weight:bold;margin-bottom:15px">please take a moment to configure theory</div>
+% endif
+
+% if c.noconnection:
+    <div style="color:white;margin:auto;font-weight:bold;margin-bottom:15px">unable to connect to MPD server</div>
+% endif
+
+<div id="errors">
+    % if c.error:
+        % if c.type == 'save':
+            <div class="error-message">error saving configuration file. please check the permissions</div>
+        % endif
+    % endif
+    <form:error name="server" format="default">
+    <form:error name="port" format="default">
+</div>
+
+<form action="/saveconfig" method=post>
+<table cellspacing=0 cellpadding=3 id="configtable">
+    <tr>
+        <td align=right>
+            MPD server host:</td>
+        <td>
+            ${h.html.tags.text('server',server)}</td>
+    </tr>
+    <tr>
+        <td align=right>
+            MPD server port:</td>
+        <td>
+            ${h.html.tags.text('port',port,size=5)}</td>
+    </tr>
+    <tr>
+        <td align=right>
+            Amazon Developer Key:</td>
+        <td>
+            ${h.html.tags.text('awskey',awskey,size=30)} 
+            (for automatic downloading of album art)
+        </td>
+    </tr>
+    <tr>
+        <td align=center colspan=2>
+            <input type=submit name=action value="save config" style="border:1px solid black;background-color:limegreen" />
+            <input type=submit name=cancel value="cancel" style="border:1px solid black;background-color:#cccccc" />
+        </td>
+    </tr>
+</table>
+
+</form>
+
+<div style="color:white;margin-top:25px">sign up for an Amazon Developer Key at <a href="https://aws-portal.amazon.com/gp/aws/developer/registration/index.html" target="_blank">https://aws-portal.amazon.com/gp/aws/developer/registration/index.html</a></div>

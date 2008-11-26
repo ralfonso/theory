@@ -1,0 +1,16 @@
+<%
+	letters = '#abcdefghijklmnopqrstuvwxyz'
+%>
+
+<div id="container-alpha">
+	<ul id="alpha">
+		% for l in letters:
+			<li><a onclick="jump('${l}')">${l}</a></li>
+		% endfor
+	</ul>
+
+    <a onclick="initConfig()" href="/config" target="config" style="margin-left:20px;color:white">edit configuration</a>
+    &middot;
+    <a onclick="initConfig()" href="/stats" target="config" style="color:white">system stats</a>
+	<br />
+</div>

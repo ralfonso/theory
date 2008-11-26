@@ -1,0 +1,127 @@
+<%inherit file="body.html"/>
+<%include file="control.html"/>
+<script language="javascript">
+    $(document).ready(
+        function() {
+            $('#volume-slider').slider(
+                {
+                    'min':      0,
+                    'max':      100,
+                    'steps':    100,
+                    'start':    function() {
+                                    window.sliding = true;   
+                                },
+                    'slide':    function(e,ui) {
+                                    $('#vol').html(String(ui.value));
+                                },
+                    'stop':   function(e,ui) {
+                                    setVolume(ui.value);
+                                    window.sliding = false;   
+                                }
+                }
+            );
+
+            $('#position-slider').slider(
+                {
+                    'min':      0,
+                    'max':      100,
+                    'steps':    100,
+                    'start':    function() {
+                                    window.sliding = true;   
+                                },
+                    'change':   function(e,ui) {
+                                    seek(ui.value);
+                                    window.sliding = false;   
+                                }
+                }
+            );
+
+            $('#repeat').click(function() {
+                                var val = ($(this).hasClass('enabled')) ? 0 : 1;
+                                var url = '/mpdcontrol/repeat/' + val;
+                                $.ajax({
+                                        url: url,
+                                        type: 'GET',
+                                        cache: false,
+                                        success: function() {
+                                                   (val) ? $('#repeat').addClass('enabled') : $('#repeat').removeClass('enabled');
+                                                 }
+                                       })
+                               });
+
+            $('#random').click(function() {
+                                var val = ($(this).hasClass('enabled')) ? 0 : 1;
+                                var url = '/mpdcontrol/random/' + val;
+                                $.ajax({
+                                        url: url,
+                                        type: 'GET',
+                                        cache: false,
+                                        success: function() {
+                                                   (val) ? $('#random').addClass('enabled') : $('#random').removeClass('enabled');
+                                                 }
+                                       })
+                               });
+            resizeIframes();
+
+            if ($('#config').attr('src') != '') {
+                initConfig();
+            }
+
+			$(window).resize(function() {
+                resizeIframes()
+				var arrPageSizes = getPageSize();
+				$('#dark-overlay').css({
+					width:		arrPageSizes[2],
+					height:		arrPageSizes[3]
+				});
+			});
+
+			$(window).hover(
+								function() {
+									window.statusloads = 0;
+								},
+								function() {}
+							 );
+
+			% if c.debug == '1':
+				$('#debug').show();	
+			% endif
+
+			$('#lyrics').attr('src','/null.html');
+
+        }
+    );
+
+    window.setInterval('getStatus()','7500');
+    window.sliding = false;
+	window.statusloads = 0;
+</script>
+
+<style>
+    body {
+        overflow-y:hidden;
+    }
+</style>
+
+<div id="dark-overlay"></div>
+
+<div id="debug" style="display:none"></div>
+
+<iframe id="config" name="config" src="${c.config}" ></iframe>
+<iframe id="lyrics" name="lyrics" src="/null.html" ></iframe>
+
+<%include file="letters.html"/>
+
+<div id="left">
+    <div class="frameheader">artists</div>
+    <div class="frameheader">albums</div>
+    <iframe id="frmartists" name="frmartists" src="/artists" ></iframe>
+    <iframe id="frmalbums" name="frmalbums" src="about:blank"></iframe>
+<br />
+
+<iframe id="frmtracks" name="frmtracks" src="about:blank"></iframe>
+</div>
+
+<div id="right">
+    <iframe id="frmplaylist" name="frmplaylist" src="/playlist"></iframe>
+</div>

@@ -1,0 +1,41 @@
+<%inherit file="body.html"/>
+<script language="javascript">
+    $(document).ready(
+        function() {
+            $('#list li:even a').addClass('evenrow');
+         }
+    );
+</script>
+
+<style>
+    body {
+        margin:0;
+        padding:0;
+        background-color:#eeeeee;
+    }
+</style>
+
+<h2>${c.artist}</h2>
+
+<div id="artistalbumart">
+	% if len(c.album_imgs) > 0:	
+		% for i in c.album_imgs[:6]:
+			<a style="cursor:pointer" onclick="albumTracks('${c.artist.replace("'","\\'")}','${i['album'].replace("'","\\'")}')"><img src="${i['imgurl']}" style="width:45px;height:45px" /></a>
+		% endfor
+	% endif
+</div>
+
+<div id="container-artists">
+    <ul id="list">
+        % for a in c.albums:
+			<%
+				if a == c.album:
+					addclass = 'class=activerow'
+				else:
+					addclass = ''
+			%>
+            <li><a onclick="window.parent.addAlbum('${c.artist.replace("'","\\'")}','${a.replace("'","\\'")}')"><img src="/img/add.png" title="queue entire album" style="float:left;margin-right:5px;" /></a><a ${addclass} onclick="albumTracks('${c.artist.replace("'","\\'")}','${a.replace("'","\\'")}')">${a}</a></li>
+        % endfor
+    </ul>
+</div>
+

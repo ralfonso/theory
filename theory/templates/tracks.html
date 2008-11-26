@@ -1,0 +1,37 @@
+<%inherit file="body.html"/>
+<script language="javascript">
+    $(document).ready(
+        function() {
+            $('#list li:even').addClass('evenrow');
+            window.parent.frames['frmtracks'].$('#albumart').parent().lightBox()
+
+            $('#albumart').load(function() {   
+                                    $(this).show();
+                                }).attr('src','/fetchart?artist=${c.artist_safe}&album=${c.album_safe}');
+            }
+    );
+
+                    
+</script>
+
+<style>
+    body {
+        margin:0;
+        padding:0;
+        background-color:#eeeeee;
+        overflow-x:hidden;
+    }
+</style>
+
+% if c.album_safe:
+    <a href="/fetchart?artist=${c.artist_safe}&album=${c.album_safe}"><img id="albumart" style="display:none" /></a>
+% endif
+
+<div id="container-tracks">
+    <ul id="list">
+        % for t in c.tracks:
+            <li><a onclick="addToPlaylist('${h.html.url_escape(t['file'])}')"><img src="/img/add.png" /> ${t['formattedtrack']}</a></li>
+        % endfor
+    </ul>
+</div>
+

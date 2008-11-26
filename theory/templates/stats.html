@@ -1,0 +1,16 @@
+<%inherit file="/body.html"/>
+
+<a onclick="window.parent.hideConfig()" style="top:0px;right:0px;cursor:pointer;position:fixed;float:right"><img src="/img/close.png" /></a>
+
+<div id="stats">
+    <ul>
+        <li>MPD uptime: ${h.format_time(c.stats['uptime'])}</li>
+        <li>Artists: ${c.stats['artists']}</li>
+        <li>Albums: ${c.stats['albums']}</li>
+        <li>Songs: ${c.stats['songs']}</li>
+        <li>Songs Playtime: ${h.format_time(c.stats['db_playtime'])}</li>
+        <li>Last DB Update: ${h.timestamp_to_friendly_date(c.stats['db_update'])}</li>
+        <li>Album art directory size: ${h.format_filesize(c.dir_size)}</li>
+    </ul>
+
+</div>

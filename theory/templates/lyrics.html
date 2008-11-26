@@ -1,0 +1,14 @@
+<%inherit file="body.html"/>
+<script language="javascript">
+	$(document).ready(function() {
+						window.parent.$('#lyrics').show();
+					 });
+</script>
+
+<a onclick="window.parent.$('#lyrics').hide()" style="top:0px;right:0px;cursor:pointer;position:fixed;float:right"><img src="/img/close.png" /></a>
+
+<div>
+% if c.lyrics:
+    <pre class="lyrics">${c.lyrics}</pre> 
+% endif
+</div>

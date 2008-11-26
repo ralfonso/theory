@@ -1,0 +1,43 @@
+<div id="control">
+    <div id="trackinfo">
+		<a id="currentartlink"><img id="currentart" src="img/50trans.gif" style="width:75px;height:75px;float:left;padding-right:6px;" /></a>
+		<span id="title">not playing</span>
+		<span id="wiki" style="display:none">(<a id=aWiki href="#" target="_blank">wiki</a> / <a id=aLyrics href="javascript:loadLyrics()">lyrics</a>)</span>
+
+	</div>
+	<div id="controls" style="float:left">
+		<input type=hidden id=currentartist value="" />
+		<input type=hidden id=currentalbum value="" />
+		<input type=hidden id=currenttitle value="" />
+		<input type=hidden id=state value="" />
+		<input type=hidden id=currentpos  value=""/>
+		<input type=hidden id=currentid  value=""/>
+		<input type=hidden id=playlistid  value=""/>
+		<a onclick="cmd('previous')"><img src=img/prev.png class=control /></a>
+		<a onclick="cmd('play')"><img src=img/pause.png class=control id=imgPlay /></a>
+		<a onclick="cmd('stop')"><img src=img/stop.png class=control /></a>
+		<a onclick="cmd('next')"><img src=img/next.png class=control /></a>
+
+        <div id="position" style="margin-left:7px;margin-top:10px;float:left">
+            <span style="float:left;margin-right:5px;font-size:9px;">position: </span>
+            <div id="position-slider" class='ui-slider-1' style="float:left;height:8px;width:200px">
+                <div class="ui-slider-handle"></div>
+            </div>
+            <span id="time" class="blackbox" style="margin-top:-3px">00:00 / 00:00</span>
+        </div>
+        
+        <div id="volume" style="margin-left:95px">
+            <span style="float:left;margin-right:5px;font-size:9px;margin-top:10px">volume: </span>
+            <div id="volume-slider" class='ui-slider-1' style="float:left;margin-left:5px;height:8px;width:200px;margin-top:10px">
+                <div class="ui-slider-handle"></div>
+            </div>
+            <span id="vol" class="blackbox" style="margin-top:5px">00</span>
+        </div>
+
+        <div id="widgets">
+            <a id="repeat">repeat</a>
+            <a id="random">random</a>
+        </div>
+	</div>
+	<br />
+</div>

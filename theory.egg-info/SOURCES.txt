@@ -1,0 +1,347 @@
+MANIFEST.in
+README
+README.txt
+setup.cfg
+setup.py
+theory/__init__.py
+theory/websetup.py
+theory.egg-info/PKG-INFO
+theory.egg-info/SOURCES.txt
+theory.egg-info/dependency_links.txt
+theory.egg-info/entry_points.txt
+theory.egg-info/not-zip-safe
+theory.egg-info/paster_plugins.txt
+theory.egg-info/requires.txt
+theory.egg-info/top_level.txt
+theory/config/__init__.py
+theory/config/deployment.ini_tmpl
+theory/config/environment.py
+theory/config/middleware.py
+theory/config/routing.py
+theory/controllers/__init__.py
+theory/controllers/error.py
+theory/controllers/main.py
+theory/controllers/mpdcontrol.py
+theory/controllers/playlist.py
+theory/lib/__init__.py
+theory/lib/app_globals.py
+theory/lib/base.py
+theory/lib/helpers.py
+theory/model/__init__.py
+theory/model/albumart.py
+theory/model/form.py
+theory/model/lyrics.py
+theory/model/mpdhelper.py
+theory/model/mpdpool.py
+theory/model/mpdqueue.py
+theory/model/mpdutil.py
+theory/model/tconfig.py
+theory/public/null.html
+theory/public/css/jquery-ui-theme.css
+theory/public/css/jquery-ui-themeroller.css
+theory/public/css/jquery.lightbox-0.5.css
+theory/public/css/jquery.tooltip.css
+theory/public/css/styles.css
+theory/public/img/50trans.gif
+theory/public/img/add.png
+theory/public/img/close.png
+theory/public/img/handle.horizontal.png
+theory/public/img/handle.vertical.png
+theory/public/img/libg.png
+theory/public/img/lightbox-blank.gif
+theory/public/img/lightbox-btn-close.gif
+theory/public/img/lightbox-btn-next.gif
+theory/public/img/lightbox-btn-prev.gif
+theory/public/img/lightbox-ico-loading.gif
+theory/public/img/next.png
+theory/public/img/noart.png
+theory/public/img/pause.png
+theory/public/img/play.png
+theory/public/img/playnow.png
+theory/public/img/prev.png
+theory/public/img/remove.png
+theory/public/img/stop.png
+theory/public/img/vol.png
+theory/public/img/art/.empty
+theory/public/img/art/A Guy Called Gerald - Essence.jpg
+theory/public/img/art/A Reminiscent Drive - Mercy Street.jpg
+theory/public/img/art/A Silver Mt. Zion - Horses In the Sky.jpg
+theory/public/img/art/Adrian Belew - Inner Revolution.jpg
+theory/public/img/art/Adrian Belew - Lone Rhino.jpg
+theory/public/img/art/Adrian Belew - Mr. Music Head.jpg
+theory/public/img/art/Adrian Belew - Op Zop Too Wah.jpg
+theory/public/img/art/Adrian Belew - Side One.jpg
+theory/public/img/art/Adrian Belew - Side Three.jpg
+theory/public/img/art/Adrian Belew - Twang Bar King.jpg
+theory/public/img/art/Air - Pocket Symphony.jpg
+theory/public/img/art/Amon Tobin - Foley Room.jpg
+theory/public/img/art/Amon Tobin - Out From Out Where.jpg
+theory/public/img/art/Amon Tobin - Permutation.jpg
+theory/public/img/art/Amon Tobin - Supermodified.jpg
+theory/public/img/art/Aphex Twin - ... I Care Because You Do.jpg
+theory/public/img/art/Aphex Twin - Drukqs.jpg
+theory/public/img/art/Aphex Twin - Richard D. James Album.jpg
+theory/public/img/art/Aphex Twin - Windowlicker.jpg
+theory/public/img/art/Azure Ray - Burn And Shiver.jpg
+theory/public/img/art/Battles - Mirrored.jpg
+theory/public/img/art/Big Black - Songs About Fucking.jpg
+theory/public/img/art/Blackalicious - Blazing Arrow.jpg
+theory/public/img/art/Bloc Party - Silent Alarm.jpg
+theory/public/img/art/Blonde Redhead - 23.jpg
+theory/public/img/art/Blonde Redhead - Melody of Certain Damaged Lemons.jpg
+theory/public/img/art/Boards of Canada - Music Has The Right To Children.jpg
+theory/public/img/art/Bob Dylan - Another Side Of Bob Dylan.jpg
+theory/public/img/art/Bob Dylan - Blonde On Blonde.jpg
+theory/public/img/art/Bob James - The Essential Collection, 24 Smooth Jazz Classics.jpg
+theory/public/img/art/Breeders - Pod.jpg
+theory/public/img/art/Brian Eno And David Byrne - My Life In The Bush Of Ghosts.jpg
+theory/public/img/art/Brian Eno and David Byrne - Everything That Happens Will Happen Today.jpg
+theory/public/img/art/Brian Eno and David Byrne - My Life In The Bush Of Ghosts.jpg
+theory/public/img/art/Built to Spill - Ancient Melodies Of The Future.jpg
+theory/public/img/art/Built to Spill - Keep it Like a Secret.jpg
+theory/public/img/art/Built to Spill - Live.jpg
+theory/public/img/art/Built to Spill - Perfect From Now On.jpg
+theory/public/img/art/Built to Spill - The Normal Years.jpg
+theory/public/img/art/Built to Spill - There's Nothing Wrong With Love.jpg
+theory/public/img/art/Built to Spill - Ultimate Alternative Wavers.jpg
+theory/public/img/art/CSS - Donkey.jpg
+theory/public/img/art/Calexico - Carried To Dust.jpg
+theory/public/img/art/Calexico - Convict Pool.jpg
+theory/public/img/art/Calexico - The Black Light.jpg
+theory/public/img/art/Cibo Matto - Stereo Type A.jpg
+theory/public/img/art/Cibo Matto - Viva! La Woman.jpg
+theory/public/img/art/Ciccone Youth - The Whitey Album.jpg
+theory/public/img/art/Clap Your Hands Say Yeah! - Clap Your Hands Say Yeah!.jpg
+theory/public/img/art/Cloud Cult - Advice From the Happy Hippopotamus.jpg
+theory/public/img/art/Cloud Cult - Feel Good Ghosts (Tea-Partying Through Tornadoes).jpg
+theory/public/img/art/Cloud Cult - The Meaning of 8.jpg
+theory/public/img/art/Cloud Cult - They Live on the Sun.jpg
+theory/public/img/art/Cloud Cult - Who Killed Puck?.jpg
+theory/public/img/art/Curtis Mayfield - The Very Best of Curtis Mayfield.jpg
+theory/public/img/art/David Bowie - The Singles 1969-1993 (Disc 1).jpg
+theory/public/img/art/David Bowie - The Singles 1969-1993.jpg
+theory/public/img/art/De-Phazz - Best Of De-Phazz - Beyond Lounge.jpg
+theory/public/img/art/Dirty Three - Ocean Songs.jpg
+theory/public/img/art/Elle Milano - Acres Of Dead Space Cadets.jpg
+theory/public/img/art/Fila Brazillia - Luck Be A Weirdo Tonight.jpg
+theory/public/img/art/Fila Brazillia - Maim That Tune.jpg
+theory/public/img/art/Flaming Lips - At War with the Mystics.jpg
+theory/public/img/art/Flaming Lips - The Soft Bulletin.jpg
+theory/public/img/art/Flaming Lips - Yoshimi Battles the Pink Robots.jpg
+theory/public/img/art/Four Tet - Rounds.jpg
+theory/public/img/art/Frank Zappa - Absolutely Free.jpg
+theory/public/img/art/Frank Zappa - Apostrophe (').jpg
+theory/public/img/art/Frank Zappa - Apostrophe (\').jpg
+theory/public/img/art/Frank Zappa - Bongo Fury.jpg
+theory/public/img/art/Frank Zappa - Broadway The Hard Way.jpg
+theory/public/img/art/Frank Zappa - Buffalo.jpg
+theory/public/img/art/Frank Zappa - Burnt Weeny Sandwich.jpg
+theory/public/img/art/Frank Zappa - Chunga's Revenge.jpg
+theory/public/img/art/Frank Zappa - Frank Zappa Meets The Mothers Of Prevention.jpg
+theory/public/img/art/Frank Zappa - Freak Out!.jpg
+theory/public/img/art/Frank Zappa - Guitar.jpg
+theory/public/img/art/Frank Zappa - Hot Rats.jpg
+theory/public/img/art/Frank Zappa - Jazz From Hell.jpg
+theory/public/img/art/Frank Zappa - Joe's Garage.jpg
+theory/public/img/art/Frank Zappa - Make A Jazz Noise Here.jpg
+theory/public/img/art/Frank Zappa - One Size Fits All.jpg
+theory/public/img/art/Frank Zappa - Over-nite Sensation.jpg
+theory/public/img/art/Frank Zappa - Roxy & Elsewhere.jpg
+theory/public/img/art/Frank Zappa - Sheik Yerbouti.jpg
+theory/public/img/art/Frank Zappa - Shut Up 'n Play Yer Guitar.jpg
+theory/public/img/art/Frank Zappa - Sleep Dirt.jpg
+theory/public/img/art/Frank Zappa - The Best Band You Never Heard In Your Life.jpg
+theory/public/img/art/Frank Zappa - The Grand Wazoo.jpg
+theory/public/img/art/Frank Zappa - The Yellow Shark.jpg
+theory/public/img/art/Frank Zappa - Uncle Meat.jpg
+theory/public/img/art/Frank Zappa - Waka Jawaka.jpg
+theory/public/img/art/Frank Zappa - Weasels Ripped My Flesh.jpg
+theory/public/img/art/Frank Zappa - You Are What You Is.jpg
+theory/public/img/art/Frank Zappa - You Can't Do That On Stage Anymore Vol. 2.jpg
+theory/public/img/art/Frank Zappa - You Can't Do That On Stage Anymore Vol. 3.jpg
+theory/public/img/art/Frank Zappa - Zoot Allures.jpg
+theory/public/img/art/Fripp  - The Equatorial Stars.jpg
+theory/public/img/art/Fripp & Eno - The Equatorial Stars.jpg
+theory/public/img/art/Funkadelic - Maggot Brain.jpg
+theory/public/img/art/Funki Porcini - Fast Asleep.jpg
+theory/public/img/art/Girl Talk - Night Ripper.jpg
+theory/public/img/art/Godspeed You! Black Emperor - Lift Your Skinny Fists Like Antennas To Heaven.jpg
+theory/public/img/art/Godspeed You! Black Emperor - Slow Riot for New Zero Kanada.jpg
+theory/public/img/art/Godspeed You! Black Emperor - Yanqui U.X.O..jpg
+theory/public/img/art/Goldfrapp - Black Cherry.jpg
+theory/public/img/art/Goldfrapp - Felt Mountain.jpg
+theory/public/img/art/Hot Chip - Made In The Dark.jpg
+theory/public/img/art/Hot Chip - The Warning.jpg
+theory/public/img/art/Hum - Downward Is Heavenward.jpg
+theory/public/img/art/Hum - You'd Prefer An Astronaut.jpg
+theory/public/img/art/Interpol - Antics.jpg
+theory/public/img/art/Interpol - Our Love to Admire.jpg
+theory/public/img/art/James - Laid.jpg
+theory/public/img/art/Jeff Buckley - Grace.jpg
+theory/public/img/art/Jimi Hendrix - Electric Ladyland.jpg
+theory/public/img/art/Kings of Convenience - Quiet Is The New Loud.jpg
+theory/public/img/art/Led Zeppelin - Led Zeppelin IV.jpg
+theory/public/img/art/Lou Rhodes - Beloved One.jpg
+theory/public/img/art/Lush - For Love.jpg
+theory/public/img/art/Lush - Lovelife.jpg
+theory/public/img/art/Lush - Spooky.jpg
+theory/public/img/art/Lykke Li - Youth Novels.jpg
+theory/public/img/art/Menomena - Friend and Foe.jpg
+theory/public/img/art/Menomena - I Am The Fun Blame Monster.jpg
+theory/public/img/art/Menomena - Wet And Rusting.jpg
+theory/public/img/art/Miles Davis - Kind of Blue.jpg
+theory/public/img/art/Minus The Bear - Menos el Oso.jpg
+theory/public/img/art/Modest Mouse - Good News For People Who Love Bad News.jpg
+theory/public/img/art/Modest Mouse - We Were Dead Before The Ship Even Sank.jpg
+theory/public/img/art/Morphine - Cure for Pain.jpg
+theory/public/img/art/Morphine - Good.jpg
+theory/public/img/art/Morphine - Like Swimming.jpg
+theory/public/img/art/Morphine - The night.jpg
+theory/public/img/art/Morphine - Yes.jpg
+theory/public/img/art/Morrissey - Ringleader Of The Tormentors.jpg
+theory/public/img/art/Morrissey - Southpaw Grammar.jpg
+theory/public/img/art/Morrissey - Vauxhall And I.jpg
+theory/public/img/art/Morrissey - Viva Hate.jpg
+theory/public/img/art/Morrissey - You Are The Quarry.jpg
+theory/public/img/art/Mos Def - Black On Both Sides.jpg
+theory/public/img/art/Mos Def - True Magic.jpg
+theory/public/img/art/My Bloody Valentine - Loveless.jpg
+theory/public/img/art/Neil Young - After The Gold Rush.jpg
+theory/public/img/art/Neutral Milk Hotel - In the Aeroplane Over the Sea.jpg
+theory/public/img/art/Nina Simone - I Put A Spell On You.jpg
+theory/public/img/art/Nina Simone - In Concert.jpg
+theory/public/img/art/Nina Simone - The Very Best Of.jpg
+theory/public/img/art/Notorious B.I.G. - Greatest Hits.jpg
+theory/public/img/art/Otis Redding - The Very Best Of.jpg
+theory/public/img/art/OutKast - ATLiens.jpg
+theory/public/img/art/OutKast - Aquemini.jpg
+theory/public/img/art/OutKast - Idlewild.jpg
+theory/public/img/art/OutKast - The Love Below.jpg
+theory/public/img/art/Outkast - Stankonia.jpg
+theory/public/img/art/Pink Floyd - A Momentary Lapse of Reason.jpg
+theory/public/img/art/Pink Floyd - Animals.jpg
+theory/public/img/art/Pink Floyd - The Division Bell.jpg
+theory/public/img/art/Pink Floyd - The Wall.jpg
+theory/public/img/art/Portishead - Dummy.jpg
+theory/public/img/art/Portishead - Portishead.jpg
+theory/public/img/art/Primus - They Can't All Be Zingers.jpg
+theory/public/img/art/Radiohead - Hail To The Thief.jpg
+theory/public/img/art/Radiohead - In Rainbows.jpg
+theory/public/img/art/Radiohead - Kid A.jpg
+theory/public/img/art/Radiohead - OK Computer.jpg
+theory/public/img/art/Ratatat - Ratatat.jpg
+theory/public/img/art/Rilo Kiley - More Adventurous.jpg
+theory/public/img/art/Roger Waters - Amused To Death.jpg
+theory/public/img/art/Roxy Music - The Best of Roxy Music.jpg
+theory/public/img/art/Run Chico Run - Shashbo.jpg
+theory/public/img/art/Saul Williams - Saul Williams.jpg
+theory/public/img/art/Soul Coughing - Ruby Vroom.jpg
+theory/public/img/art/Stevie Wonder - Innervisions.jpg
+theory/public/img/art/Stevie Wonder - Songs In The Key Of Life, Vol. 1.jpg
+theory/public/img/art/TV on the Radio - Return to Cookie Mountain.jpg
+theory/public/img/art/Talking Heads - Talking Heads: 77.jpg
+theory/public/img/art/The Album Leaf - Into The Blue Again.jpg
+theory/public/img/art/The Amps - Pacer.jpg
+theory/public/img/art/The Arcade Fire - Funeral.jpg
+theory/public/img/art/The Beatles - Revolver.jpg
+theory/public/img/art/The Beatles - Rubber Soul.jpg
+theory/public/img/art/The Clash - Combat Rock.jpg
+theory/public/img/art/The Clash - London Calling.jpg
+theory/public/img/art/The Clash - Sandinista!.jpg
+theory/public/img/art/The Decemberists - Castaways And Cutouts.jpg
+theory/public/img/art/The Decemberists - Picaresque.jpg
+theory/public/img/art/The Decemberists - The Crane Wife.jpg
+theory/public/img/art/The Dismemberment Plan - Change.jpg
+theory/public/img/art/The Dismemberment Plan - Emergency & I.jpg
+theory/public/img/art/The Dismemberment Plan - The Dismemberment Plan Is Terrified.jpg
+theory/public/img/art/The Dresden Dolls - The Dresden Dolls.jpg
+theory/public/img/art/The Hives - Tyrannosaurus Hives.jpg
+theory/public/img/art/The Hives - Your New Favourite Band.jpg
+theory/public/img/art/The Knife - Deep Cuts.jpg
+theory/public/img/art/The Knife - Silent Shout.jpg
+theory/public/img/art/The Long Blondes - Couples.jpg
+theory/public/img/art/The Microphones - The Glow, Pt. 2.jpg
+theory/public/img/art/The Morning Benders - Loose Change.jpg
+theory/public/img/art/The New Pornographers - Challengers.jpg
+theory/public/img/art/The New Pornographers - Mass Romantic.jpg
+theory/public/img/art/The New Pornographers - Twin Cinema.jpg
+theory/public/img/art/The Smiths - The Very Best Of.jpg
+theory/public/img/art/The Specials - More Specials.jpg
+theory/public/img/art/The Specials - Specials.jpg
+theory/public/img/art/The Stone Roses - The Stone Roses.jpg
+theory/public/img/art/Thievery Corporation - Abductions And Reconstructions.jpg
+theory/public/img/art/Tom Waits - Rain Dogs.jpg
+theory/public/img/art/Tool - Aenima.jpg
+theory/public/img/art/Unforscene - Fingers And Thumbs.jpg
+theory/public/img/art/Wu-Tang Clan - Enter The Wu-Tang: 36 Chambers.jpg
+theory/public/img/art/Wu-Tang Clan - Wu-Tang Forever.jpg
+theory/public/img/art/Yo La Tengo - And Then Nothing Turned Itself Inside-Out.jpg
+theory/public/img/art/Yo La Tengo - I Can Hear the Heart Beating as One.jpg
+theory/public/js/demo.html
+theory/public/js/jquery-ui.js
+theory/public/js/jquery.js
+theory/public/js/jquery.lightbox-0.5.js
+theory/public/js/jquery.tooltip.js
+theory/public/js/theory.js
+theory/public/js/images/222222_11x11_icon_arrows_leftright.gif
+theory/public/js/images/222222_11x11_icon_arrows_updown.gif
+theory/public/js/images/222222_11x11_icon_close.gif
+theory/public/js/images/222222_11x11_icon_doc.gif
+theory/public/js/images/222222_11x11_icon_folder_closed.gif
+theory/public/js/images/222222_11x11_icon_folder_open.gif
+theory/public/js/images/222222_11x11_icon_minus.gif
+theory/public/js/images/222222_11x11_icon_plus.gif
+theory/public/js/images/222222_11x11_icon_resize_se.gif
+theory/public/js/images/222222_35x9_colorpicker_indicator.gif.gif
+theory/public/js/images/222222_7x7_arrow_down.gif
+theory/public/js/images/222222_7x7_arrow_left.gif
+theory/public/js/images/222222_7x7_arrow_right.gif
+theory/public/js/images/222222_7x7_arrow_up.gif
+theory/public/js/images/454545_11x11_icon_arrows_leftright.gif
+theory/public/js/images/454545_11x11_icon_arrows_updown.gif
+theory/public/js/images/454545_11x11_icon_close.gif
+theory/public/js/images/454545_11x11_icon_doc.gif
+theory/public/js/images/454545_11x11_icon_folder_closed.gif
+theory/public/js/images/454545_11x11_icon_folder_open.gif
+theory/public/js/images/454545_11x11_icon_minus.gif
+theory/public/js/images/454545_11x11_icon_plus.gif
+theory/public/js/images/454545_7x7_arrow_down.gif
+theory/public/js/images/454545_7x7_arrow_left.gif
+theory/public/js/images/454545_7x7_arrow_right.gif
+theory/public/js/images/454545_7x7_arrow_up.gif
+theory/public/js/images/888888_11x11_icon_arrows_leftright.gif
+theory/public/js/images/888888_11x11_icon_arrows_updown.gif
+theory/public/js/images/888888_11x11_icon_close.gif
+theory/public/js/images/888888_11x11_icon_doc.gif
+theory/public/js/images/888888_11x11_icon_folder_closed.gif
+theory/public/js/images/888888_11x11_icon_folder_open.gif
+theory/public/js/images/888888_11x11_icon_minus.gif
+theory/public/js/images/888888_11x11_icon_plus.gif
+theory/public/js/images/888888_7x7_arrow_down.gif
+theory/public/js/images/888888_7x7_arrow_left.gif
+theory/public/js/images/888888_7x7_arrow_right.gif
+theory/public/js/images/888888_7x7_arrow_up.gif
+theory/public/js/images/_x_.
+theory/public/js/images/dadada_40x100_textures_02_glass_75.png
+theory/public/js/images/e6e6e6_40x100_textures_02_glass_75.png
+theory/public/js/images/ffffff_40x100_textures_01_flat_0.png
+theory/public/js/images/ffffff_40x100_textures_02_glass_65.png
+theory/templates/404.html
+theory/templates/albums.html
+theory/templates/artists.html
+theory/templates/body.html
+theory/templates/config.html
+theory/templates/control.html
+theory/templates/index.html
+theory/templates/letters.html
+theory/templates/lyrics.html
+theory/templates/null.html
+theory/templates/playlist.html
+theory/templates/stats.html
+theory/templates/tracks.html
+theory/tests/__init__.py
+theory/tests/test_models.py
+theory/tests/functional/__init__.py
+theory/tests/functional/test_main.py
+theory/tests/functional/test_mpd.py
+theory/tests/functional/test_playlist.py

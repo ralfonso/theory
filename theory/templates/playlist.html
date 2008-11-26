@@ -1,0 +1,159 @@
+<%inherit file="body.html"/>
+<script language="javascript">
+    $(document).ready(
+        function() {
+            $('#fakeborder').height(window.innerHeight);
+            setPlaylistColors()
+            $('#playlist').sortable({
+                                        start: function(e,ui) {
+                                                    window.parent.sliding = true;
+                                               },
+                                        stop: function() {
+                                                    setPlaylistColors()
+                                                    var url = '/mpdcontrol/reorderplaylist';
+                                                    $.ajax({
+                                                                url: url,
+                                                                type: 'POST',
+                                                                cache: false,
+                                                                data: $('#playlist').sortable('serialize')
+                                                          })
+                                                    window.parent.sliding = false;
+                                                }
+                                    });
+
+            $('#playlistname').click(function() { 
+                                        if ($(this).val() == 'enter playlist name')
+                                            $(this).val(''); 
+                                     });
+            $('#playlistname').blur(function() { 
+                                        if ($(this).val() == '')
+                                            $(this).val('enter playlist name');
+                                    });
+            
+            $('#saveplaylist').click(function() {
+                                        var val = $('#playlistname').val();
+                                        if (val == '' || val == 'enter playlist name') {
+                                            alert('please enter a playlist name');
+                                            return;
+                                        }
+
+                                        var playlists = $('#playlists option[value!=]');
+
+                                        for(var i = 0; i < playlists.length; i++) {
+                                            if (playlists.get(i).value == val) {
+                                                if (!confirm('That playlist exists. Would you like to overwrite it?'))
+                                                    return false;
+                                            }
+                                        }
+
+                                        var url = '/playlist/save?name=' + val;
+                                        $.ajax({
+                                                url: url,
+                                                type: 'GET',
+                                                cache: false,
+                                                success: function() {
+                                                            window.location.reload();
+                                                         }
+                                              });
+                                    });
+            $('#playlistname').val('enter playlist name');
+            $('#playlist-hover').hover(function(){
+                                            clearTimeout(window.t);
+                                            $(this).css('height','40px');
+                                            $('#playlist-hover div#label').hide();
+                                            $('#playlist-controls').fadeIn();
+                                         },
+                                         function(){
+                                            /*
+                                            var val = $('#playlistname').val();
+                                            if (val != '' && val != 'enter playlist name')
+                                                return; 
+                                            */
+
+                                            to = function() { 
+                                                    $('#playlist-controls').fadeOut(1000,function(){
+                                                                                            $('#playlist-controls:hidden').parent().css('height','15px');
+                                                                                         });
+                                                    $('#playlist-hover div#label').fadeIn();
+                                                 };
+                                            window.t = setTimeout(to,1300);
+                                         });
+            
+			window.parent.$('#playlistid').val(${c.playlistid});
+            window.parent.getStatus();
+
+         }
+    );
+</script>
+
+<style>
+    body {
+        margin:0;
+        padding:0;
+        background-color:#eeeeee;
+        height:100%;
+        width:100%;
+    }
+
+    #fakeborder {
+        width:1px;
+        background-color:#333;
+        position:absolute;
+    }
+</style>
+
+<div id="fakeborder">
+    &nbsp;
+</div>
+
+<div id="playlistheader">
+    playlist
+</div>
+
+<div id="playlist-hover">
+    <div id="label">mouse here to open the playlist widget</div>
+    <div id="playlist-controls" style="display:none">
+        <div id="playlist-clear">
+            <a onclick="playlistAjax('clearplaylist')">clear</a>
+            &middot;
+            <a onclick="playlistAjax('trimplaylist')">trim</a>
+            &middot;
+            <a onclick="playlistAjax('shuffle')">shuffle</a>
+        </div>
+
+        <div id="playlist-saved">
+            playlists:
+            ${h.html.tags.select('playlists',None,c.available_playlists,id='playlists')}
+            <input type="button" id="loadplaylist" value="load" onclick="loadPlaylist()" class="button green" />
+            <input type="button" id="deleteplaylist" value="del" onclick="deletePlaylist()" class="button red" />
+        </div>
+
+        <div id="playlist-save">
+            <input type="text" id="playlistname" value="enter playlist name" maxlength="15" style="width:120px"/>
+            <input type="button" id="saveplaylist" value="save" class="button orange" />
+        </div>
+    </div>
+</div>
+    
+<div id="container-artists">
+    <ul id="playlist">
+        % if len(c.playlist) == 0:
+            <li>empty playlist</li>
+        % endif
+        % for t in c.playlist:
+            <li id="track_${t['id']}:${t['pos']}">
+                <a onclick="removeTrack(this,${t['id']})" title="remove this track"><img src="/img/remove.png" /></a>
+                <a onclick="window.parent.playNow(${t['id']})" title="play this track now"><img src="/img/playnow.png" /></a>
+                ${t['artist']} - ${t['title']}
+                <div class="playlist-tooltip">
+                    <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}')">${t['artist']}</a>
+                    <br />
+                    <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}','${t['album'].replace("'","\\'")}')">${t['album']}</a>
+                    <br />
+                    ${h.format_time(t['time'])}
+                </div>
+            </li>
+        % endfor
+    </ul>
+</div>
+
