@@ -12,6 +12,9 @@ function getStatus() {
 	if (window.statusloads > 80)
 		return;
 
+    if (!(window.frames['frmplaylist']))
+        return;
+
 	debug('loading status (' + window.statusloads + ')');
     $.getJSON('/mpdcontrol/status',
         function(data) {
@@ -198,6 +201,7 @@ function formatTime(seconds)
 
 function cmd(v) {
     $.get('/mpdcontrol/' + v);
+	getStatus();
 }
 
 function artistAlbums(artist,album) {
@@ -309,7 +313,7 @@ function playNow(id) {
 }
 
 function addAlbum(artist,album) {
-    var url = '/mpdcontrol/addalbumtoplaylist/' + artist + '/' + album;
+    var url = '/mpdcontrol/addalbumtoplaylist?artist=' + artist + '&album=' + album;
     $.ajax({
             url: url,
             type: 'GET',
@@ -339,7 +343,7 @@ function hideConfig(reload) {
         window.frames['frmplaylist'].location.reload();
     }
 
-    window.frames['config'].location.href = 'about:blank';
+    window.frames['config'].location.href = '';
     getStatus();
 }
 
@@ -403,4 +407,72 @@ function deletePlaylist() {
                         $('#playlists option[value=' + playlist + ']').remove();                        
                      }
          });
+}
+
+function fsStatus() {
+    $.getJSON('/mpdcontrol/fs_status',
+        function (data) {
+            var begin_id = $('#currentid').html();
+
+            if (data.current.title) {
+                $('#not-playing').hide();
+                $('#current').show();
+                $('#next').show();
+                $('#albumart-container').show();
+				$('#progress').show();
+                $('#currentid').html(data.current.id);
+                $('#currenttrack').html(data.current.title);
+                $('#currentartist').html(data.current.artist);
+                $('#currentalbum').html(data.current.album);
+
+                var arturl = '/fetchart?artist=' + data.current.artist + '&album=' + data.current.album
+                $('#albumart-container a').attr('href',arturl)
+                $('#albumart').attr('src',arturl)
+                $('#albumart-container a').lightBox();
+            }
+            else if (data.status.state == 'stop') {
+                $('#currentid').html('')
+                $('#current').hide();
+                $('#next').hide();
+                $('#albumart-container').hide();
+				$('#progress').hide();
+                $('#not-playing').show();
+                $('#currenttrack').html(data.current.title);
+                $('#currentartist').html(data.current.artist);
+                $('#currentalbum').html(data.current.album);
+
+            }
+
+            if (data.status.time) {
+                var time = data.status.time.split(':');
+                var currentseconds = time[0];
+                var totalseconds = time[1];
+            }
+            else if (data.track && data.track.time) {
+                var currentseconds = 0;
+                var totalseconds = data.track.time;
+            }
+            else {
+                var currentseconds = 0;
+                var totalseconds = 0;
+            }
+            
+            var currenttime = formatTime(currentseconds);
+            var totaltime = formatTime(totalseconds);
+
+            if (time) {
+                $('#playing-time').html(currenttime);
+                $('#total-time').html(totaltime);
+
+                var progress = currentseconds / totalseconds * 100;
+                $('#progress-img').css('width',progress + '%');
+            }
+
+            if (begin_id != data.status.id)
+                $('#next').html('');
+
+            for (var i = 0; i < data.playlist.length; i++) {
+                $('#next').append(data.playlist[i].artist + ' - ' + data.playlist[i].title + '<br />');
+            }
+        });
 }

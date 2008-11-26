@@ -1,0 +1,136 @@
+body {
+    font-size:250%;
+    height:100%;
+    overflow:hidden;
+}
+
+#current {
+    width:70%;
+    border:1px solid #acacac;
+    background-color:#444444;
+    margin:auto;
+    margin-top:25px;
+    text-align:center;
+    padding-bottom:10px;
+}
+
+
+#currenttrack {
+    color:white;
+    text-align:center;
+    margin:none auto;
+    font-weight:bold;
+}
+
+
+#currentartist {
+    text-align:center;
+    margin:none auto;
+    font-weight:bold;
+    font-size:80%;
+    color:#cccccc;
+}
+
+#currentalbum {
+    text-align:center;
+    margin:none auto;
+    font-weight:bold;
+    font-size:80%;
+    color:#cccccc;
+}
+
+#progress {
+    margin:auto;
+    width:50%;
+    text-align:center;
+}
+
+#progress-bg {
+    width:85%;
+    margin:auto;
+    text-align:left;
+    background-color:#cbcbcb;
+}
+
+#playing-time,#total-time {
+    color:#cccccc;
+    margin-top:-3px;
+    font-size:12px;
+}
+
+#playing-time{float:left}
+#total-time{float:right}
+
+#progress-img {
+    height:9px;
+    background:#cbcbcb url(/img/progress.png) repeat-x;
+    vertical-align:baseline;
+}
+
+#next-container {
+    width:100%;
+    height:80%;
+    position:absolute;
+}
+
+#next {
+    width:30%;
+    height:100%;
+    border:1px solid #acacac;
+    background-color:#444444;
+    margin:auto;
+    margin-top:20px;
+    text-align:left;
+    padding:5px;
+    padding-bottom:10px;
+    font-size:16px;
+    color:#cacaca;
+}
+
+#albumart-container {
+    width:100%;
+    text-align:center;
+    margin:auto;
+}
+
+#albumart {
+    float:none;
+}
+
+#controls {
+    position:absolute;
+    z-index:5;
+    top:30%;
+    left:50%;
+    margin-left:-150px;
+    width:300px;
+    background-color:#59BA70;
+    color:white;
+    border-color:white;
+    font-size:40%;
+    padding:5px;
+    text-align:center;
+}
+
+#controls ul {
+    margin:0;
+    padding:0;
+    text-align:left;
+}
+
+#controls ul li {
+    margin:0;
+    padding:0;
+    list-style-type:none;
+}
+
+#not-playing {
+    width:70%;
+    border:1px solid #acacac;
+    background-color:#444444;
+    margin:auto;
+    margin-top:25px;
+    text-align:center;
+    padding-bottom:10px;
+	color:white;
+}

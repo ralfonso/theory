@@ -1,0 +1,61 @@
+<%inherit file="/body.html"/>
+<style>
+    @import '/css/fullscreen.css';
+</style>
+<script language="javascript">
+    $(document).ready(function() {
+                        fsStatus();
+                        window.setInterval('fsStatus()','3000');
+                        
+                        $(document).keyup(function(e) {
+                                        
+                                        if (e.keyCode == 90)
+                                            cmd('previous')
+                                        else if (e.keyCode == 88)
+                                            cmd('play')
+                                        else if (e.keyCode == 67)
+                                            cmd('pause')
+                                        else if (e.keyCode == 86)
+                                            cmd('stop')
+                                        else if (e.keyCode == 66)
+                                            cmd('next')
+                                     });
+
+                        window.setTimeout("$('#controls').fadeOut()",'3000');
+                     });
+
+</script>
+
+<div id="controls">
+    <span style="font-weight:bold">keyboard controls:</span>
+    <div style="padding-left:10px">
+        <ul>
+            <li>z - previous</li>
+            <li>x - play</li>
+            <li>c - pause</li>
+            <li>v - stop</li>
+            <li>b - next</li>
+        </ul>
+    </div>
+</div>
+
+<div id="not-playing" style="display:none">not playing</div>
+
+<div id="albumart-container"><a><img id="albumart" style="height:150px;width:150px" /></a></div>
+
+<div id="current">
+    <div id="currentid" style="display:none"></div>
+    <div id="currenttrack"></div>
+    <div id="currentartist"></div>
+    <div id="currentalbum"></div>
+    <div id="progress">
+        <span id="playing-time"></span>
+        <span id="total-time"></span>
+        <div id="progress-bg"><div id="progress-img"></div></div>
+    </div>
+</div>
+
+<div id="next-container">
+    <div id="next">
+    </div>
+</div>

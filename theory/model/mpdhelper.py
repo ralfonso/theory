@@ -6,6 +6,12 @@ class NoMPDConnection(Exception):
     pass
 
 class mpdhelper(object):
+    """ 
+    most python-mpd functions are handed right off.  this class overloads some of them
+    to add required processing features (e.g. sorting) and also provides some convenience functions
+    for common tasks
+    """
+
     mpdc = None
 
     def __init__(self): 

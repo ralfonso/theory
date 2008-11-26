@@ -37,9 +37,7 @@ log = logging.getLogger(__name__)
 class MainController(BaseController):
 
     def index(self):
-        # Return a rendered template
-        #   return render('/template.mako')
-        # or, Return a response
+        """ the main page controller! """
 
         c.debug = request.GET.get('debug',0)
         
@@ -57,6 +55,8 @@ class MainController(BaseController):
         return render('/index.html')
 
     def artists(self):
+        """ the controller for the artists frame """
+
         try:
             m = g.p.connect()
         except ConnectionClosed:
@@ -66,6 +66,8 @@ class MainController(BaseController):
         return render('/artists.html')
 
     def albums(self):
+        """ controller for the albums frame """
+
         c.artist = request.GET.get('artist','')
         c.album = request.GET.get('album','')
 
@@ -81,6 +83,8 @@ class MainController(BaseController):
         return render('/albums.html')
 
     def tracks(self):
+        """ controller for the tracks frame """
+
         c.artist = request.GET.get('artist','')
         c.album = request.GET.get('album','')
         try:
@@ -98,6 +102,11 @@ class MainController(BaseController):
         return render('/tracks.html')
  
     def fetchart(self):
+        """ 
+        creates an AlbumArt object and attemps to load the image from disk.
+        if it doesn't exist, attempt to fetch it from Amazon and save to disk 
+        """
+            
         artist = request.GET.get('artist','')
         album = request.GET.get('album','')
         response.headers['Content-type'] = 'image/jpg'
@@ -118,6 +127,8 @@ class MainController(BaseController):
         return data
     
     def config(self,use_htmlfill=True):
+        """ controller for the configuration iframe """
+
         c.firsttime = request.GET.get('firsttime')
         c.noconnection = request.GET.get('noconnection')
         c.error = request.GET.get('error')
@@ -129,6 +140,7 @@ class MainController(BaseController):
             return render("/config.html",{'server':g.tc.server,'port':g.tc.port,'awskey':g.tc.awskey})
 
     def saveconfig(self):
+        """ controller to save the web-based configuration """ 
         try:
             fields = validate_custom(form.ConfigForm())
         except formencode.api.Invalid, e:
@@ -149,6 +161,8 @@ class MainController(BaseController):
 
 
     def lyrics(self):
+        """ controller for the lyrics widget. loads lyrics from lyricswiki.org """
+
         artist = request.GET.get('artist')
         track = request.GET.get('track')
     
@@ -157,6 +171,8 @@ class MainController(BaseController):
         return render('/lyrics.html')
 
     def stats(self):
+        """ controller for the stats widget """
+
         try:
             m = g.p.connect()
         except ConnectionClosed:
@@ -167,3 +183,8 @@ class MainController(BaseController):
         c.dir_size = aa.dir_size()
 
         return render('/stats.html')
+
+    def fullscreen(self):
+        """ controller for the fullscreen widget """
+
+        return render('/fullscreen.html')

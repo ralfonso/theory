@@ -30,16 +30,51 @@ log = logging.getLogger(__name__)
 class MpdcontrolController(BaseController):
     @jsonify
     def status(self):
-        # Return a rendered template
-        #   return render('/template.mako')
-        # or, Return a response
-       
+        """ 
+        this is the status data that the main indexes calls on an interval.
+        uses the pylons @jsonify decorator to turn the output into something
+        that can be parsed by JQuery's getJSON() function
+        """
+            
         m = g.p.connect()
         current = m.currentsong()
         status = m.status()
 
         return dict(track=current,status=status)
- 
+
+    @jsonify
+    def fs_status(self):
+        """ 
+        similar to status() but includes a forward-looking playlist 
+        for the fullscreen widget
+        """
+
+        try:
+            m = g.p.connect()
+        except ConnectionClosed:
+            return render('/null.html')
+
+        status = m.status()
+        current = m.currentsong()
+        playlist = m.playlistinfo()
+        next = None
+
+        track = 0
+        found_current = False
+        remaining_playlist = []
+
+        for pl in playlist:
+            if found_current:
+                remaining_playlist.append(pl)
+
+            if pl['id'] == current['id']:
+                next = playlist[track+1]
+                found_current = True
+           
+            track += 1
+
+        return dict(status=status,current=current,playlist=remaining_playlist,next=next)
+
     def setvolume(self,id):
         m = g.p.connect()
 
@@ -78,6 +113,9 @@ class MpdcontrolController(BaseController):
         else:
             m.play()
 
+    def pause(self):
+        m = g.p.connect()
+        m.pause()
 
     def reorderplaylist(self):
         tracklist = request.POST.getall('track[]')
@@ -98,9 +136,9 @@ class MpdcontrolController(BaseController):
         m = g.p.connect()
         m.add(file)
 
-    def addalbumtoplaylist(self,id,val):
-        artist = id
-        album = val
+    def addalbumtoplaylist(self):
+        artist = request.GET.get('artist')
+        album = request.GET.get('album')
 
         m = g.p.connect()
         tracks = m.tracks(artist,album)
@@ -136,6 +174,7 @@ class MpdcontrolController(BaseController):
         m.shuffle()
         
     def trimplaylist(self):
+        """ trims the playlist of everything leading up to the currently playing track """
         m = g.p.connect()
         current = m.status()
         playlist = m.playlistinfo()

@@ -29,6 +29,8 @@ log = logging.getLogger(__name__)
 
 class PlaylistController(BaseController):
     def index(self):
+        """ controller for the playlist frame """
+
         try:
             m = g.p.connect()
         except ConnectionClosed:
@@ -45,6 +47,7 @@ class PlaylistController(BaseController):
  
 
     def save(self):
+        """ commit a stored playlist to disk via MPD """
         name = request.GET.get('name',0)
 
         if name == 0:
@@ -60,6 +63,8 @@ class PlaylistController(BaseController):
         return 'saved!'
 
     def load(self):
+        """ load a stored playlist into the running playlist """
+
         name = request.GET.get('name',0)
         if name == 0:
             return ''
@@ -69,6 +74,8 @@ class PlaylistController(BaseController):
         return 'loaded!'
 
     def delete(self):
+        """ delete a stored playlist from disk """
+
         name = request.GET.get('name',0)
         if name == 0:
             return ''

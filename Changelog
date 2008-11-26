@@ -1,0 +1,8 @@
+0.1.1:
+	added fullscreen widget
+	added basic python-style documentation
+	changed the add entire album function to use querystrings
+
+0.1.0: 
+	initial release
+

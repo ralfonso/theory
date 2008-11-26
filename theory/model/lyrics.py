@@ -22,6 +22,8 @@ class NoLyricsError(Exception):
     pass
 
 class Lyrics:
+    """ attempts to fetch lyrics from lyricswiki.org using their querystring-based API """
+
     artist = None
     track = None
     lyrics = None

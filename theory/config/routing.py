@@ -27,6 +27,7 @@ def make_map():
     map.connect('/albums',controller='main',action='albums')
     map.connect('/stats',controller='main',action='stats')
     map.connect('/tracks',controller='main',action='tracks')
+    map.connect('/fullscreen',controller='main',action='fullscreen')
     map.connect('/playlist',controller='playlist',action='index')
     map.connect('/playlist/save',controller='playlist',action='save')
     map.connect('/playlist/load',controller='playlist',action='load')

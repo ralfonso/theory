@@ -22,12 +22,19 @@ class ConfigFileError(Exception):
     pass
 
 class TConfig:
+    """
+    handles the global configuration.  loaded into app globals at application startup
+    also handles committing the configuration to disk to maintain across app restarts
+    """
+
     server = None
     port = None
     password = None
     awskey = None
 
     def __init__(self):
+        """ try to read the configuration from disk """
+
         conf = ConfigParser.ConfigParser()
      	conf.read(config['localconf'])
         try:
@@ -38,6 +45,8 @@ class TConfig:
             pass
 
     def update_config(self,server,port,awskey): 
+        """ commit the configuration to disk """
+
         conf = ConfigParser.ConfigParser()
         conf.add_section("mpd")
         conf.set("mpd", "server",server)

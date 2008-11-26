@@ -39,9 +39,16 @@ class AlbumArt:
         self.disk_root = 'theory/public/img/art/'
 
     def album_fetch(self,artist,album):
+        """
+        attempt to load an album's cover art from disk. 
+        if it doesn't exist, make a request using Amazon's
+        Web Services 
+        """
+
         self.artist = artist
         self.album = album
 
+        # some ID3 tags split a two-disc volume into two, attempt to remove that part of the tag for the search
         disc_num_found = re.search('(\(disc.+\)|\(CD.+\))',self.album,re.IGNORECASE)
 
         if disc_num_found:
@@ -55,6 +62,8 @@ class AlbumArt:
             self.amazon_fetch()
 
     def artist_art(self,artist):
+        """ return all of the album covers for a particular artist """
+
         images = []
         filenames = [filename for filename in os.listdir(self.disk_root) if filename.startswith("%s -" % artist)] 
 
@@ -71,6 +80,12 @@ class AlbumArt:
         self.logger.info(msg)
 
     def amazon_fetch(self):
+        """ 
+        attempts to fetch album cover art from Amazon Web Services and 
+        calls save_to_disk() to save the largest available image permanently
+        to avoid subsequent lookups
+        """
+
         if g.tc.awskey == '':
             raise NoArtError
 
@@ -100,6 +115,8 @@ class AlbumArt:
         self.save_to_disk()
 
     def set_file_paths(self):
+        """ set up the local paths images on both disk and web root """
+
         artist_pathsafe = self.artist.replace(os.sep,' ')
         album_pathsafe = self.album.replace(os.sep,' ')
         filename = "%s - %s.jpg" % (artist_pathsafe,album_pathsafe)
@@ -107,12 +124,15 @@ class AlbumArt:
         self.disk_path = os.path.join(self.disk_root,filename)
 
     def check_disk(self):
+        """ check if cover art exists locally """
+
         if os.path.exists(self.disk_path):
             self.imgurl = self.www_path
         else:
             raise NoArtOnDisk
 
     def save_to_disk(self):
+        """ save the fetched cover image to disk permanently """
         try:
             urlfile = urllib2.urlopen(self.amazonurl)
         except urllib2.URLError:
@@ -124,6 +144,7 @@ class AlbumArt:
         self.imgurl = self.www_path
 
     def dir_size(self):
+        """ return the sum of the cover art disk usage """
         dir_size = 0
 
         for (path,dirs,files) in os.walk(self.disk_root):
