@@ -142,7 +142,7 @@ class MpdcontrolController(BaseController):
 
         m = g.p.connect()
         tracks = m.tracks(artist,album)
-        
+
         for t in tracks:
             m.add(t['file'])
 

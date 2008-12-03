@@ -237,7 +237,8 @@ function albumTracks(artist,album) {
 	$('#list li:even a',window.parent.frames['frmalbums'].document).removeClass('activerow').addClass('evenrow');
 	$('#list li a:contains(' + album + ')',window.parent.frames['frmalbums'].document).each(
 		function() {
-			if ($(this).html() == album)
+            // wow this is a hack!
+			if ($(this).html() == $('<div/>').text(album).html())
 				$(this).addClass('activerow');
 		}
 	);
@@ -313,7 +314,7 @@ function playNow(id) {
 }
 
 function addAlbum(artist,album) {
-    var url = '/mpdcontrol/addalbumtoplaylist?artist=' + artist + '&album=' + album;
+    var url = '/mpdcontrol/addalbumtoplaylist?artist=' + escape(artist) + '&album=' + escape(album);
     $.ajax({
             url: url,
             type: 'GET',

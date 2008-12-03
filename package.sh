@@ -1,4 +1,6 @@
 #!/bin/sh
+SELF=$(cd $(dirname $0); pwd -P)/
 VERSION=0.1.1
-cd ..
-tar jcvf theory-${VERSION}.tar.bz2 --exclude 'theory/theory/public/img/art/*' theory/theory theory/README theory/server.ini theory/run-theory.sh  theory/go-pylons.py theory/install.sh  theory/theory.egg-info/ theory/Changelog
+
+cd "$SELF/.."
+tar jcvf theory-${VERSION}.tar.bz2 --exclude-from=theory/tar_exclude --exclude-vcs theory
