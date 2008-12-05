@@ -1,3 +1,8 @@
+0.1.2:
+	added the ability to change the progress bar color via css
+	added a hack/fix for selecting albums with an ampersand
+	fix for adding a complete album with an ampersand in the title
+
 0.1.1:
 	added fullscreen widget
 	added basic python-style documentation
