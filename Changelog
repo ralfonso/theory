@@ -1,3 +1,10 @@
+0.1.3
+	changed start script to add start|stop options
+	added Apache-compatible CLF logging
+	added webpassword support
+	added MPD password support
+	fixed leading "the" artists jumping bug
+
 0.1.2:
 	added the ability to change the progress bar color via css
 	added a hack/fix for selecting albums with an ampersand

@@ -30,7 +30,7 @@ class TConfig:
     server = None
     port = None
     password = None
-    webpassword = None
+    webpassword = ''
     awskey = None
 
     def __init__(self):

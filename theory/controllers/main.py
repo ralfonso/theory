@@ -160,9 +160,9 @@ class MainController(BaseController):
         else:
             reloadframes = 'false'
 
-        g.p.dispose()
-
-        return '<script language="javascript">window.parent.hideConfig(%s)</script>' % reloadframes
+        g.p = g.p.recreate()
+        
+        return '<script language="javascript">window.parent.hideConfig(%s);document.location.replace(\'/null.html\')</script>' % reloadframes
 
 
     def lyrics(self):

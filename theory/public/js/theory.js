@@ -344,7 +344,6 @@ function hideConfig(reload) {
         window.frames['frmplaylist'].location.reload();
     }
 
-    window.frames['config'].location.href = '';
     getStatus();
 }
 
