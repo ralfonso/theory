@@ -20,13 +20,12 @@ import random
 
 from pylons import request, response, session
 from pylons import tmpl_context as c
-from pylons import app_globals as g
 from pylons.controllers.util import abort, redirect_to
 from pylons import config
 
 from theory.lib.base import BaseController, render
 from theory.lib import helpers as h
-from theory.model.mpdpool import ConnectionClosed
+from theory.model.mpdpool import ConnectionClosed,IncorrectPassword
 from theory.model.albumart import AlbumArt,NoArtError
 from theory.model.lyrics import *
 
@@ -35,6 +34,7 @@ from theory.model import *
 log = logging.getLogger(__name__)
 
 class MainController(BaseController):
+    requires_auth = True
 
     def index(self):
         """ the main page controller! """
@@ -51,6 +51,8 @@ class MainController(BaseController):
             else:
                 c.config = '/config?noconnection=1'
             pass
+        except IncorrectPassword:
+            return 'hi'
 
         return render('/index.html')
 
@@ -135,9 +137,12 @@ class MainController(BaseController):
         c.type = request.GET.get('type')
 
         if use_htmlfill:
-            return formencode.htmlfill.render(render("/config.html",{'server':g.tc.server,'port':g.tc.port,'awskey':g.tc.awskey}))
+            return formencode.htmlfill.render(render("/config.html",{'server':g.tc.server,'port':g.tc.port,
+                                                                     'password':g.tc.password,'webpassword':g.tc.webpassword,
+                                                                     'awskey':g.tc.awskey}))
         else:
-            return render("/config.html",{'server':g.tc.server,'port':g.tc.port,'awskey':g.tc.awskey})
+            return render("/config.html",{'server':g.tc.server,'port':g.tc.port,'password':g.tc.password,
+                                          'webpassword':g.tc.webpassword,'awskey':g.tc.awskey})
 
     def saveconfig(self):
         """ controller to save the web-based configuration """ 
@@ -149,7 +154,7 @@ class MainController(BaseController):
         if fields['action'] == 'save config':
             reloadframes = 'true'
             try:
-                g.tc.update_config(fields['server'],fields['port'],fields['awskey'])
+                g.tc.update_config(fields['server'],fields['port'],fields['password'],fields['webpassword'],fields['awskey'])
             except:
                 redirect_to('/config?error=1&type=save')
         else:

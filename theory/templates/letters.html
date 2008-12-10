@@ -14,5 +14,9 @@
     <a onclick="initConfig()" href="/stats" target="config" style="color:white">system stats</a>
     &middot;
     <a href="/fullscreen" target="_blank" style="color:white">full screen</a>
+    %if session.has_key('user'):
+        &middot;
+        <a href="/login/logout" target="_blank" style="color:white">logout</a>
+    %endif
 	<br />
 </div>

@@ -11,6 +11,8 @@ class ConfigForm(formencode.Schema):
     port = formencode.validators.Int(strip=True,not_empty=True,messages={'empty':'please enter a port, MPD default is 6600',
                                                               'integer':'please enter an integer value for port, MPD default is 6600'
                                                              })
+    password = formencode.validators.String(not_empty=False,if_missing=None)
+    webpassword = formencode.validators.String(not_empty=False,if_missing=None)
     awskey = formencode.validators.String(strip=True,not_empty=False,if_missing=None)
 
 class State(object):

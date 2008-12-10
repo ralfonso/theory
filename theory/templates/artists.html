@@ -21,13 +21,19 @@
         <% lastlead = '' %>
 
         % for a in c.artists:
+            <%
+                if a.startswith(('The ','THE ','the ')):
+                    firstchar = a[4].lower() 
+                else:
+                    firstchar = a[0].lower()
+            %>  
             <li>
-                % if a[0].lower() != lastlead:
-                    <a name="jump${a[0].lower()}"></a>
+                % if firstchar != lastlead:
+                    <a name="jump${firstchar}"></a>
                 % endif
                 <a onclick="artistAlbums('${a.replace("'","\\'")}')">${a}</a>
             </li>
-            <% lastlead = a[0].lower() %>
+            <% lastlead = firstchar %>
         % endfor
     </ul>
 </div>

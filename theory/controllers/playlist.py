@@ -28,6 +28,8 @@ from theory.lib.base import BaseController, render
 log = logging.getLogger(__name__)
 
 class PlaylistController(BaseController):
+    requires_auth = True
+
     def index(self):
         """ controller for the playlist frame """
 

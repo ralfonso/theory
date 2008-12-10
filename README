@@ -1,7 +1,7 @@
 * theory music software. *
 #########################*
 
-quick: ./install.sh and run ./run-theory.sh .  Then direct your browser 
+quick: ./install.sh and run "./run-theory.sh start" .  Then direct your browser 
 to http://localhost:9099/ if you're running theory locally
 
 

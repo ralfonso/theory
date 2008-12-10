@@ -18,6 +18,8 @@ class mpdhelper(object):
         try:
             self.mpdc = mpd.MPDClient()
             self.mpdc.connect(g.tc.server,g.tc.port)
+            if g.tc.password:
+                self.mpdc.password(g.tc.password)
         except (socket.gaierror,socket.error):
             self.mpdc = None
 

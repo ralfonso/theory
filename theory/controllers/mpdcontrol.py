@@ -28,6 +28,8 @@ from theory.lib.base import BaseController, render
 log = logging.getLogger(__name__)
 
 class MpdcontrolController(BaseController):
+    requires_auth = True
+
     @jsonify
     def status(self):
         """ 

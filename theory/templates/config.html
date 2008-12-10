@@ -44,6 +44,7 @@
     % endif
     <form:error name="server" format="default">
     <form:error name="port" format="default">
+    <form:error name="password" format="default">
 </div>
 
 <form action="/saveconfig" method=post>
@@ -56,9 +57,21 @@
     </tr>
     <tr>
         <td align=right>
-            MPD server port:</td>
+            MPD server port (usually 6600):</td>
         <td>
             ${h.html.tags.text('port',port,size=5)}</td>
+    </tr>
+    <tr>
+        <td align=right>
+            MPD server password:</td>
+        <td>
+            ${h.html.tags.text('password',password,size=25)}</td>
+    </tr>
+    <tr>
+        <td align=right>
+            theory web password:</td>
+        <td>
+            ${h.html.tags.text('webpassword',webpassword,size=25)}</td>
     </tr>
     <tr>
         <td align=right>

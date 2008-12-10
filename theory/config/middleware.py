@@ -4,6 +4,7 @@ from paste.cascade import Cascade
 from paste.registry import RegistryManager
 from paste.urlparser import StaticURLParser
 from paste.deploy.converters import asbool
+from paste.translogger import TransLogger
 from pylons import config
 from pylons.middleware import ErrorHandler, StatusCodeRedirect
 from pylons.wsgiapp import PylonsApp
@@ -42,7 +43,7 @@ def make_app(global_conf, full_stack=True, **app_conf):
     app = RoutesMiddleware(app, config['routes.map'])
     app = SessionMiddleware(app, config)
     app = CacheMiddleware(app, config)
-    
+
     if asbool(full_stack):
         # Handle Python exceptions
         app = ErrorHandler(app, global_conf, **config['pylons.errorware'])
@@ -61,4 +62,5 @@ def make_app(global_conf, full_stack=True, **app_conf):
     # server is handling this static content, remove the following 3 lines)
     static_app = StaticURLParser(config['pylons.paths']['static_files'])
     app = Cascade([static_app, app])
+    app = TransLogger(app, setup_console_handler=False)
     return app

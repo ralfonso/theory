@@ -20,7 +20,7 @@ import socket
 
 import theory.model.mpdqueue as Queue
 from theory.model.mpdhelper import mpdhelper
-import mpd
+from mpd import *
 
 from theory.model.mpdutil import thread,threading
 
@@ -32,6 +32,9 @@ from theory.model.mpdutil import thread,threading
 
 
 class ConnectionClosed(Exception):
+    pass
+
+class IncorrectPassword(Exception):
     pass
 
 class Pool(object):
@@ -258,6 +261,9 @@ class _ConnectionRecord(object):
             if self.__pool._should_log_info:
                 self.__pool.log("Created new connection %r" % connection)
             return connection
+        except CommandError,e:
+            if 'incorrect password' in e:
+                raise IncorrectPassword
         except Exception, e:
             if self.__pool._should_log_info:
                 self.__pool.log("Error on connect(): %s" % e)
@@ -349,7 +355,7 @@ class _ConnectionFairy(object):
 
     def checkout(self):
         if self.connection is None:
-            raise exc.InvalidRequestError("This connection is closed")
+            raise ConnectionClosed("This connection is closed")
         self.__counter += 1
 
         try:
@@ -357,9 +363,9 @@ class _ConnectionFairy(object):
                 if self.connection.mpdc is not None:
                     self.connection.ping()
                 else:
-                    raise mpd.ConnectionError
+                    raise ConnectionError
                 return self
-        except (mpd.ConnectionError,AttributeError,socket.error):
+        except (ConnectionError,AttributeError,socket.error):
             pass
 
         # Pool listeners can trigger a reconnection on checkout
@@ -372,9 +378,9 @@ class _ConnectionFairy(object):
                 if self.connection.mpdc is not None:
                     self.connection.ping()
                 else:
-                    raise mpd.ConnectionError
+                    raise ConnectionError
                 return self
-            except (mpd.ConnectionError, AttributeError,socket.error),e:
+            except (ConnectionError, AttributeError,socket.error),e:
                 if self._pool._should_log_info:
                     self._pool.log(
                     "Disconnection detected on checkout: %s" % e)
