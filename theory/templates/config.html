@@ -53,31 +53,37 @@
         <td align=right>
             MPD server host:</td>
         <td>
-            ${h.html.tags.text('server',server)}</td>
+            ${h.html.tags.text('server',g.tc.server)}</td>
     </tr>
     <tr>
         <td align=right>
             MPD server port (usually 6600):</td>
         <td>
-            ${h.html.tags.text('port',port,size=5)}</td>
+            ${h.html.tags.text('port',g.tc.port,size=5)}</td>
     </tr>
     <tr>
         <td align=right>
             MPD server password:</td>
         <td>
-            ${h.html.tags.text('password',password,size=25)}</td>
+            ${h.html.tags.text('password',g.tc.password,size=25)}</td>
     </tr>
     <tr>
         <td align=right>
             theory web password:</td>
         <td>
-            ${h.html.tags.text('webpassword',webpassword,size=25)}</td>
+            ${h.html.tags.text('webpassword',g.tc.webpassword,size=25)}</td>
+    </tr>
+    <tr>
+        <td align=right>
+            web interface stops refreshing after ~20minutes of inactivity:</td>
+        <td>
+            ${h.html.tags.checkbox('timeout',value=True,checked=True)}</td>
     </tr>
     <tr>
         <td align=right>
             Amazon Developer Key:</td>
         <td>
-            ${h.html.tags.text('awskey',awskey,size=30)} 
+            ${h.html.tags.text('awskey',g.tc.awskey,size=30)} 
             (for automatic downloading of album art)
         </td>
     </tr>

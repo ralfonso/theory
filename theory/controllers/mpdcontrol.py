@@ -133,14 +133,14 @@ class MpdcontrolController(BaseController):
             iter += 1
 
     def addtoplaylist(self):
-        file = request.POST.get('file')
+        file = request.POST.get('file').encode('utf-8')
 
         m = g.p.connect()
         m.add(file)
 
     def addalbumtoplaylist(self):
-        artist = request.GET.get('artist')
-        album = request.GET.get('album')
+        artist = request.GET.get('artist').encode('utf-8')
+        album = request.GET.get('album').encode('utf-8')
 
         m = g.p.connect()
         tracks = m.tracks(artist,album)

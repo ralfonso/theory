@@ -33,3 +33,29 @@ def timestamp_to_friendly_date(ts):
         return date.strftime("%Y-%m-%d %H:%M:%S")
     except TypeError:
         return 'unable to determine'
+
+def format_title(t):
+    try:
+        t['formattedtrack'] = "%02d. %s" % (int(t['track']),t['title'])
+    except KeyError,e:
+        if t.has_key('title'):
+            t['formattedtrack'] = "%s" % (t['title'])
+    except ValueError,e:
+        if t.has_key('title'):
+            t['formattedtrack'] = "%s. %s" % (t['track'],t['title'])
+        else:
+            if t.has_key('title'):
+                t['formattedtrack'] = "%s" % t['title']
+    
+    if not t.has_key('formattedtrack'):
+        t['formattedtrack'] = "%d." % trackno
+
+def format_title_search(t):
+    try:
+        t['formattedtrack'] = "%s - %s - %s" % (t['artist'],t['album'],t['title'])
+    except KeyError,e:
+        if t.has_key('title'):
+            t['formattedtrack'] = "%s" % (t['title'])
+    
+    if not t.has_key('formattedtrack'):
+        t['formattedtrack'] = "%s" % t['file']

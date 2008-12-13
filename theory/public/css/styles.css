@@ -11,6 +11,7 @@ input.button {
 input.orange { background-color:orange; }
 input.red { background-color:red;color:white; }
 input.green { background-color:limegreen;color:white }
+input.grey { background-color:#ededed; }
 
 img {
     border:none;
@@ -23,6 +24,10 @@ h2 {
     border-bottom:1px solid #333;
     margin-bottom:3px;
     color:#333;
+}
+
+td.label {
+    text-align:right;
 }
 
 img.control {
@@ -67,6 +72,7 @@ div#control {
 
 
 div#container-alpha {
+    height:16px;
     padding:10px 4px;
     background-color:#666666;
 	color:white;
@@ -383,4 +389,18 @@ a#aWiki,a#aLyrics {
 #stats ul li {
 	font-size:140%;
 	list-style-type:none;
+}
+
+#search {
+    padding-left:30px;
+}
+
+#searchtype {
+    margin-left:10px;
+}
+
+#misc a {
+    color:white;
+    text-decoration:underline;
+    cursor:pointer;
 }

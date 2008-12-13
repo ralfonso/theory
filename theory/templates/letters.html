@@ -1,5 +1,7 @@
+## vim: set tabstop=4: set shiftwidth=4: set expandtab
 <%
-	letters = '#abcdefghijklmnopqrstuvwxyz'
+    letters = '#abcdefghijklmnopqrstuvwxyz'
+    searchterms = ['Artist','Title','Album','Genre']
 %>
 
 <div id="container-alpha">
@@ -9,14 +11,28 @@
 		% endfor
 	</ul>
 
-    <a onclick="initConfig()" href="/config" target="config" style="margin-left:20px;color:white">edit configuration</a>
-    &middot;
-    <a onclick="initConfig()" href="/stats" target="config" style="color:white">system stats</a>
-    &middot;
-    <a href="/fullscreen" target="_blank" style="color:white">full screen</a>
-    %if session.has_key('user'):
+    <div id="search" style="display:none">
+        <form action="/search" method="post" target="frmtracks">
+        ${h.html.tags.select('searchtype',None,searchterms,id="searchtype")}
+        ${h.html.tags.text('q','',size=25)}
+        <input type="submit" value="search" class="orange" />
+        <input type="button" id="searchcancel" value="cancel" class="grey" />
+        </form>
+    </div>
+
+    <div id="misc">
+        <a onclick="initConfig()" href="/config" target="config" style="margin-left:20px">edit configuration</a>
         &middot;
-        <a href="/login/logout" target="_blank" style="color:white">logout</a>
-    %endif
-	<br />
+        <a onclick="initConfig()" href="/stats" target="config">system stats</a>
+        &middot;
+        <a href="/fullscreen" target="_blank">full screen</a>
+        &middot;
+        <a href="/randomizer" target="frmtracks">randomizer</a>
+        &middot;
+        <a>search</a>
+        %if session.has_key('user'):
+            &middot;
+            <a href="/login/logout" target="_blank">logout</a>
+        %endif
+    </div>
 </div>

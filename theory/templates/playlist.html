@@ -135,10 +135,17 @@
             <li>empty playlist</li>
         % endif
         % for t in c.playlist:
+            <%
+                if t.has_key('artist') and t.has_key('title'):
+                    display_title = "%s - %s" % (t['artist'],t['title'])
+                else:
+                    display_title = t['file']
+            %>
             <li id="track_${t['id']}:${t['pos']}">
                 <a onclick="removeTrack(this,${t['id']})" title="remove this track"><img src="/img/remove.png" /></a>
                 <a onclick="window.parent.playNow(${t['id']})" title="play this track now"><img src="/img/playnow.png" /></a>
-                ${t['artist']} - ${t['title']}
+                ${display_title}
+                % if t.has_key('artist') and t.has_key('album'):
                 <div class="playlist-tooltip">
                     <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}')">${t['artist']}</a>
                     <br />
@@ -146,6 +153,7 @@
                     <br />
                     ${h.format_time(t['time'])}
                 </div>
+                % endif
             </li>
         % endfor
     </ul>

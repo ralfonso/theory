@@ -13,6 +13,7 @@ class ConfigForm(formencode.Schema):
                                                              })
     password = formencode.validators.String(not_empty=False,if_missing=None)
     webpassword = formencode.validators.String(not_empty=False,if_missing=None)
+    timeout = formencode.validators.Bool()
     awskey = formencode.validators.String(strip=True,not_empty=False,if_missing=None)
 
 class State(object):

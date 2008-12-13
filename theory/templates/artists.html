@@ -31,7 +31,7 @@
                 % if firstchar != lastlead:
                     <a name="jump${firstchar}"></a>
                 % endif
-                <a onclick="artistAlbums('${a.replace("'","\\'")}')">${a}</a>
+                <a onclick="artistAlbums('${a.replace("'","\\'").decode('utf-8')}')">${a}</a>
             </li>
             <% lastlead = firstchar %>
         % endfor

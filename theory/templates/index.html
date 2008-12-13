@@ -1,5 +1,6 @@
 <%inherit file="body.html"/>
 <%include file="control.html"/>
+
 <script language="javascript">
     $(document).ready(
         function() {
@@ -61,6 +62,16 @@
                                                  }
                                        })
                                });
+
+            $('#misc a:contains(search)').click(function() {
+                                                    $('#misc').hide();
+                                                    $('#search').show();
+                                               });
+
+            $('#searchcancel').click(function() {
+                                        $('#search').hide();
+                                        $('#misc').show();
+                                    });
             resizeIframes();
 
             if ($('#config').attr('src') != '') {
@@ -95,6 +106,10 @@
     window.setInterval('getStatus()','7500');
     window.sliding = false;
 	window.statusloads = 0;
+    % if g.tc.timeout == False:
+        ## hack to make sure statusloads never goes over the limit when the timeout is disabled
+        window.setInterval('window.statusloads = 0','20000');
+    % endif
 </script>
 
 <style>

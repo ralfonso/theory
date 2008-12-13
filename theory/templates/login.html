@@ -1,0 +1,20 @@
+<%inherit file="body.html"/>
+
+<script language="javascript">
+    if (self != top) {
+        top.location.replace('/login/login');
+    }
+</script>
+
+%if c.err == 1:
+<div style="color:white;padding:7px;margin:15px;background-color:red;width:400px;border:1px solid white">
+    incorrect password
+</div>
+%endif 
+
+<div style="color:white">
+<form action="/login/submit" method="post">
+password: ${h.html.tags.password('password','',size=25)} 
+<input type=submit name=action value="submit" style="border:1px solid black;background-color:limegreen" />
+</form>
+</div>

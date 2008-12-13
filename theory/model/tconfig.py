@@ -31,6 +31,7 @@ class TConfig:
     port = None
     password = None
     webpassword = ''
+    timeout = False
     awskey = None
 
     def __init__(self):
@@ -44,11 +45,12 @@ class TConfig:
             self.awskey = conf.get('services','awskey')
             self.password = conf.get('mpd','password')
             self.webpassword = conf.get('main','webpassword')
+            self.timeout = bool(conf.get('main','timeout',False))
 
         except (ConfigParser.NoSectionError,ConfigParser.NoOptionError):
             pass
 
-    def update_config(self,server,port,password,webpassword,awskey): 
+    def update_config(self,server,port,password,webpassword,timeout,awskey): 
         """ commit the configuration to disk """
 
         conf = ConfigParser.ConfigParser()
@@ -60,6 +62,7 @@ class TConfig:
         conf.set('services','awskey',awskey)
         conf.add_section('main')
         conf.set('main','webpassword',webpassword)
+        conf.set('main','timeout',bool(timeout))
 
         print config['localconf']
 
@@ -73,4 +76,5 @@ class TConfig:
         self.port = port
         self.password = password
         self.webpassword = webpassword
+        self.timeout = bool(timeout)
         self.awskey = awskey

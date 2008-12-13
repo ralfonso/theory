@@ -1,0 +1,54 @@
+<%inherit file="body.html"/>
+<style>
+    body {
+        background-color:#eee;
+    }
+</style>
+
+<form action="/randomizer" method="get">
+<table cellspacing=4 cellpadding=2>
+    <tr>
+        <td class="label" valign="top" rowspan="2">
+            <fieldset>
+                <legend for="genres">exclude genres</legend>
+                ${h.html.tags.select('genres',c.exclude_genres,c.genres,size=6,multiple=True)}
+            </fieldset>
+        </td>
+        <td>
+            <fieldset>
+                <legend>quantity</legend>
+                ${h.html.tags.text('quantity',c.quantity,size=4)}
+            </fieldset>
+        </td>
+    </tr>
+    <tr>
+        <td>
+           ${h.html.tags.checkbox('excludelive',1,checked=c.exclude_live)}
+            attempt to exclude live recordings<br />
+            <input type="submit" value="randomize!" class="orange" name="action" /></td>
+    </tr>
+</table>
+</form>
+
+<hr />
+
+% if c.random_tracks:
+    <form method="post" action="/add_random">
+    <input type="submit" value="add to playlist" class="green" />
+    <ul id="list">
+    % for t in c.random_tracks:
+        <%
+            if t.has_key('artist') and t.has_key('album') and t.has_key('title'):
+                display_title = "%s - %s - %s" % (t['artist'],t['album'],t['title'])
+            else:
+                display_title = t['file']
+        %>
+        <li>
+            ${h.html.tags.checkbox('file',t['file'],checked=True)}
+            ${display_title}
+        </li>
+    % endfor
+    </ul>
+    <input type="submit" value="add to playlist" class="green" />
+    </form>
+% endif

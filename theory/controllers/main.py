@@ -52,7 +52,7 @@ class MainController(BaseController):
                 c.config = '/config?noconnection=1'
             pass
         except IncorrectPassword:
-            return 'hi'
+            abort(401)
 
         return render('/index.html')
 
@@ -70,8 +70,8 @@ class MainController(BaseController):
     def albums(self):
         """ controller for the albums frame """
 
-        c.artist = request.GET.get('artist','')
-        c.album = request.GET.get('album','')
+        c.artist = request.GET.get('artist','').encode('utf-8')
+        c.album = request.GET.get('album','').encode('utf-8')
 
         try:
             m = g.p.connect()
@@ -87,8 +87,8 @@ class MainController(BaseController):
     def tracks(self):
         """ controller for the tracks frame """
 
-        c.artist = request.GET.get('artist','')
-        c.album = request.GET.get('album','')
+        c.artist = request.GET.get('artist','').encode('utf-8')
+        c.album = request.GET.get('album','').encode('utf-8')
         try:
             m = g.p.connect()
         except ConnectionClosed:
@@ -99,7 +99,7 @@ class MainController(BaseController):
 
    
         c.artist_safe = h.html.url_escape(c.artist)
-        c.album_safe = h.html.url_escape(c.album.encode('utf-8'))
+        c.album_safe = h.html.url_escape(c.album)
 
         return render('/tracks.html')
  
@@ -109,9 +109,9 @@ class MainController(BaseController):
         if it doesn't exist, attempt to fetch it from Amazon and save to disk 
         """
             
-        artist = request.GET.get('artist','')
-        album = request.GET.get('album','')
-        response.headers['Content-type'] = 'image/jpg'
+        artist = request.GET.get('artist','').encode('utf-8')
+        album = request.GET.get('album','').encode('utf-8')
+        response.headers['Content-type'] = 'image/jpeg'
 
         try:
             aa = AlbumArt()
@@ -122,10 +122,9 @@ class MainController(BaseController):
             img = 'theory/public/img/noart.png'
 
 
-        f = open(img)
+        f = open(img,'rb')
         data = f.read()
         f.close()
-
         return data
     
     def config(self,use_htmlfill=True):
@@ -137,12 +136,11 @@ class MainController(BaseController):
         c.type = request.GET.get('type')
 
         if use_htmlfill:
-            return formencode.htmlfill.render(render("/config.html",{'server':g.tc.server,'port':g.tc.port,
+            return formencode.htmlfill.render(render("/config.html"),{'server':g.tc.server,'port':g.tc.port,
                                                                      'password':g.tc.password,'webpassword':g.tc.webpassword,
-                                                                     'awskey':g.tc.awskey}))
+                                                                     'awskey':g.tc.awskey,'timeout':g.tc.timeout})
         else:
-            return render("/config.html",{'server':g.tc.server,'port':g.tc.port,'password':g.tc.password,
-                                          'webpassword':g.tc.webpassword,'awskey':g.tc.awskey})
+            return render("/config.html")
 
     def saveconfig(self):
         """ controller to save the web-based configuration """ 
@@ -153,23 +151,28 @@ class MainController(BaseController):
 
         if fields['action'] == 'save config':
             reloadframes = 'true'
+            reloadpage = 'false'
             try:
-                g.tc.update_config(fields['server'],fields['port'],fields['password'],fields['webpassword'],fields['awskey'])
+                if g.tc.timeout != bool(fields['timeout']):
+                    reloadpage = 'true'
+
+                g.tc.update_config(fields['server'],fields['port'],fields['password'],fields['webpassword'],fields['timeout'],fields['awskey'])
             except:
                 redirect_to('/config?error=1&type=save')
         else:
+            reloadpage = 'false'
             reloadframes = 'false'
 
         g.p = g.p.recreate()
         
-        return '<script language="javascript">window.parent.hideConfig(%s);document.location.replace(\'/null.html\')</script>' % reloadframes
+        return '<script language="javascript">window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>' % (reloadframes,reloadpage)
 
 
     def lyrics(self):
         """ controller for the lyrics widget. loads lyrics from lyricswiki.org """
 
-        artist = request.GET.get('artist')
-        track = request.GET.get('track')
+        artist = request.GET.get('artist').encode('utf-8')
+        track = request.GET.get('track').encode('utf-8')
     
         l = Lyrics(artist,track)
         c.lyrics = l.lyrics
@@ -193,3 +196,33 @@ class MainController(BaseController):
         """ controller for the fullscreen widget """
 
         return render('/fullscreen.html')
+
+    def randomizer(self):
+        c.exclude_genres = request.GET.getall('genres') 
+        c.exclude_live = request.GET.get('excludelive',1)
+        c.quantity = int(request.GET.get('quantity',50))
+        action = request.GET.get('action',None)
+        c.genres = sorted(g.genres)
+
+        if action:
+            m = g.p.connect()
+            c.random_tracks = m.get_random_tracks(c.exclude_genres,c.exclude_live,c.quantity)
+        return render('/randomizer.html')
+
+    def add_random(self):
+        m = g.p.connect()
+        files = request.POST.getall('file').encode('utf-8')
+        for f in files:
+            m.add(f)
+
+        redirect_to('/null.html')
+
+    def search(self):
+        searchtype = request.POST.get('searchtype','Artist')
+        q = request.POST.get('q')
+
+        if q:
+            m = g.p.connect()
+            c.results = m.search(searchtype,q)
+
+        return render('/search.html')

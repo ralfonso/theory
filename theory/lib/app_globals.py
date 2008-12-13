@@ -9,7 +9,7 @@ class Globals(object):
     life of the application
     """
     def get_mpd_conn(self):
-        m = mpdhelper()
+        m = mpdhelper(self)
         return m
 
     def __init__(self):
@@ -20,7 +20,27 @@ class Globals(object):
 
         self.p = QueuePool(self.get_mpd_conn, max_overflow=10, pool_size=5, use_threadlocal=True)
         self.tc = TConfig()
+        self.get_genres()
         pass
+
+    def get_genres(self):
+        """ load all tracks and create a list of every unique genre in the database"""
+        self.genres = []
+        m = self.p.connect()
+        all_tracks = m.listallinfo()
+        
+        for t in all_tracks:
+            if not t.has_key('genre'):
+                continue
+
+            if type(t['genre']) == list:
+                track_genres = t['genre']
+            else:
+                track_genres = [t['genre']]
+
+            for genre in track_genres:
+                if genre not in self.genres:
+                    self.genres.append(genre)
 
 
 

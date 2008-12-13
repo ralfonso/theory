@@ -1,6 +1,10 @@
 import mpd
-from pylons import app_globals as g
+import random
 import socket
+import re
+
+from pylons import app_globals as g
+from theory.lib import helpers as h
 
 class NoMPDConnection(Exception):
     pass
@@ -14,12 +18,12 @@ class mpdhelper(object):
 
     mpdc = None
 
-    def __init__(self): 
+    def __init__(self,globals): 
         try:
             self.mpdc = mpd.MPDClient()
-            self.mpdc.connect(g.tc.server,g.tc.port)
-            if g.tc.password:
-                self.mpdc.password(g.tc.password)
+            self.mpdc.connect(globals.tc.server,globals.tc.port)
+            if globals.tc.password:
+                self.mpdc.password(globals.tc.password)
         except (socket.gaierror,socket.error):
             self.mpdc = None
 
@@ -30,7 +34,6 @@ class mpdhelper(object):
 
     def tracks(self,artist,album=None):
         # this is really ugly!
-
 
         if album:
             tracks = self.find('artist',artist,'album',album)
@@ -45,20 +48,7 @@ class mpdhelper(object):
         trackno = 1
 
         for t in tracks:
-            try:
-                t['formattedtrack'] = "%02d. %s" % (int(t['track']),t['title'])
-            except KeyError,e:
-                if t.has_key('title'):
-                    t['formattedtrack'] = "%s" % (t['title'])
-            except ValueError,e:
-                if t.has_key('title'):
-                    t['formattedtrack'] = "%s. %s" % (t['track'],t['title'])
-                else:
-                    if t.has_key('title'):
-                        t['formattedtrack'] = "%s" % t['title']
-            
-            if not t.has_key('formattedtrack'):
-                t['formattedtrack'] = "%d." % trackno
+            h.format_title(t)
             trackno += 1
 
         return tracks
@@ -67,6 +57,45 @@ class mpdhelper(object):
         albums = self.list('album',artist)
         albums.sort(lambda x,y: cmp(x.lower(),y.lower()))
         return albums
+
+    def get_random_tracks(self,exclude_genres,exclude_live,quantity):
+        all_tracks = self.listallinfo()
+
+        selected_tracks = []
+
+        for i in range(0,quantity):
+            tracknum = len(all_tracks)
+            if quantity - i > tracknum:
+                break
+
+            if exclude_live:
+                exc_re = re.compile('.*((\d{2}|\d{4})[-\/]\d{1,2}[-\/]\d{1,2}|\d{2}[-\/]\d{1,2}[-\/](\d{1,2}|\d{4}))')
+
+            while True:
+                tracknum = len(all_tracks)
+                track = all_tracks.pop(random.randrange(tracknum))
+
+                if track.has_key('file'):
+                    if exclude_live:
+                        if exc_re.match(track.get('album','')) or exc_re.match(track['file']):
+                            continue
+
+                    genre = track.get('genre',None)
+                    if genre: 
+                        if type(genre) != list:
+                            genre = [genre]
+                        
+                        for ge in genre:    
+                            if ge in exclude_genres:
+                                i -= 1
+                            break
+                    else:
+                        break
+
+            selected_tracks.append(track)
+                
+
+        return selected_tracks
 
     def _sorttrackno(self,x,y):
         xt = x['track']

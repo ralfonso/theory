@@ -208,8 +208,8 @@ function artistAlbums(artist,album) {
     if (!album)
         album = '';
 
-    window.parent.$('#frmalbums').attr('src','/albums?artist=' + escape(artist) + '&album=' + escape(album))
-    window.parent.$('#frmtracks').attr('src','/tracks?artist=' + escape(artist) + '&album=' + escape(album))
+    window.parent.$('#frmalbums').attr('src','/albums?artist=' + encodeURIComponent(artist) + '&album=' + encodeURIComponent(album))
+    window.parent.$('#frmtracks').attr('src','/tracks?artist=' + encodeURIComponent(artist) + '&album=' + encodeURIComponent(album))
 
 	
 	$('#list li:odd a',window.parent.frames['frmartists'].document).removeClass('activerow').addClass('oddrow');
@@ -231,7 +231,7 @@ function artistAlbums(artist,album) {
 }
 
 function albumTracks(artist,album) {
-    window.parent.$('#frmtracks').attr('src','/tracks?artist=' + escape(artist) + '&album=' + escape(album))
+    window.parent.$('#frmtracks').attr('src','/tracks?artist=' + encodeURIComponent(artist) + '&album=' + encodeURIComponent(album))
 
 	$('#list li:odd a',window.parent.frames['frmalbums'].document).removeClass('activerow').addClass('oddrow');
 	$('#list li:even a',window.parent.frames['frmalbums'].document).removeClass('activerow').addClass('evenrow');
@@ -314,7 +314,7 @@ function playNow(id) {
 }
 
 function addAlbum(artist,album) {
-    var url = '/mpdcontrol/addalbumtoplaylist?artist=' + escape(artist) + '&album=' + escape(album);
+    var url = '/mpdcontrol/addalbumtoplaylist?artist=' + encodeURIComponent(artist) + '&album=' + encodeURIComponent(album);
     $.ajax({
             url: url,
             type: 'GET',
@@ -330,16 +330,21 @@ function initConfig() {
     var arrPageSizes = getPageSize(); // from jquery-lightbox
     $('#dark-overlay').css({
         width:				arrPageSizes[2],
-        height:				arrPageSizes[3]
+        height:				arrPageSizes[3] + 100
     }).fadeIn();
     $('#config').show();
 }
 
-function hideConfig(reload) {
+function hideConfig(reloadframes,reloadpage) {
     $('#config').hide();
     $('#dark-overlay').fadeOut();
 
-    if (reload) {
+    if (reloadpage) {
+        document.location.replace('/');
+        return;
+    }
+
+    if (reloadframes) {
         window.frames['frmartists'].location.reload();
         window.frames['frmplaylist'].location.reload();
     }

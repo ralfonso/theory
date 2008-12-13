@@ -1,0 +1,24 @@
+<%inherit file="body.html"/>
+
+
+<style>
+    body {
+        margin:0;
+        padding:0;
+        background-color:#eeeeee;
+        overflow-x:hidden;
+    }
+</style>
+
+<div id="container-tracks">
+    <ul id="list">
+        % if len(c.results) == 0:
+            <div style="margin:20px">no tracks found</div>
+        % endif
+        % for t in c.results:
+            <% h.format_title_search(t) %>
+            <li><a onclick="addToPlaylist('${h.html.url_escape(t['file'])}')"><img src="/img/add.png" /> ${t['formattedtrack']}</a></li>
+        % endfor
+    </ul>
+</div>
+
