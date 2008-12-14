@@ -45,7 +45,7 @@ class TConfig:
             self.awskey = conf.get('services','awskey')
             self.password = conf.get('mpd','password')
             self.webpassword = conf.get('main','webpassword')
-            self.timeout = bool(conf.get('main','timeout',False))
+            self.timeout = conf.get('main','timeout',False)
 
         except (ConfigParser.NoSectionError,ConfigParser.NoOptionError):
             pass
@@ -63,8 +63,6 @@ class TConfig:
         conf.add_section('main')
         conf.set('main','webpassword',webpassword)
         conf.set('main','timeout',bool(timeout))
-
-        print config['localconf']
 
         try:
             conffile = open(config['localconf'],"w")

@@ -64,13 +64,11 @@
                                });
 
             $('#misc a:contains(search)').click(function() {
-                                                    $('#misc').hide();
-                                                    $('#search').show();
+                                                    $('#misc').slideToggle('normal',function(){$('#search').slideToggle()});
                                                });
 
             $('#searchcancel').click(function() {
-                                        $('#search').hide();
-                                        $('#misc').show();
+                                        $('#search').slideToggle('normal',function(){$('#misc').slideToggle()});
                                     });
             resizeIframes();
 
@@ -106,6 +104,7 @@
     window.setInterval('getStatus()','7500');
     window.sliding = false;
 	window.statusloads = 0;
+    window.trackremoved = false;
     % if g.tc.timeout == False:
         ## hack to make sure statusloads never goes over the limit when the timeout is disabled
         window.setInterval('window.statusloads = 0','20000');

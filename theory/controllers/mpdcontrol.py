@@ -145,8 +145,11 @@ class MpdcontrolController(BaseController):
         m = g.p.connect()
         tracks = m.tracks(artist,album)
 
+        m.command_list_ok_begin()
         for t in tracks:
             m.add(t['file'])
+
+        m.command_list_end()
 
     def removetrack(self,id):
         m = g.p.connect()
@@ -181,9 +184,16 @@ class MpdcontrolController(BaseController):
         current = m.status()
         playlist = m.playlistinfo()
 
+        if len(playlist) == 0:
+            return
+
+        m.command_list_ok_begin()
+
         for t in playlist:
             if current['songid'] != t['id']:
                 self.removetrack(t['id'])
             else:
-                return 
+                break
+
+        m.command_list_end()
 

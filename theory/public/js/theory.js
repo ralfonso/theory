@@ -32,8 +32,22 @@ function getStatus() {
             $('#vol').show();
 
             if ($('#playlistid').val() != data.status.playlist) {
+                if (window.trackremoved) {
+                    // this is kind of hacky.  don't refresh the playlist if a track has been removed
+                    // and the playlist has only been updated twice. It's trying to detect whether the 
+                    // change is actually just the user removing tracks from their own playlist.  two
+                    // is a reasonably max to click in 7.5 seconds
+                    
+                    if (data.status.playlist - $('#playlistid').val() > 2)
+                        $('#frmplaylist').attr('src','/playlist')
+
+                    window.trackremoved = false;
+                }
+                else {
+                    $('#frmplaylist').attr('src','/playlist')
+                }
+                
                 $('#playlistid').val(data.status.playlist);
-                $('#frmplaylist').attr('src','/playlist')
             }
 
 
@@ -77,10 +91,18 @@ function getStatus() {
             $('#time').html(currenttime + ' / ' + totaltime);
             $('#time').show();
 
-            if (data.track.artist && ((data.track.title != $('#currenttitle').val() || $('#title').html() == 'not playing'))) {
+            if ((data.track.title != $('#currenttitle').val() || $('#title').html() == 'not playing')) {
                 $('#currentartist').val(data.track.artist)
                 $('#currenttitle').val(data.track.title);
-                $('#title').html(data.track.artist + ' - ' + data.track.title);
+
+                if (data.track.artist && data.track.title)
+                    var title = data.track.artist + ' - ' + data.track.title
+                else if (data.track.name && data.track.title)
+                    var title = data.track.name + ' - ' + data.track.title
+                else if (data.track.file)
+                    var title = data.track.file
+
+                $('#title').html(title);
                 $('#aWiki').attr('href','http://www.google.com/search?btnI=I\'m+Feeling+Lucky&q=site:en.wikipedia.org%20' + data.track.artist);
                 $('#wiki').show();
                 var arturl = '/fetchart?artist=' + data.track.artist + '&album=' + data.track.album
@@ -92,7 +114,7 @@ function getStatus() {
 				if ($('#lyrics:visible').length)
 					loadLyrics();
             }
-            else if (!data.track.artist) {
+            else if (!data.track.title) {
                 $('#currentartist').val('');
                 $('#currenttitle').val('');
                 $('#currentid').val('');
@@ -280,6 +302,7 @@ function addToPlaylist(file) {
 
 function removeTrack(el,id) {
     var url = '/mpdcontrol/removetrack/' + id
+    window.parent.trackremoved = true;
     $.ajax({
             url: url,
             type: 'GET',
@@ -427,8 +450,14 @@ function fsStatus() {
 				$('#progress').show();
                 $('#currentid').html(data.current.id);
                 $('#currenttrack').html(data.current.title);
-                $('#currentartist').html(data.current.artist);
-                $('#currentalbum').html(data.current.album);
+                if (data.current.name) {
+                    $('#currentartist').html(data.current.name);
+                    $('#currentalbum').html();
+                }
+                else {
+                    $('#currentartist').html(data.current.artist);
+                    $('#currentalbum').html(data.current.album);
+                }
 
                 var arturl = '/fetchart?artist=' + data.current.artist + '&album=' + data.current.album
                 $('#albumart-container a').attr('href',arturl)
@@ -477,7 +506,18 @@ function fsStatus() {
                 $('#next').html('');
 
             for (var i = 0; i < data.playlist.length; i++) {
-                $('#next').append(data.playlist[i].artist + ' - ' + data.playlist[i].title + '<br />');
+                if (data.playlist[i].artist && data.playlist[i].title)
+                    var title = data.playlist[i].artist + ' - ' + data.playlist[i].title + '<br />';
+                else
+                    var title = data.playlist[i].file + '<br />';
+                $('#next').append(title);
             }
         });
+}
+
+function getURL() {
+    var url = prompt('Please enter the URL of the stream you\'d like to append to the playlist:');
+    if (url) {
+        addToPlaylist(url);
+    }
 }

@@ -76,6 +76,19 @@
 			window.parent.$('#playlistid').val(${c.playlistid});
             window.parent.getStatus();
 
+            $('#widget-addurl img').hover(function(){ $('#widget-tooltip').html('add URL')},
+                                          function(){ $('#widget-tooltip').html('') }
+                                         );
+            $('#widget-clear img').hover(function(){ $('#widget-tooltip').html('clear playlist')},
+                                          function(){ $('#widget-tooltip').html('') }
+                                         );
+            $('#widget-trim img').hover(function(){ $('#widget-tooltip').html('trim playlist')},
+                                          function(){ $('#widget-tooltip').html('') }
+                                         );
+            $('#widget-shuffle img').hover(function(){ $('#widget-tooltip').html('shuffle playlist')},
+                                          function(){ $('#widget-tooltip').html('') }
+                                         );
+
          }
     );
 </script>
@@ -92,7 +105,7 @@
     #fakeborder {
         width:1px;
         background-color:#333;
-        position:absolute;
+        position:fixed;
     }
 </style>
 
@@ -108,11 +121,13 @@
     <div id="label"><a>mouse here to open the playlist widget</a></div>
     <div id="playlist-controls" style="display:none">
         <div id="playlist-clear">
-            <a onclick="playlistAjax('clearplaylist')">clear</a>
-            &middot;
-            <a onclick="playlistAjax('trimplaylist')">trim</a>
-            &middot;
-            <a onclick="playlistAjax('shuffle')">shuffle</a>
+            <div style="padding:0px 10px">
+                <a onclick="getURL()" id="widget-addurl"><img src="/img/add_url.png" /></a>
+                <a onclick="playlistAjax('clearplaylist')" id="widget-clear"><img src="/img/clear.png" /></a>
+                <a onclick="playlistAjax('trimplaylist')" id="widget-trim"><img src="/img/trim.png" /></a>
+                <a onclick="playlistAjax('shuffle')" id="widget-shuffle"><img src="/img/shuffle.png" /></a>
+            </div>
+            <div id="widget-tooltip"></div>
         </div>
 
         <div id="playlist-saved">

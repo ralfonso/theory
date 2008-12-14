@@ -1,18 +1,40 @@
 <%inherit file="body.html"/>
+<script language="javascript">
+% if c.random_tracks:
+    $(document).ready(function() {
+                        $('#randomoptions').hide();
+
+                        $('span.songtitle').click(function() {
+                                                    $(this).parent().children('input[type=checkbox]').attr('checked',!$(this).parent().children('input[type=checkbox]').attr('checked'));
+                                                 });
+                      });
+% endif
+</script>
 <style>
     body {
         background-color:#eee;
     }
+
+    #list li input {
+        padding:0;
+        margin:0;
+    }
+
+    #list li span {
+        cursor:pointer;
+    }
 </style>
 
 <form action="/randomizer" method="get">
-<table cellspacing=4 cellpadding=2>
+<table cellspacing=4 cellpadding=2 id="randomoptions">
     <tr>
         <td class="label" valign="top" rowspan="2">
+            % if len(c.genres) > 0:
             <fieldset>
                 <legend for="genres">exclude genres</legend>
                 ${h.html.tags.select('genres',c.exclude_genres,c.genres,size=6,multiple=True)}
             </fieldset>
+            % endif
         </td>
         <td>
             <fieldset>
@@ -33,8 +55,12 @@
 <hr />
 
 % if c.random_tracks:
-    <form method="post" action="/add_random">
-    <input type="submit" value="add to playlist" class="green" />
+    <a onclick="$('#randomoptions').toggle()" id="randomtoggle" style="cursor:pointer;text-decoration:underline;color:steelblue">show/hide search options</a>
+% endif
+
+% if c.random_tracks:
+    <form method="post" action="/add_random" style="margin-top:5px">
+    <input type="submit" value="add selected to playlist" class="green" />
     <ul id="list">
     % for t in c.random_tracks:
         <%
@@ -45,10 +71,10 @@
         %>
         <li>
             ${h.html.tags.checkbox('file',t['file'],checked=True)}
-            ${display_title}
+            <span class="songtitle">${display_title}</span>
         </li>
     % endfor
     </ul>
-    <input type="submit" value="add to playlist" class="green" />
+    <input type="submit" value="add selected to playlist" class="green" />
     </form>
 % endif

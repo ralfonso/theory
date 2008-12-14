@@ -94,10 +94,8 @@ class MainController(BaseController):
         except ConnectionClosed:
             return render('/null.html')
 
-
         c.tracks = m.tracks(c.artist,c.album)
 
-   
         c.artist_safe = h.html.url_escape(c.artist)
         c.album_safe = h.html.url_escape(c.album)
 
@@ -156,16 +154,21 @@ class MainController(BaseController):
                 if g.tc.timeout != bool(fields['timeout']):
                     reloadpage = 'true'
 
-                g.tc.update_config(fields['server'],fields['port'],fields['password'],fields['webpassword'],fields['timeout'],fields['awskey'])
+                g.tc.update_config(fields['server'],fields['port'],fields['password'],
+                                   fields['webpassword'],fields['timeout'],fields['awskey'])
             except:
                 redirect_to('/config?error=1&type=save')
+
+            if len(g.genres) == 0:
+                g.get_genres()
         else:
             reloadpage = 'false'
             reloadframes = 'false'
 
         g.p = g.p.recreate()
         
-        return '<script language="javascript">window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>' % (reloadframes,reloadpage)
+        return '<script language="javascript">window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>'\
+                % (reloadframes,reloadpage)
 
 
     def lyrics(self):
@@ -211,9 +214,9 @@ class MainController(BaseController):
 
     def add_random(self):
         m = g.p.connect()
-        files = request.POST.getall('file').encode('utf-8')
+        files = request.POST.getall('file')
         for f in files:
-            m.add(f)
+            m.add(f.encode('utf-8'))
 
         redirect_to('/null.html')
 

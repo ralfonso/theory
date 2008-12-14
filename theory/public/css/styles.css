@@ -365,12 +365,21 @@ a#aWiki,a#aLyrics {
 #playlist-clear {
     background-color:#2F3983;
     color:white;
+    overflow-x:hidden;
+    padding:10px 0px;
 }
 
 #playlist-clear a {
     cursor:pointer;
     text-decoration:underline;
     color:white;
+}
+
+div#widget-tooltip {
+    width:100%;
+    background:transparent url('/img/libg.png');
+    color:white;
+    font-size:10px;
 }
 
 #playlist-saved {
@@ -391,12 +400,8 @@ a#aWiki,a#aLyrics {
 	list-style-type:none;
 }
 
-#search {
-    padding-left:30px;
-}
-
 #searchtype {
-    margin-left:10px;
+    margin-left:20px;
 }
 
 #misc a {
@@ -404,3 +409,5 @@ a#aWiki,a#aLyrics {
     text-decoration:underline;
     cursor:pointer;
 }
+
+

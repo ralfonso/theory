@@ -1,4 +1,5 @@
 import mpd
+import logging
 import random
 import socket
 import re
@@ -6,12 +7,14 @@ import re
 from pylons import app_globals as g
 from theory.lib import helpers as h
 
+log = logging.getLogger(__name__)
+
 class NoMPDConnection(Exception):
     pass
 
 class mpdhelper(object):
     """ 
-    most python-mpd functions are handed right off.  this class overloads some of them
+    most python-mpd functions are handed off to python-mpd.  this class overwrites some of them
     to add required processing features (e.g. sorting) and also provides some convenience functions
     for common tasks
     """
@@ -20,6 +23,7 @@ class mpdhelper(object):
 
     def __init__(self,globals): 
         try:
+            log.debug('Attempting to connect to %s:%s' % (globals.tc.server,globals.tc.port))
             self.mpdc = mpd.MPDClient()
             self.mpdc.connect(globals.tc.server,globals.tc.port)
             if globals.tc.password:
@@ -48,7 +52,7 @@ class mpdhelper(object):
         trackno = 1
 
         for t in tracks:
-            h.format_title(t)
+            h.format_title(t,trackno)
             trackno += 1
 
         return tracks
@@ -62,22 +66,30 @@ class mpdhelper(object):
         all_tracks = self.listallinfo()
 
         selected_tracks = []
+        skipped_live = 0
+        skipped_genre = 0
+        skipped_not_file = 0
+
+        log.debug("randomizer: total tracks %d" % len(all_tracks))
 
         for i in range(0,quantity):
             tracknum = len(all_tracks)
-            if quantity - i > tracknum:
-                break
 
             if exclude_live:
                 exc_re = re.compile('.*((\d{2}|\d{4})[-\/]\d{1,2}[-\/]\d{1,2}|\d{2}[-\/]\d{1,2}[-\/](\d{1,2}|\d{4}))')
 
             while True:
                 tracknum = len(all_tracks)
-                track = all_tracks.pop(random.randrange(tracknum))
+                try:
+                    track = all_tracks.pop(random.randrange(tracknum))
+                except (IndexError,ValueError):
+                    track = None
+                    break
 
                 if track.has_key('file'):
                     if exclude_live:
                         if exc_re.match(track.get('album','')) or exc_re.match(track['file']):
+                            skipped_live += 1
                             continue
 
                     genre = track.get('genre',None)
@@ -87,14 +99,21 @@ class mpdhelper(object):
                         
                         for ge in genre:    
                             if ge in exclude_genres:
-                                i -= 1
-                            break
+                                skipped_genre += 1
+                                continue
+                        break
                     else:
                         break
+                else:
+                    skipped_not_file += 1
+
+            if track is None:
+                break
 
             selected_tracks.append(track)
-                
-
+               
+        log.debug("randomizer: skipped live: %d / skipped genre: %d / skipped not file: %d" % (skipped_live,skipped_genre,skipped_not_file))
+        log.debug("randomizer: sel: %d/%d left: %d" % (len(selected_tracks),quantity,len(all_tracks)))
         return selected_tracks
 
     def _sorttrackno(self,x,y):

@@ -12,7 +12,7 @@
 	</ul>
 
     <div id="search" style="display:none">
-        <form action="/search" method="post" target="frmtracks">
+        <form action="/search" method="post" target="frmtracks" style="margin:none;padding:none">
         ${h.html.tags.select('searchtype',None,searchterms,id="searchtype")}
         ${h.html.tags.text('q','',size=25)}
         <input type="submit" value="search" class="orange" />
@@ -21,9 +21,9 @@
     </div>
 
     <div id="misc">
-        <a onclick="initConfig()" href="/config" target="config" style="margin-left:20px">edit configuration</a>
+        <a onclick="initConfig()" href="/config" target="config" style="margin-left:20px">edit config</a>
         &middot;
-        <a onclick="initConfig()" href="/stats" target="config">system stats</a>
+        <a onclick="initConfig()" href="/stats" target="config">stats</a>
         &middot;
         <a href="/fullscreen" target="_blank">full screen</a>
         &middot;

@@ -93,23 +93,29 @@ class AlbumArt:
         artist_safe = urllib2.quote(self.artist)
         album_safe = urllib2.quote(self.album)
 
-        try:
-            url = 'http://ecs.amazonaws.com/onca/xml?Service=AWSECommerceService&AWSAccessKeyId=%s&Operation=ItemSearch&SearchIndex=Music&Version=2008-11-15&ResponseGroup=Images&Artist=%s&Title=%s' % (g.tc.awskey,artist_safe,album_safe)
-            self.log('Fetching Amazon album image: %s' % url)
-            urlfile = urllib2.urlopen(url)
-        except urllib2.URLError:
-            self.log('Error fetching Amazon XML')
-            raise NoArtError
+        urls = []
 
-        doc = xml.dom.minidom.parse(urlfile)
-        urlfile.close()
-        imgnodes = doc.getElementsByTagName('LargeImage')
+        urls.append('http://ecs.amazonaws.com/onca/xml?Service=AWSECommerceService&AWSAccessKeyId=%s&Operation=ItemSearch&SearchIndex=Music&Version=2008-11-15&ResponseGroup=Images&Artist=%s&Title=%s' % (g.tc.awskey,artist_safe,album_safe))
+        urls.append('http://ecs.amazonaws.com/onca/xml?Service=AWSECommerceService&AWSAccessKeyId=%s&Operation=ItemSearch&SearchIndex=Music&Version=2008-11-15&ResponseGroup=Images&Artist=%s' % (g.tc.awskey,artist_safe))
 
-        if len(imgnodes) > 0:
-            node = imgnodes[0]
-            self.amazonurl =  node.firstChild.firstChild.nodeValue
-            self.log('Found album art: %s' % self.amazonurl)
-        else:
+        for url in urls:
+            try:
+                self.log('Fetching Amazon album image: %s' % url)
+                urlfile = urllib2.urlopen(url)
+            except urllib2.URLError:
+                self.log('Error fetching Amazon XML')
+                raise NoArtError
+
+            doc = xml.dom.minidom.parse(urlfile)
+            urlfile.close()
+            imgnodes = doc.getElementsByTagName('LargeImage')
+            if len(imgnodes) > 0:
+                node = imgnodes[0]
+                self.amazonurl =  node.firstChild.firstChild.nodeValue
+                self.log('Found album art: %s' % self.amazonurl)
+                break
+
+        if not self.amazonurl:
             raise NoArtError
 
         self.save_to_disk()

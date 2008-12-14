@@ -34,7 +34,7 @@ def timestamp_to_friendly_date(ts):
     except TypeError:
         return 'unable to determine'
 
-def format_title(t):
+def format_title(t,trackno=None):
     try:
         t['formattedtrack'] = "%02d. %s" % (int(t['track']),t['title'])
     except KeyError,e:
@@ -48,7 +48,10 @@ def format_title(t):
                 t['formattedtrack'] = "%s" % t['title']
     
     if not t.has_key('formattedtrack'):
-        t['formattedtrack'] = "%d." % trackno
+        if trackno:
+            t['formattedtrack'] = "%d." % trackno
+        else:
+            t['formattedtrack'] = '<unknown>'
 
 def format_title_search(t):
     try:
