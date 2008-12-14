@@ -18,7 +18,7 @@ class Globals(object):
         variable
         """
 
-        self.p = QueuePool(self.get_mpd_conn, max_overflow=10, pool_size=5, use_threadlocal=True)
+        self.p = QueuePool(self.get_mpd_conn, max_overflow=10, pool_size=2, use_threadlocal=True)
         self.tc = TConfig()
         self.get_genres()
         pass
@@ -26,21 +26,23 @@ class Globals(object):
     def get_genres(self):
         """ load all tracks and create a list of every unique genre in the database"""
         self.genres = []
-        m = self.p.connect()
-        all_tracks = m.listallinfo()
-        
-        for t in all_tracks:
-            if not t.has_key('genre'):
-                continue
 
-            if type(t['genre']) == list:
-                track_genres = t['genre']
-            else:
-                track_genres = [t['genre']]
+        # this won't work before configuration
+        try:
+            m = self.p.connect()
+            all_tracks = m.listallinfo()
+            
+            for t in all_tracks:
+                if not t.has_key('genre'):
+                    continue
 
-            for genre in track_genres:
-                if genre not in self.genres:
-                    self.genres.append(genre)
+                if type(t['genre']) == list:
+                    track_genres = t['genre']
+                else:
+                    track_genres = [t['genre']]
 
-
-
+                for genre in track_genres:
+                    if genre not in self.genres:
+                        self.genres.append(genre)
+        except:
+            pass
