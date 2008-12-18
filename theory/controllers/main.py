@@ -150,12 +150,15 @@ class MainController(BaseController):
         if fields['action'] == 'save config':
             reloadframes = 'true'
             reloadpage = 'false'
+
+            for k in fields.keys():
+                setattr(g.tc,k,fields[k])
+
             try:
                 if g.tc.timeout != bool(fields['timeout']):
                     reloadpage = 'true'
-
-                g.tc.update_config(fields['server'],fields['port'],fields['password'],
-                                   fields['webpassword'],fields['timeout'],fields['awskey'])
+               
+                g.tc.commit_config()
             except:
                 redirect_to('/config?error=1&type=save')
 
@@ -201,15 +204,16 @@ class MainController(BaseController):
         return render('/fullscreen.html')
 
     def randomizer(self):
-        c.exclude_genres = request.GET.getall('genres') 
-        c.exclude_live = request.GET.get('excludelive',1)
+        action = request.GET.get('action','')
+        c.incex = request.GET.get('incex','exclude')
+        c.selected_genres = request.GET.getall('genres') 
+        c.exclude_live = request.GET.get('excludelive',not bool(len(action)))
         c.quantity = int(request.GET.get('quantity',50))
-        action = request.GET.get('action',None)
         c.genres = sorted(g.genres)
 
         if action:
             m = g.p.connect()
-            c.random_tracks = m.get_random_tracks(c.exclude_genres,c.exclude_live,c.quantity)
+            c.random_tracks = m.get_random_tracks(c.incex,c.selected_genres,c.exclude_live,c.quantity)
         return render('/randomizer.html')
 
     def add_random(self):
@@ -218,7 +222,8 @@ class MainController(BaseController):
         for f in files:
             m.add(f.encode('utf-8'))
 
-        redirect_to('/null.html')
+        c.content = '<script language="javascript">window.parent.frames[\'frmplaylist\'].location.reload();</script>'
+        return render('/null.html')
 
     def search(self):
         searchtype = request.POST.get('searchtype','Artist')
@@ -229,3 +234,56 @@ class MainController(BaseController):
             c.results = m.search(searchtype,q)
 
         return render('/search.html')
+
+    def streams(self,use_htmlfill=True,**kwargs):
+        c.error = request.GET.get('error','')
+        c.streams = g.tc.streams
+
+        if use_htmlfill:
+            return formencode.htmlfill.render(render("/streams.html"),{'name':kwargs.get('name',''),
+                                                                       'url':kwargs.get('url','')})
+        else:
+            return render("/streams.html")
+        return render('/streams.html')
+
+    def savestream(self):
+        """ controller to save a stream """
+        try:
+            fields = validate_custom(form.StreamForm())
+        except formencode.api.Invalid, e:
+            return form.htmlfill(self.streams(use_htmlfill=False),  e)
+
+        try:
+            if fields['oldname']:
+                index = self._find_stream_index(g.tc.streams,fields['oldname'])
+
+                if index > -1:
+                    del g.tc.streams[index]
+                
+            g.tc.streams.append([fields['name'],fields['url']])
+            g.tc.commit_config()
+        except:
+            redirect_to('/streams?error=1&type=save')
+        
+        redirect_to('/streams')
+
+    def _find_stream_index(self,streams,name):
+        for iter,s in enumerate(streams):
+            if s[0] == name:
+                return iter
+
+        return -1
+
+    def deletestream(self):
+        delete = request.GET.get('delete','')
+
+        if delete:
+            index = self._find_stream_index(g.tc.streams,delete)
+            if index > -1:
+                del g.tc.streams[index]
+                try:
+                    g.tc.commit_config()
+                except:
+                    redirect_to('/streams?error=1&type=save')
+
+        redirect_to('/streams')

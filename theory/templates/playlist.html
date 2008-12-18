@@ -76,19 +76,42 @@
 			window.parent.$('#playlistid').val(${c.playlistid});
             window.parent.getStatus();
 
-            $('#widget-addurl img').hover(function(){ $('#widget-tooltip').html('add URL')},
-                                          function(){ $('#widget-tooltip').html('') }
-                                         );
-            $('#widget-clear img').hover(function(){ $('#widget-tooltip').html('clear playlist')},
-                                          function(){ $('#widget-tooltip').html('') }
-                                         );
-            $('#widget-trim img').hover(function(){ $('#widget-tooltip').html('trim playlist')},
-                                          function(){ $('#widget-tooltip').html('') }
-                                         );
-            $('#widget-shuffle img').hover(function(){ $('#widget-tooltip').html('shuffle playlist')},
-                                          function(){ $('#widget-tooltip').html('') }
-                                         );
+            $('#widget-addurl img').hover(function(){ 
+                                            $('#widget-tooltip').html('add URL');
+                                            $(this).css('opacity',1);
+                                          },
+                                          function(){ 
+                                            $('#widget-tooltip').html('');
+                                            $(this).css('opacity','0.6');
+                                         });
+            $('#widget-clear img').hover(function(){ 
+                                            $('#widget-tooltip').html('clear playlist');
+                                            $(this).css('opacity',1);
+                                          },
+                                          function(){ 
+                                            $('#widget-tooltip').html('');
+                                            $(this).css('opacity','0.6');
+                                         });
+            $('#widget-trim img').hover(function(){ 
+                                            $('#widget-tooltip').html('trim playlist');
+                                            $(this).css('opacity',1);
+                                          },
+                                          function(){ 
+                                            $('#widget-tooltip').html('');
+                                            $(this).css('opacity','0.6');
+                                         });
+            $('#widget-shuffle img').hover(function(){ 
+                                            $('#widget-tooltip').html('shuffle playlist');
+                                            $(this).css('opacity',1);
+                                          },
+                                          function(){ 
+                                            $('#widget-tooltip').html('');
+                                            $(this).css('opacity','0.6');
+                                         });
 
+			$('ul#playlist li a img').hover(function() {$(this).css('opacity','1.0')},
+											function() {$(this).css('opacity','0.6')});
+												
          }
     );
 </script>
@@ -154,7 +177,14 @@
                 if t.has_key('artist') and t.has_key('title'):
                     display_title = "%s - %s" % (t['artist'],t['title'])
                 else:
-                    display_title = t['file']
+                    if t['file'].lower().startswith('http://') or t['file'].lower().startswith('https://'):
+                        stream_name = g.tc.get_stream_name(t['file'])
+                        if stream_name:
+                            display_title = "%s (stream)" % stream_name 
+                        else:
+                            display_title = t['file']
+                    else:
+                        display_title = t['file']
             %>
             <li id="track_${t['id']}:${t['pos']}">
                 <a onclick="removeTrack(this,${t['id']})" title="remove this track"><img src="/img/remove.png" /></a>

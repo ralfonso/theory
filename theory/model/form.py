@@ -16,6 +16,13 @@ class ConfigForm(formencode.Schema):
     timeout = formencode.validators.Bool()
     awskey = formencode.validators.String(strip=True,not_empty=False,if_missing=None)
 
+class StreamForm(formencode.Schema):
+    allow_extra_fields = False
+    
+    name = formencode.validators.String(not_empty=True,messages={'empty':'please enter a name for this stream'})
+    url = formencode.validators.URL(not_empty=True,require_tld=False,check_exists=False,messages={'empty':'please enter a URL'})
+    oldname = formencode.validators.String(not_empty=False)
+                                                             
 class State(object):
     """Trivial class to be used as State objects to transport information to formencode validators"""
     def __init__(self, **kw):

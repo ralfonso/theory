@@ -62,7 +62,7 @@ class mpdhelper(object):
         albums.sort(lambda x,y: cmp(x.lower(),y.lower()))
         return albums
 
-    def get_random_tracks(self,exclude_genres,exclude_live,quantity):
+    def get_random_tracks(self,incex,selected_genres,exclude_live,quantity):
         all_tracks = self.listallinfo()
 
         selected_tracks = []
@@ -79,6 +79,8 @@ class mpdhelper(object):
                 exc_re = re.compile('.*((\d{2}|\d{4})[-\/]\d{1,2}[-\/]\d{1,2}|\d{2}[-\/]\d{1,2}[-\/](\d{1,2}|\d{4}))')
 
             while True:
+                # this loop keeps running until a valid track (based on the parameters) is found
+
                 tracknum = len(all_tracks)
                 try:
                     track = all_tracks.pop(random.randrange(tracknum))
@@ -92,18 +94,23 @@ class mpdhelper(object):
                             skipped_live += 1
                             continue
 
-                    genre = track.get('genre',None)
-                    if genre: 
-                        if type(genre) != list:
-                            genre = [genre]
-                        
-                        for ge in genre:    
-                            if ge in exclude_genres:
-                                skipped_genre += 1
+                    track_genres = track.get('genre',None)
+                    if track_genres: 
+                        if type(track_genres) != list:
+                            track_genres = [track_genres]
+                       
+                        if self._comparegenres(track_genres,selected_genres):
+                            if incex == 'exclude':
                                 continue
+                        elif incex == 'include':
+                            continue
+
                         break
                     else:
-                        break
+                        if incex == 'include':
+                            continue
+                        else:
+                            break
                 else:
                     skipped_not_file += 1
 
@@ -115,6 +122,14 @@ class mpdhelper(object):
         log.debug("randomizer: skipped live: %d / skipped genre: %d / skipped not file: %d" % (skipped_live,skipped_genre,skipped_not_file))
         log.debug("randomizer: sel: %d/%d left: %d" % (len(selected_tracks),quantity,len(all_tracks)))
         return selected_tracks
+
+
+    def _comparegenres(self,tracklist,selectedlist):
+        for t in tracklist:
+            if t in selectedlist:
+                return True
+
+        return False
 
     def _sorttrackno(self,x,y):
         xt = x['track']

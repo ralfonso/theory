@@ -1,14 +1,21 @@
 <%inherit file="body.html"/>
 <script language="javascript">
-% if c.random_tracks:
     $(document).ready(function() {
-                        $('#randomoptions').hide();
+                        % if c.random_tracks:
+                            $('#randomoptions').hide();
+                        % endif
 
                         $('span.songtitle').click(function() {
                                                     $(this).parent().children('input[type=checkbox]').attr('checked',!$(this).parent().children('input[type=checkbox]').attr('checked'));
                                                  });
+
+                        $('#action').click(function() {
+                                            if ($('#incex').val() == 'include' && !$('#genres').val()) {
+                                                alert('"Include Genres" selected.  Please select at least one genre to include in the randomization');
+                                                return false;
+                                            }
+                                          });
                       });
-% endif
 </script>
 <style>
     body {
@@ -31,8 +38,11 @@
         <td class="label" valign="top" rowspan="2">
             % if len(c.genres) > 0:
             <fieldset>
-                <legend for="genres">exclude genres</legend>
-                ${h.html.tags.select('genres',c.exclude_genres,c.genres,size=6,multiple=True)}
+                <legend for="genres">
+                    ${h.html.tags.select('incex',c.incex,['exclude','include'],id='incex')}
+                    genres
+                </legend>
+                ${h.html.tags.select('genres',c.selected_genres,c.genres,size=6,multiple=True,id='genres')}
             </fieldset>
             % endif
         </td>
@@ -47,7 +57,7 @@
         <td>
            ${h.html.tags.checkbox('excludelive',1,checked=c.exclude_live)}
             attempt to exclude live recordings<br />
-            <input type="submit" value="randomize!" class="orange" name="action" /></td>
+            <input type="submit" value="randomize!" class="orange" name="action" id="action" /></td>
     </tr>
 </table>
 </form>
@@ -65,7 +75,7 @@
     % for t in c.random_tracks:
         <%
             if t.has_key('artist') and t.has_key('album') and t.has_key('title'):
-                display_title = "%s - %s - %s" % (t['artist'],t['album'],t['title'])
+                display_title = "%s - %s - %s (%s)" % (t['artist'],t['album'],t['title'],t.get('genre',''))
             else:
                 display_title = t['file']
         %>

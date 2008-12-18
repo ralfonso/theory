@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import ConfigParser 
+import pickle
 from pylons import config
 from pylons import app_globals as g
 
@@ -27,52 +28,64 @@ class TConfig:
     also handles committing the configuration to disk to maintain across app restarts
     """
 
-    server = None
-    port = None
-    password = None
-    webpassword = ''
-    timeout = False
-    awskey = None
+
 
     def __init__(self):
         """ try to read the configuration from disk """
+        self.server = None
+        self.port = None
+        self.password = None
+        self.webpassword = ''
+        self.timeout = False
+        self.awskey = None
+        self.streams = []
 
         conf = ConfigParser.ConfigParser()
-     	conf.read(config['localconf'])
+        conf.read(config['localconf'])
+
         try:
             self.server = conf.get('mpd','server')
             self.port = conf.get('mpd','port')
             self.awskey = conf.get('services','awskey')
             self.password = conf.get('mpd','password')
             self.webpassword = conf.get('main','webpassword')
-            self.timeout = conf.get('main','timeout',False)
-
+            self.timeout = conf.getboolean('main','timeout')
+            conf_stream = conf.get('ext','streams')
         except (ConfigParser.NoSectionError,ConfigParser.NoOptionError):
             pass
 
-    def update_config(self,server,port,password,webpassword,timeout,awskey): 
+        try:
+            self.streams = pickle.loads(eval(conf_stream))
+        except:
+            # we don't really care what happened, the user must have messed with the magic pickled string :)
+            pass
+
+
+
+    def commit_config(self):
         """ commit the configuration to disk """
 
         conf = ConfigParser.ConfigParser()
         conf.add_section("mpd")
-        conf.set("mpd", "server",server)
-        conf.set("mpd", "port",port)
-        conf.set("mpd", "password",password)
+        conf.set("mpd", "server",self.server)
+        conf.set("mpd", "port",self.port)
+        conf.set("mpd", "password",self.password)
         conf.add_section("services")
-        conf.set('services','awskey',awskey)
+        conf.set('services','awskey',self.awskey)
         conf.add_section('main')
-        conf.set('main','webpassword',webpassword)
-        conf.set('main','timeout',bool(timeout))
+        conf.set('main','webpassword',self.webpassword)
+        conf.set('main','timeout',self.timeout)
+        conf.add_section('ext')
+        conf.set('ext','streams',repr(pickle.dumps(self.streams)))
 
         try:
             conffile = open(config['localconf'],"w")
             conf.write(conffile)
         except IOError,e:
-            raise ConfigFileError
+            raise ConfigFileErro
+                
 
-        self.server = server
-        self.port = port
-        self.password = password
-        self.webpassword = webpassword
-        self.timeout = bool(timeout)
-        self.awskey = awskey
+    def get_stream_name(self,url):
+        for s in self.streams:
+            if s[1] == url:
+                return s[0]

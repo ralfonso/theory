@@ -32,15 +32,8 @@ function getStatus() {
             $('#vol').show();
 
             if ($('#playlistid').val() != data.status.playlist) {
+                // don't refresh the playlist if the user just removed a track. wait until next time. 
                 if (window.trackremoved) {
-                    // this is kind of hacky.  don't refresh the playlist if a track has been removed
-                    // and the playlist has only been updated twice. It's trying to detect whether the 
-                    // change is actually just the user removing tracks from their own playlist.  two
-                    // is a reasonably max to click in 7.5 seconds
-                    
-                    if (data.status.playlist - $('#playlistid').val() > 2)
-                        $('#frmplaylist').attr('src','/playlist')
-
                     window.trackremoved = false;
                 }
                 else {
@@ -353,7 +346,7 @@ function initConfig() {
     var arrPageSizes = getPageSize(); // from jquery-lightbox
     $('#dark-overlay').css({
         width:				arrPageSizes[2],
-        height:				arrPageSizes[3] + 100
+        height:				arrPageSizes[3]
     }).fadeIn();
     $('#config').show();
 }
@@ -520,4 +513,10 @@ function getURL() {
     if (url) {
         addToPlaylist(url);
     }
+}
+
+function editStream(name,url) {
+    $('#oldname').val(name);
+    $('#name').val(name);
+    $('#url').val(url);
 }

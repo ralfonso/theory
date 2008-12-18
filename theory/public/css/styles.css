@@ -13,6 +13,10 @@ input.red { background-color:red;color:white; }
 input.green { background-color:limegreen;color:white }
 input.grey { background-color:#ededed; }
 
+input.smaller {
+    font-size:.9em;
+}
+
 img {
     border:none;
 }
@@ -204,6 +208,10 @@ ul#playlist li a {
 	cursor:pointer;
 }
 
+ul#playlist li a img {
+	opacity:0.6;
+}
+
 #albumart {
     border:1px solid black;
     float:right;
@@ -375,6 +383,10 @@ a#aWiki,a#aLyrics {
     color:white;
 }
 
+#playlist-clear a img {
+    opacity:.6;
+}
+
 div#widget-tooltip {
     width:100%;
     background:transparent url('/img/libg.png');
@@ -410,4 +422,6 @@ div#widget-tooltip {
     cursor:pointer;
 }
 
-
+div.padded-content {
+    margin:20px;
+}

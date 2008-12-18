@@ -1,0 +1,72 @@
+<%inherit file="body.html"/>
+<script language="javascript">
+    $(document).ready(
+        function() {
+            $('#list li:odd a').addClass('oddrow');
+            $('#list li:even a').addClass('evenrow');
+        }
+    );
+</script>
+<style>
+    body {
+        background-color:#eee;
+        margin:0;
+        margin-top:20px;
+    }
+
+    #list li input {
+        padding:0;
+        margin:0;
+    }
+
+    #list li span {
+        cursor:pointer;
+    }
+
+    .error-message {
+        background-color:red;
+        color:white;
+    }
+</style>
+
+% if len(c.streams) == 0:
+    <div style="margin:20px">no stored streams found</div>
+% endif
+
+    <ul id="list">
+    % for s in c.streams:
+        <li><a href="/deletestream?delete=${s[0]}" title="delete stream" onclick="return confirm('Are you sure you want to delete this stream?')"><img src="/img/remove.png" style="float:left" /></a><a onclick="editStream('${s[0].replace("'","\\'")}','${s[1].replace("'","\\'")}')" title="edit this stream's details" style="float:left;margin-right:5px"><img src="/img/link_edit.png" /></a> <a onclick="addToPlaylist('${h.html.url_escape(s[1])}')" title="add this stream to the playlist" style="margin-left:30px"><img src="/img/add.png" /> ${s[0]} - ${s[1]}</a></li> 
+    % endfor
+    </ul>
+
+<div class="padded-content">
+    <a name="form"></a>
+    <h3>add a stream</h3>
+    <hr />
+
+    <form:error name="name">
+    <form:error name="url">
+    <form action="/savestream#form" method="post">
+    ${h.html.tags.hidden('oldname','',id='oldname')}
+        <table cellspacing=0 cellpadding=0>
+            <tr>
+                <td class="label">
+                    name:</td>
+                <td>
+                    ${h.html.tags.text('name','',id='name')}</td>
+            </tr>
+            <tr>
+                <td class="label">
+                    stream URL:</td>
+                <td>
+                    ${h.html.tags.text('url','',size=50,class_='smaller',id='url')}<br />
+                    (the actual stream URL, not the URL of the PLS file)
+                 </td>
+            </tr>
+            <tr>
+                <td class="label" colspan="2">
+                    <input type="submit" value="save stream" class="green" /></td>
+            </tr>
+        </table>
+    </form>
+</div>

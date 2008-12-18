@@ -184,6 +184,9 @@ class MpdcontrolController(BaseController):
         current = m.status()
         playlist = m.playlistinfo()
 
+        if not current.has_key('songid'):
+            return
+
         if len(playlist) == 0:
             return
 

@@ -105,7 +105,7 @@
     window.sliding = false;
 	window.statusloads = 0;
     window.trackremoved = false;
-    % if g.tc.timeout == False:
+    % if g.tc.timeout is False:
         ## hack to make sure statusloads never goes over the limit when the timeout is disabled
         window.setInterval('window.statusloads = 0','20000');
     % endif
