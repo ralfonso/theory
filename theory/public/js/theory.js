@@ -519,4 +519,7 @@ function editStream(name,url) {
     $('#oldname').val(name);
     $('#name').val(name);
     $('#url').val(url);
+
+    $('#addtitle').html('edit stream');
+    window.location.hash = 'form';
 }

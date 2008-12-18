@@ -4,8 +4,25 @@
         function() {
             $('#list li:odd a').addClass('oddrow');
             $('#list li:even a').addClass('evenrow');
+
+			checkSize()
+
+			$('#addstream a').click(function() {
+										document.location.hash  = 'form';
+								   });
         }
     );
+
+	$(window).resize(function(){checkSize();});
+
+	function checkSize() {
+		var ih = window.innerHeight
+		var div = $('div.padded-content')
+		if (ih - div.attr('offsetTop') < div.attr('offsetHeight'))
+			$('#addstream').show();
+		else
+			$('#addstream').hide();
+	}
 </script>
 <style>
     body {
@@ -24,14 +41,29 @@
     }
 
     .error-message {
-        background-color:red;
-        color:white;
+        color:black;
+		font-weight:bold;
     }
+
+	.error-message:before {
+		color:red;
+		content:'* ';
+	}
+
+	#addstream {
+		margin:10px 10px;
+		display:none;
+		text-decoration:underline;
+		cursor:pointer;
+		color:steelblue;
+	}
 </style>
 
 % if len(c.streams) == 0:
     <div style="margin:20px">no stored streams found</div>
 % endif
+
+	<div id="addstream"><a>add stream</a></div>
 
     <ul id="list">
     % for s in c.streams:
@@ -41,11 +73,12 @@
 
 <div class="padded-content">
     <a name="form"></a>
-    <h3>add a stream</h3>
+    <h3 id="addtitle">add a stream</h3>
     <hr />
 
     <form:error name="name">
     <form:error name="url">
+    <form:error name="stream_name_taken">
     <form action="/savestream#form" method="post">
     ${h.html.tags.hidden('oldname','',id='oldname')}
         <table cellspacing=0 cellpadding=0>

@@ -1,5 +1,6 @@
 import formencode 
 import pylons
+from pylons import app_globals as g
 
 class ConfigForm(formencode.Schema):
     allow_extra_fields = False
@@ -16,13 +17,22 @@ class ConfigForm(formencode.Schema):
     timeout = formencode.validators.Bool()
     awskey = formencode.validators.String(strip=True,not_empty=False,if_missing=None)
 
+class StreamNameInUse(formencode.validators.FancyValidator):
+    def validate_python(self, values, state):
+        if values['name'] in [name[0] for name in g.tc.streams]:
+            raise formencode.Invalid({'stream_name_taken':"that stream name has already been used"}, values, state)
+
+
 class StreamForm(formencode.Schema):
     allow_extra_fields = False
     
     name = formencode.validators.String(not_empty=True,messages={'empty':'please enter a name for this stream'})
     url = formencode.validators.URL(not_empty=True,require_tld=False,check_exists=False,messages={'empty':'please enter a URL'})
     oldname = formencode.validators.String(not_empty=False)
+
+    chained_validators = [StreamNameInUse()]
                                                              
+
 class State(object):
     """Trivial class to be used as State objects to transport information to formencode validators"""
     def __init__(self, **kw):

@@ -1,3 +1,10 @@
+0.1.4
+	added randomizer
+	added search
+	fixed playlist trim bug
+	added streams
+	changed playlist controls to icons instead of text
+
 0.1.3
 	changed start script to add start|stop options
 	added Apache-compatible CLF logging
