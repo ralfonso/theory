@@ -19,6 +19,10 @@ class ConfigForm(formencode.Schema):
 
 class StreamNameInUse(formencode.validators.FancyValidator):
     def validate_python(self, values, state):
+        # if old name is set, don't do this check
+        if values['oldname']:
+            return
+
         if values['name'] in [name[0] for name in g.tc.streams]:
             raise formencode.Invalid({'stream_name_taken':"that stream name has already been used"}, values, state)
 
@@ -26,8 +30,8 @@ class StreamNameInUse(formencode.validators.FancyValidator):
 class StreamForm(formencode.Schema):
     allow_extra_fields = False
     
-    name = formencode.validators.String(not_empty=True,messages={'empty':'please enter a name for this stream'})
-    url = formencode.validators.URL(not_empty=True,require_tld=False,check_exists=False,messages={'empty':'please enter a URL'})
+    name = formencode.validators.String(not_empty=True,strip=True,messages={'empty':'please enter a name for this stream'})
+    url = formencode.validators.URL(not_empty=True,require_tld=False,strip=True,check_exists=False,messages={'empty':'please enter a URL'})
     oldname = formencode.validators.String(not_empty=False)
 
     chained_validators = [StreamNameInUse()]

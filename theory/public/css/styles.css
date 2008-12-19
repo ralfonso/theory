@@ -39,6 +39,18 @@ img.control {
     cursor:pointer;
 }
 
+#theory {
+    position:absolute;
+    top:10px;
+    right:11px;
+}
+
+#theory a {
+    color:#717171;
+    font-weight:bold;
+    font-size:120%;
+}
+
 span.blackbox {
     background-color:black;
     color:white;

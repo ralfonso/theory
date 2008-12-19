@@ -28,8 +28,6 @@ class TConfig:
     also handles committing the configuration to disk to maintain across app restarts
     """
 
-
-
     def __init__(self):
         """ try to read the configuration from disk """
         self.server = None
@@ -86,6 +84,8 @@ class TConfig:
                 
 
     def get_stream_name(self,url):
+        """ search the list of streams for a particular name """
+
         for s in self.streams:
             if s[1] == url:
                 return s[0]

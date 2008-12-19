@@ -227,7 +227,7 @@ class MainController(BaseController):
 
     def search(self):
         searchtype = request.POST.get('searchtype','Artist')
-        q = request.POST.get('q')
+        q = request.POST.get('q').encode('utf-8')
 
         if q:
             m = g.p.connect()

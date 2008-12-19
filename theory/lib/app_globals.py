@@ -3,6 +3,7 @@
 from theory.model.mpdhelper import *
 from theory.model.mpdpool import QueuePool
 from theory.model.tconfig import TConfig
+from pylons import config
 
 class Globals(object):
     """Globals acts as a container for objects available throughout the
@@ -21,6 +22,7 @@ class Globals(object):
         self.p = QueuePool(self.get_mpd_conn, max_overflow=10, pool_size=2, use_threadlocal=True)
         self.tc = TConfig()
         self.get_genres()
+        self.version = config.get('version','')
         pass
 
     def get_genres(self):
