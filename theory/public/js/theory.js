@@ -4,20 +4,26 @@ function debug(v) {
 }
 
 function getStatus() {
+    // this function is a mess
+
     if (window.sliding == true)
         return;
 
 	window.statusloads++;
-
-	if (window.statusloads > 80)
+    
+    // if this is enabled in the config, stop refreshing the main page after twenty minutes of not seeing the mouse cursor
+	if (window.statusloads > 160)
 		return;
 
     if (!(window.frames['frmplaylist']))
         return;
 
 	debug('loading status (' + window.statusloads + ')');
+
+    // load the status data from the server
     $.getJSON('/mpdcontrol/status',
         function(data) {
+            // change the icon displayed on the controls
             if (data.status.state == 'play') {
                 $('#imgPlay').attr('src','../img/pause.png');
             }
@@ -26,11 +32,9 @@ function getStatus() {
             }
 
 
-            if ($('#vol').html() != data.status.volume)
-                $('#volume-slider').slider('moveTo',data.status.volume);
-            $('#vol').html(data.status.volume);
-            $('#vol').show();
 
+
+            // check to see if the playlist was updated
             if ($('#playlistid').val() != data.status.playlist) {
                 // don't refresh the playlist if the user just removed a track. wait until next time. 
                 if (window.trackremoved) {
@@ -42,7 +46,6 @@ function getStatus() {
                 
                 $('#playlistid').val(data.status.playlist);
             }
-
 
             if (data.status.time) {
                 var time = data.status.time.split(':');
@@ -58,25 +61,25 @@ function getStatus() {
                 var totalseconds = 0;
             }
 
+            window.ignorepositionslide = true;
+            $('#position-slider').slider('moveTo',currentseconds);
+
+            // did someone change the volume?! 
+            if ($('#vol').html() != data.status.volume) {
+                window.ignorevolumeslide = true;
+                $('#volume-slider').slider('moveTo',data.status.volume);
+            }
+
+            $('#vol').html(data.status.volume);
+            $('#vol').show();
+
             (data.status.repeat == 1) ? $('#repeat').addClass('enabled') : $('#repeat').removeClass('enabled');
             (data.status.random  == 1) ? $('#random').addClass('enabled') : $('#random').removeClass('enabled');
 
-            $('#position-slider').slider("destroy");
+            // destroy / recreate the position slider.  This is ugly, but jquery-ui doesn't seem to provide an 
+            // easy way to alter an existing slider
 
-            $('#position-slider').slider(
-                {
-                    'min'       : 0,
-                    'max'       : totalseconds,
-                    'startValue': currentseconds,
-                    'start':    function() {
-                                    window.sliding = true;   
-                                },
-                    'change'    : function(e,ui) {
-                                    seek($('#currentid').val(),ui.value);
-                                    window.sliding = false;
-                                  }
-                }
-            );
+
 
             var currenttime = formatTime(currentseconds);
             var totaltime = formatTime(totalseconds);
@@ -85,6 +88,29 @@ function getStatus() {
             $('#time').show();
 
             if ((data.track.title != $('#currenttitle').val() || $('#title').html() == 'not playing')) {
+                // track updated
+
+                if (data.status.state == 'play') {
+                    $('#position-slider').slider("destroy");
+                    $('#position-slider').slider(
+                        {
+                            'min'       : 0,
+                            'max'       : totalseconds,
+                            'startValue': currentseconds,
+                            'start':    function() {
+                                            window.sliding = true;   
+                                        },
+                            'change'    : function(e,ui) {
+                                            seek($('#currentid').val(),ui.value);
+                                            window.sliding = false;
+                                          }
+                        }
+                    );
+                }
+                else {
+                    $('#position-slider').slider("destroy");
+                }
+
                 $('#currentartist').val(data.track.artist)
                 $('#currenttitle').val(data.track.title);
 
@@ -184,11 +210,20 @@ function jump(v) {
 }
 
 function setVolume(val) {
-    $.get('/mpdcontrol/setvolume/' + val);
+    // check to see if the slider was simply updated by status() if so, don't update MPD
+
+    if (!window.ignorevolumeslide)
+        $.get('/mpdcontrol/setvolume/' + val);
+
+    window.ignorevolumeslide = false;
 }
 
 function seek(id,pos) {
-    $.get('/mpdcontrol/seek/' + id + '/' + pos);
+    // check to see if the slider was simply updated by status() if so, don't update MPD
+
+    if (!window.ignorepositionslide)
+        $.get('/mpdcontrol/seek/' + id + '/' + pos);
+    window.ignorepositionslide = false;
 }   
 
 function formatTime(seconds)

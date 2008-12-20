@@ -109,6 +109,10 @@
         ## hack to make sure statusloads never goes over the limit when the timeout is disabled
         window.setInterval('window.statusloads = 0','20000');
     % endif
+
+	// I can't figure out how to get jquery-ui sliders to not fire their change() event when moveTo is used
+	window.ignorepositionslide = false;
+	window.ignorevolumeslide = false;
 </script>
 
 <style>
