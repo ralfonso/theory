@@ -29,12 +29,13 @@
     <ul id="list">
         % for a in c.albums:
 			<%
-				if a == c.album:
+				album_utf8 = a.decode('utf-8')
+				if album_utf8 == c.album:
 					addclass = 'class=activerow'
 				else:
 					addclass = ''
 			%>
-            <li><a onclick="window.parent.addAlbum('${c.artist.replace("'","\\'")}','${a.replace("'","\\'")}')"><img src="/img/add.png" title="queue entire album" style="float:left;margin-right:5px;" /></a><a ${addclass} onclick="albumTracks('${c.artist.replace("'","\\'")}','${a.replace("'","\\'")}')">${a}</a></li>
+            <li><a onclick="window.parent.addAlbum('${c.artist.replace("'","\\'")}','${album_utf8.replace("'","\\'")}')"><img src="/img/add.png" title="queue entire album" style="float:left;margin-right:5px;" /></a><a ${addclass} onclick="albumTracks('${c.artist.replace("'","\\'")}','${album_utf8.replace("'","\\'")}')">${album_utf8}</a></li>
         % endfor
     </ul>
 </div>

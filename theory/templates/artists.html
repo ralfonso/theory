@@ -1,3 +1,4 @@
+## vim: set tabstop=4: set shiftwidth=4: set expandtab
 <%inherit file="body.html"/>
 <script language="javascript">
     $(document).ready(
@@ -22,16 +23,17 @@
 
         % for a in c.artists:
             <%
-                if a.startswith(('The ','THE ','the ')):
-                    firstchar = a[4].lower() 
-                else:
-                    firstchar = a[0].lower()
+				fixed_artist = a.decode('utf-8')
+				if a.startswith(('The ','THE ','the ')):
+					firstchar = fixed_artist[4].lower()
+				else:
+					firstchar = fixed_artist[0].lower()
             %>  
             <li>
                 % if firstchar != lastlead:
                     <a name="jump${firstchar}"></a>
                 % endif
-                <a onclick="artistAlbums('${a.replace("'","\\'").decode('utf-8')}')">${a}</a>
+                <a onclick="artistAlbums('${fixed_artist.replace("'","\\'")}')">${fixed_artist}</a>
             </li>
             <% lastlead = firstchar %>
         % endfor

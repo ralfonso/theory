@@ -31,9 +31,6 @@ function getStatus() {
                 $('#imgPlay').attr('src','../img/play.png');
             }
 
-
-
-
             // check to see if the playlist was updated
             if ($('#playlistid').val() != data.status.playlist) {
                 // don't refresh the playlist if the user just removed a track. wait until next time. 
@@ -69,16 +66,12 @@ function getStatus() {
                 window.ignorevolumeslide = true;
                 $('#volume-slider').slider('moveTo',data.status.volume);
             }
-
             $('#vol').html(data.status.volume);
             $('#vol').show();
 
+			// set the buttons' state
             (data.status.repeat == 1) ? $('#repeat').addClass('enabled') : $('#repeat').removeClass('enabled');
             (data.status.random  == 1) ? $('#random').addClass('enabled') : $('#random').removeClass('enabled');
-
-            // destroy / recreate the position slider.  This is ugly, but jquery-ui doesn't seem to provide an 
-            // easy way to alter an existing slider
-
 
 
             var currenttime = formatTime(currentseconds);
@@ -87,63 +80,73 @@ function getStatus() {
             $('#time').html(currenttime + ' / ' + totaltime);
             $('#time').show();
 
-            if ((data.track.title != $('#currenttitle').val() || $('#title').html() == 'not playing')) {
-                // track updated
+			if (data.status.state == 'play') {
+				if (data.track.title != $('#currenttitle').val()) {
+					// track updated
 
-                if (data.status.state == 'play') {
-                    $('#position-slider').slider("destroy");
-                    $('#position-slider').slider(
-                        {
-                            'min'       : 0,
-                            'max'       : totalseconds,
-                            'startValue': currentseconds,
-                            'start':    function() {
-                                            window.sliding = true;   
-                                        },
-                            'change'    : function(e,ui) {
-                                            seek($('#currentid').val(),ui.value);
-                                            window.sliding = false;
-                                          }
-                        }
-                    );
-                }
-                else {
-                    $('#position-slider').slider("destroy");
-                }
+					// create a new slider
+					$('#position-slider').slider("destroy");
+					$('#position-slider').slider(
+						{
+							'min'       : 0,
+							'max'       : totalseconds,
+							'startValue': currentseconds,
+							'start':    function() {
+											window.sliding = true;   
+										},
+							'change'    : function(e,ui) {
+											seek($('#currentid').val(),ui.value);
+											window.sliding = false;
+										  }
+						}
+					);
 
-                $('#currentartist').val(data.track.artist)
-                $('#currenttitle').val(data.track.title);
+					$('#currentartist').val(data.track.artist)
+					$('#currenttitle').val(data.track.title);
 
-                if (data.track.artist && data.track.title)
-                    var title = data.track.artist + ' - ' + data.track.title
-                else if (data.track.name && data.track.title)
-                    var title = data.track.name + ' - ' + data.track.title
-                else if (data.track.file)
-                    var title = data.track.file
+					if (data.track.artist && data.track.title)
+						var title = data.track.artist + ' - ' + data.track.title
+					else if (data.track.name && data.track.title)
+						var title = data.track.name + ' - ' + data.track.title
+					else if (data.track.file)
+						var title = data.track.file
 
-                $('#title').html(title);
-                $('#aWiki').attr('href','http://www.google.com/search?btnI=I\'m+Feeling+Lucky&q=site:en.wikipedia.org%20' + data.track.artist);
-                $('#wiki').show();
-                var arturl = '/fetchart?artist=' + data.track.artist + '&album=' + data.track.album
-                $('#currentartlink').attr('href',arturl)
-                $('#currentart').attr('src',arturl)
-                $('#currentartlink').lightBox();
+					$('#title').html(title);
+					$('#aWiki').attr('href','http://www.google.com/search?btnI=I\'m+Feeling+Lucky&q=site:en.wikipedia.org%20' + data.track.artist);
+					$('#wiki').show();
+					var arturl = '/fetchart?artist=' + data.track.artist + '&album=' + data.track.album
+					$('#currentartlink').attr('href',arturl)
+					$('#currentart').attr('src',arturl)
+					$('#currentartlink').lightBox();
 
-				if (data.track.artist && data.track.title)
-					$(document).attr('title','theory :: ' + data.track.artist + ' - ' + data.track.title)
-				else if ($('#title').html() == 'not playing')
+					if (data.track.artist && data.track.title)
+						$(document).attr('title','theory :: ' + data.track.artist + ' - ' + data.track.title)
+					else if ($('#title').html() == 'not playing')
+						$(document).attr('title','theory :: not playing');
+
+					if ($('#lyrics:visible').length)
+						loadLyrics();
+				}
+				else if (!data.track.title) {
+					$('#currentartist').val('');
+					$('#currenttitle').val('');
+					$('#currentid').val('');
+					$('#title').html(data.track.file);
+					$('#wiki').hide();
+					$('#currentart').attr('src','/img/50trans.gif');
+				}   
+			}
+			else if (data.status.state == 'stop') {
+				if (!data.track.file) {
 					$(document).attr('title','theory :: not playing');
-
-				if ($('#lyrics:visible').length)
-					loadLyrics();
-            }
-            else if (!data.track.title) {
-                $('#currentartist').val('');
-                $('#currenttitle').val('');
-                $('#currentid').val('');
-                $('#title').html('not playing');
-                $('#wiki').hide();
-            }   
+					$('#currentartist').val('');
+					$('#currenttitle').val('');
+					$('#currentid').val('');
+					$('#title').html('not playing');
+					$('#wiki').hide();
+					$('#currentart').attr('src','/img/50trans.gif');
+				}
+			}
 
             if ($('#currentid').val() != data.track.id || $('#playlist li.selectedtrack',window.frames['frmplaylist'].document).length == 0) {
                 $('#currentid').val(data.track.id);
