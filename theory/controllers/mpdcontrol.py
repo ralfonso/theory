@@ -200,3 +200,8 @@ class MpdcontrolController(BaseController):
 
         m.command_list_end()
 
+    def playnext(self,id):
+        m = g.p.connect()
+        current = m.currentsong()
+        m.moveid(id,int(current['pos'])+1)
+

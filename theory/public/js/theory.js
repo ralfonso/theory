@@ -80,7 +80,7 @@ function getStatus() {
             $('#time').html(currenttime + ' / ' + totaltime);
             $('#time').show();
 
-			if (data.status.state == 'play') {
+			if (data.status.state == 'play' || data.status.state == 'pause') {
 				if (data.track.title != $('#currenttitle').val()) {
 					// track updated
 
@@ -153,7 +153,7 @@ function getStatus() {
 
                 // this/ doesn't work on the initial page load because the frame isn't ready
                 setPlaylistColors(window.frames['frmplaylist'].document,true);
-                $('#playlist li[id^=track_' + data.track.id + ']',window.frames['frmplaylist'].document).addClass('selectedtrack');
+                $('#playlist li[id^=track_' + data.track.id + ':]',window.frames['frmplaylist'].document).addClass('selectedtrack');
             }
 
             $('#currentid').val(data.track.id)
@@ -564,4 +564,16 @@ function editStream(name,url) {
 
     $('#addtitle').html('edit stream');
     window.location.hash = 'form';
+}
+
+function playNext(id) {
+    var url = '/mpdcontrol/playnext/' + id;
+    $.ajax({
+            url: url,
+            type: 'GET',
+            cache: false,
+            success: function() {
+                        window.location.reload()
+                     }
+          });
 }

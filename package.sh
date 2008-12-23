@@ -1,6 +1,9 @@
 #!/bin/sh
 SELF=$(cd $(dirname $0); pwd -P)/
-VERSION=0.1.4
+VERSION=0.1.5
+NAME="theory-${VERSION}"
 
 cd "$SELF/.."
-tar jcvf theory-${VERSION}.tar.bz2 --exclude-from=theory/tar_exclude --exclude-vcs theory
+cp -Rp theory "${NAME}"
+tar jcvf "${NAME}.tar.bz2" --exclude-from=theory/tar_exclude --exclude-vcs ${NAME}
+rm -rf "${NAME}"

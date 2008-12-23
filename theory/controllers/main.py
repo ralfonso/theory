@@ -149,15 +149,12 @@ class MainController(BaseController):
 
         if fields['action'] == 'save config':
             reloadframes = 'true'
-            reloadpage = 'false'
+            reloadpage = 'true'
 
             for k in fields.keys():
                 setattr(g.tc,k,fields[k])
 
             try:
-                if g.tc.timeout != bool(fields['timeout']):
-                    reloadpage = 'true'
-               
                 g.tc.commit_config()
             except:
                 redirect_to('/config?error=1&type=save')

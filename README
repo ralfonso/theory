@@ -11,9 +11,9 @@ This is only my third Python project and my second Pylons app.  Suggestions / bu
 my non-Pythonic idioms are all welcome.  Most layout values / colors are in the CSS file theory/public/css/styles.css.  
 I'd like to add support for themes, but you should be able to edit the CSS file if you don't like the color scheme.
 
-theory is Firefox only for now. I have no desire to support IE and I don't have access to any OSX-based browsers.  
+theory is Firefox only for now. I have no desire to support IE and I don't have access to any OSX-based browsers. jquery is cross-browser so Opera should work pretty well, but I haven't tested it. 
 
 known bugs:
-    * the Python-MPD library doesn't properly handle unicode in artist/album queries.  If you have tags that
-      use unicode it's suggested that you simplify them, unfortunately.
     * there is a bug in jquery that will throw an "easing" error occasionally 
+	* unicode support doesn't appear to be completely sorted.  I've fixed the
+	  bugs that are causes by my collection, but there might be some lingerers

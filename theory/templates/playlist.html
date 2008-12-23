@@ -57,13 +57,13 @@
                                               });
                                     });
             $('#playlistname').val('enter playlist name');
-			$('#playlist-hover').hover(function(){
-													clearTimeout(window.t);
-													$('#playlist-hover').css('height','40px');
-													$('#playlist-hover div#label').hide();
-													$('#playlist-controls').fadeIn();
-												 },
-										function(){
+			$('#playlist-hover').click(function() {
+											clearTimeout(window.t);
+											$('#playlist-hover').css('height','40px');
+											$('#playlist-hover div#label').hide();
+											$('#playlist-controls').fadeIn();
+									  });
+			$('#playlist-controls').mouseout(function(){
                                             to = function() { 
                                                     $('#playlist-controls:visible').fadeOut(1000,function(){
                                                                                             $('#playlist-controls:hidden').parent().css('height','15px');
@@ -141,7 +141,7 @@
 </div>
 
 <div id="playlist-hover">
-    <div id="label"><a>mouse here to open the playlist widget</a></div>
+    <div id="label"><a><span style="font-weight:bold">*click*</span> here to open the playlist widget</a></div>
     <div id="playlist-controls" style="display:none">
         <div id="playlist-clear">
             <div style="padding:0px 10px">
@@ -167,7 +167,7 @@
     </div>
 </div>
     
-<div id="container-artists">
+<div id="container-playlist">
     <ul id="playlist">
         % if len(c.playlist) == 0:
             <li>empty playlist</li>
@@ -187,8 +187,7 @@
                         display_title = t['file']
             %>
             <li id="track_${t['id']}:${t['pos']}">
-                <a onclick="removeTrack(this,${t['id']})" title="remove this track"><img src="/img/remove.png" /></a>
-                <a onclick="window.parent.playNow(${t['id']})" title="play this track now"><img src="/img/playnow.png" /></a>
+                <a onclick="removeTrack(this,${t['id']})" title="remove this track" style="padding-right:1px;"><img src="/img/remove.png" /></a><a onclick="window.parent.playNow(${t['id']})" title="play this track now"><img src="/img/playnow.png" /></a>
                 ${display_title}
                 % if t.has_key('artist') and t.has_key('album'):
                 <div class="playlist-tooltip">
@@ -197,10 +196,11 @@
                     <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}','${t['album'].replace("'","\\'")}')">${t['album']}</a>
                     <br />
                     ${h.format_time(t['time'])}
+					&lt;<a onclick="playNext(${t['id']})">play this next</a>&gt;
                 </div>
                 % endif
             </li>
         % endfor
     </ul>
 </div>
-
+<div style="height:40px;clear:both">&nbsp;</div>

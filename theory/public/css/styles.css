@@ -164,6 +164,10 @@ ul#alpha li a {
 #container-artists {
 }
 
+#container-playlist {
+	margin-bottom:40px;
+}
+
 .oddrow {
     background-color:#eeeeee;
 }
@@ -201,7 +205,7 @@ ul#list li a:hover {
 
 ul#playlist {
     clear:none;
-    overflow:hidden;
+    overflow-x:hidden;
     float:left;
     margin-top:16px;
     padding:0;
@@ -263,7 +267,7 @@ div.playlist-tooltip {
     color:white;
     padding:2px 3px;
     position:absolute;
-    font-size:90%;
+    font-size:100%;
     display:none;
 }
 
@@ -357,6 +361,7 @@ a#aWiki,a#aLyrics {
 }
 
 #playlist-hover div#label {
+	cursor:pointer;
     font-size:110%;
     font-weight:bold;
     color:white;
