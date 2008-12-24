@@ -125,6 +125,8 @@ function getStatus() {
 
 					if (data.track.artist && data.track.title)
 						$(document).attr('title','theory :: ' + data.track.artist + ' - ' + data.track.title)
+					else if (data.track.name && data.track.title)
+						$(document).attr('title','theory :: ' + data.track.name + ' - ' + data.track.title)
 					else if ($('#title').html() == 'not playing')
 						$(document).attr('title','theory :: not playing');
 
