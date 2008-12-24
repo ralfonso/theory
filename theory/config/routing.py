@@ -30,6 +30,7 @@ def make_map():
     map.connect('/fullscreen',controller='main',action='fullscreen')
     map.connect('/randomizer',controller='main',action='randomizer')
     map.connect('/add_random',controller='main',action='add_random')
+    map.connect('/filesystem',controller='main',action='filesystem')
     map.connect('/search',controller='main',action='search')
     map.connect('/streams',controller='main',action='streams')
     map.connect('/savestream',controller='main',action='savestream')

@@ -97,7 +97,11 @@ function getStatus() {
 							'change'    : function(e,ui) {
 											seek($('#currentid').val(),ui.value);
 											window.sliding = false;
-										  }
+										  },
+                            'slide'     : function(e,ui) {
+                                            var possec = formatTime(ui.value);
+                                            $('#time').html(possec + ' / ' + totaltime);
+                                          }
 						}
 					);
 

@@ -1,0 +1,47 @@
+<%inherit file="body.html"/>
+<script language="javascript">
+    $(document).ready(
+        function() {
+            $('#list li:even').addClass('evenrow');
+            window.parent.frames['frmtracks'].$('#albumart').parent().lightBox()
+
+            $('#albumart').load(function() {   
+                                    $(this).show();
+                                }).attr('src','/fetchart?artist=${c.artist_safe}&album=${c.album_safe}');
+            }
+    );
+
+                    
+</script>
+
+<style>
+    body {
+        margin:0;
+        padding:0;
+        background-color:#eeeeee;
+        overflow-x:hidden;
+    }
+
+    li a {
+        text-decoration:none;
+    }
+</style>
+<div id="container-tracks">
+	<h2>${c.path}</h2>
+    <ul id="list">
+        % if c.path != '/':
+            <li><a href="/filesystem?path=/"><img src="/img/folder_go.png" /> /</a></li>
+            <li><a href="/filesystem?path=${h.html.url_escape(c.uppath)}"><img src="/img/folder_go.png" /> ..</a></li>
+        % endif
+        % for f in c.lsinfo:
+            % if f.has_key('directory'):
+                <li><a href="/filesystem?path=${h.html.url_escape(f['directory'])}"><img src="/img/folder_go.png" /> ${f['directory'].split('/')[-1]}</a></li>
+            % elif f.has_key('file'):
+                <% 
+                    h.format_title(f)
+                %>
+                <li><a onclick="addToPlaylist('${h.html.url_escape(f['file'])}')"><img src="/img/add.png" /> ${f['formattedtrack']}</a></li>
+            % endif
+        % endfor
+    </ul>
+</div>

@@ -284,3 +284,12 @@ class MainController(BaseController):
                     redirect_to('/streams?error=1&type=save')
 
         redirect_to('/streams')
+ 
+    def filesystem(self):
+        m = g.p.connect()
+        c.path = request.GET.get('path','/').encode('utf-8')
+        c.lsinfo = m.lsinfo(c.path)
+
+        c.uppath = '/'.join(c.path.split('/')[:-1])
+
+        return render('/filesystem.html')
