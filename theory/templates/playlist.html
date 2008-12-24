@@ -63,7 +63,8 @@
 											$('#playlist-hover div#label').hide();
 											$('#playlist-controls').fadeIn();
 									  });
-			$('#playlist-controls').mouseout(function(){
+			$('#playlist-controls').hover(function(){},
+										  function(){
                                             to = function() { 
                                                     $('#playlist-controls:visible').fadeOut(1000,function(){
                                                                                             $('#playlist-controls:hidden').parent().css('height','15px');
