@@ -81,7 +81,7 @@ function getStatus() {
             $('#time').show();
 
 			if (data.status.state == 'play' || data.status.state == 'pause') {
-				if (data.track.title != $('#currenttitle').val()) {
+				if (data.track.id != $('#currentid').val()) {
 					// track updated
 
 					// create a new slider

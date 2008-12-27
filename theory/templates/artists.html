@@ -24,10 +24,14 @@
         % for a in c.artists:
             <%
 				fixed_artist = a.decode('utf-8')
-				if a.startswith(('The ','THE ','the ')):
-					firstchar = fixed_artist[4].lower()
-				else:
-					firstchar = fixed_artist[0].lower()
+
+				try:
+					if a.startswith(('The ','THE ','the ')):
+						firstchar = fixed_artist[4].lower()
+					else:
+						firstchar = fixed_artist[0].lower()
+				except IndexError:
+					firstchar = ''
             %>  
             <li>
                 % if firstchar != lastlead:

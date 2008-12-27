@@ -19,7 +19,7 @@ class Globals(object):
         variable
         """
 
-        self.p = QueuePool(self.get_mpd_conn, max_overflow=10, pool_size=2, use_threadlocal=True)
+        self.p = QueuePool(self.get_mpd_conn, max_overflow=0, pool_size=2, use_threadlocal=True)
         self.tc = TConfig()
         self.get_genres()
         self.version = config.get('version','')
