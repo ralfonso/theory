@@ -515,7 +515,6 @@ function fsStatus() {
                 $('#currenttrack').html(data.current.title);
                 $('#currentartist').html(data.current.artist);
                 $('#currentalbum').html(data.current.album);
-
             }
 
             if (data.status.time) {

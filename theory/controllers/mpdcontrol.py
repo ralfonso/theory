@@ -59,7 +59,6 @@ class MpdcontrolController(BaseController):
         status = m.status()
         current = m.currentsong()
         playlist = m.playlistinfo()
-        next = None
 
         track = 0
         found_current = False
@@ -70,12 +69,11 @@ class MpdcontrolController(BaseController):
                 remaining_playlist.append(pl)
 
             if pl['id'] == current['id']:
-                next = playlist[track+1]
                 found_current = True
            
             track += 1
 
-        return dict(status=status,current=current,playlist=remaining_playlist,next=next)
+        return dict(status=status,current=current,playlist=remaining_playlist)
 
     def setvolume(self,id):
         m = g.p.connect()
