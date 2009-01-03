@@ -6,4 +6,4 @@ then
 	echo "please install the prerequisites by using the included install.sh script"
 	exit
 fi
-"$SELF/env/bin/paster" serve --daemon --reload "$SELF/development.ini"
+"$SELF/env/bin/paster" serve --reload "$SELF/development.ini"

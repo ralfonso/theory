@@ -15,7 +15,8 @@ theory-*/env
 theory-*/theory.ini
 theory-*/development.ini
 theory-*/run-dev.sh
-theory-*/package.sh
+theory-*/scripts/*
+theory-*/scripts
 theory-*/package.py
 theory-*/theory/public/img/art/*
 theory-*/tar_exclude

@@ -25,7 +25,7 @@ from pylons import config
 
 from theory.lib.base import BaseController, render
 from theory.lib import helpers as h
-from theory.model.mpdpool import ConnectionClosed,IncorrectPassword
+from theory.model.mpdpool import ConnectionClosed,IncorrectPassword,ProtocolError
 from theory.model.albumart import AlbumArt,NoArtError
 from theory.model.lyrics import *
 
@@ -43,7 +43,7 @@ class MainController(BaseController):
         
         try:
             g.p.connect()
-        except ConnectionClosed:
+        except (ProtocolError,ConnectionClosed):
             if g.tc.server is None:
                 g.tc = TConfig()
                 if g.tc.server is None:

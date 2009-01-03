@@ -68,8 +68,9 @@ class MpdcontrolController(BaseController):
             if found_current:
                 remaining_playlist.append(pl)
 
-            if pl['id'] == current['id']:
-                found_current = True
+            if current.has_key('id'):
+                if pl['id'] == current['id']:
+                    found_current = True
            
             track += 1
 

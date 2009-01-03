@@ -62,5 +62,5 @@ def make_app(global_conf, full_stack=True, **app_conf):
     # server is handling this static content, remove the following 3 lines)
     static_app = StaticURLParser(config['pylons.paths']['static_files'])
     app = Cascade([static_app, app])
-    #app = TransLogger(app, setup_console_handler=False)
+    app = TransLogger(app, setup_console_handler=False)
     return app

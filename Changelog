@@ -1,3 +1,11 @@
+0.1.6
+	added logo and logo generation script
+	fix for configuring a used, but invalid port
+	fix for fullscreen status when the current track is the last in the playlist
+	fix for song changing to a track with the same title
+	fix for null artist names. MPD bug, bad encoding?
+	moved playlist back to hover() so it detects child hovers properly
+
 0.1.5
 	added basic filesystem browsing
 	getStatus() javascript partial rewrite

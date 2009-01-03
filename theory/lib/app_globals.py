@@ -22,7 +22,6 @@ class Globals(object):
         self.p = QueuePool(self.get_mpd_conn, max_overflow=0, pool_size=2, use_threadlocal=True)
         self.tc = TConfig()
         self.get_genres()
-        self.version = config.get('version','')
         pass
 
     def get_genres(self):
