@@ -19,12 +19,6 @@ def main():
     tar_file = os.path.join(app_path,"theory-%s.tar.bz2" % version)
     exclude_file = os.path.join(src,"tar_exclude")
 
-    # draw logo
-    imgpath = os.path.join(app_path,'theory','theory','public','img','theory-logo.png')
-    logo_exec = os.path.join(app_path,'theory','scripts','draw_theory_logo.py')
-
-    args = [logo_exec,version,imgpath]
-    subprocess.call(args)
 
     # remove destination dir in case it exists
     try:
@@ -32,6 +26,12 @@ def main():
     except OSError:
         pass
     shutil.copytree(src,dest)
+
+    # draw logo
+    imgpath = os.path.join(dest,'theory','public','img','theory-logo.png')
+    logo_exec = os.path.join(app_path,'theory','scripts','draw_theory_logo.py')
+    args = [logo_exec,version,imgpath]
+    subprocess.call(args)
 
     os.chdir(app_path)
 
