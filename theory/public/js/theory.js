@@ -108,14 +108,23 @@ function getStatus() {
 					$('#currentartist').val(data.track.artist)
 					$('#currenttitle').val(data.track.title);
 
-					if (data.track.artist && data.track.title)
-						var title = data.track.artist + ' - ' + data.track.title
-					else if (data.track.name && data.track.title)
+					if (data.track.artist && data.track.title) {
+                        $('#title').html('');
+                        $('#title').append("<a style=\"cursor:pointer\" onclick=\"artistAlbums('" + data.track.artist.replace(/'/g,"\\'") + "')\">" + data.track.artist + "</a> - ");
+                        if (data.track.album)
+                            $('#title').append("<a style=\"cursor:pointer\" onclick=\"artistAlbums('" + data.track.artist.replace(/'/g,"\\'") + "','" + data.track.album.replace(/'/g,"\\'") + "')\">" + data.track.title + "</a>");
+                        else
+                            $('#title').append(data.track.title);
+                    }
+					else if (data.track.name && data.track.title) {
 						var title = data.track.name + ' - ' + data.track.title
-					else if (data.track.file)
+                        $('#title').html(title);
+                    }
+					else if (data.track.file) {
 						var title = data.track.file
+                        $('#title').html(title);
+                    }
 
-					$('#title').html(title);
 					$('#aWiki').attr('href','http://www.google.com/search?btnI=I\'m+Feeling+Lucky&q=site:en.wikipedia.org%20' + data.track.artist);
 					$('#wiki').show();
 					var arturl = '/fetchart?artist=' + data.track.artist + '&album=' + data.track.album
@@ -435,6 +444,7 @@ function loadLyrics() {
 
     var url = '/lyrics?artist=' + artist + '&track=' + track;
     $('#lyrics').attr('src',url);
+    $('#lyricsinfo').text(' (loading)')
 }
 
 function loadPlaylist() {

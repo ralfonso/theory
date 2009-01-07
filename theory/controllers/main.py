@@ -176,9 +176,13 @@ class MainController(BaseController):
 
         artist = request.GET.get('artist').encode('utf-8')
         track = request.GET.get('track').encode('utf-8')
-    
-        l = Lyrics(artist,track)
-        c.lyrics = l.lyrics
+   
+        try:
+            l = Lyrics(artist,track)
+            c.lyrics = l.lyrics
+        except NoLyricsError:
+            c.lyrics = 'error loading lyrics.  lyricwiki.org down?' 
+
         return render('/lyrics.html')
 
     def stats(self):
