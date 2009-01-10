@@ -150,6 +150,25 @@ class MpdcontrolController(BaseController):
 
         m.command_list_end()
 
+    def addartistalbums(self):
+        artist = request.GET.get('artist').encode('utf-8')
+
+        m = g.p.connect()
+        albums = m.albums(artist)
+
+        tracklist = []
+
+        for album in albums:
+            tracklist.extend(m.tracks(artist,album))
+        
+        m.command_list_ok_begin()
+
+        for t in tracklist:
+            m.add(t['file'])
+
+        m.command_list_end()
+
+
     def removetrack(self,id):
         m = g.p.connect()
         m.deleteid(id)

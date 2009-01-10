@@ -399,6 +399,19 @@ function addAlbum(artist,album) {
           });
 }
 
+function addAllArtistAlbums(artist) {
+    var url = '/mpdcontrol/addartistalbums?artist=' + encodeURIComponent(artist);
+    $.ajax({
+            url: url,
+            type: 'GET',
+            cache: false,
+            success: function() {
+                        $('#frmplaylist').attr('src','/playlist')
+                        getStatus()
+                     }
+          });                     
+}
+
 function initConfig() {
     var arrPageSizes = getPageSize(); // from jquery-lightbox
     $('#dark-overlay').css({

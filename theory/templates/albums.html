@@ -15,7 +15,7 @@
     }
 </style>
 
-<h2>${c.artist}</h2>
+<h2>${c.artist} <a onclick="addAllArtistAlbums('${c.artist.replace("'","\\'")}')" style="cursor:pointer" title="add all albums"><img src="/img/add.png" /></a></h2>
 
 <div id="artistalbumart">
 	% if len(c.album_imgs) > 0:	
