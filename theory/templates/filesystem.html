@@ -8,7 +8,10 @@
             $('#albumart').load(function() {   
                                     $(this).show();
                                 }).attr('src','/fetchart?artist=${c.artist_safe}&album=${c.album_safe}');
-            }
+
+			if ($('li.musicfile').length == 0)
+				$('#addfiles').hide();	
+		}
     );
 
                     
@@ -27,7 +30,7 @@
     }
 </style>
 <div id="container-tracks">
-	<h2>${c.path}</h2>
+	<h2>${c.path} <a id="addfiles" title="add these files to the playlist" onclick="addPathToPlaylist('${h.html.url_escape(c.path)}')" style="cursor:pointer"><img src="/img/add.png" /></a></h2>
     <ul id="list">
         % if c.path != '/':
             <li><a href="/filesystem?path=/"><img src="/img/folder_go.png" /> /</a></li>
@@ -40,7 +43,7 @@
                 <% 
                     h.format_title(f)
                 %>
-                <li><a onclick="addToPlaylist('${h.html.url_escape(f['file'])}')"><img src="/img/add.png" /> ${f['formattedtrack']}</a></li>
+                <li class="musicfile"><a onclick="addToPlaylist('${h.html.url_escape(f['file'])}')"><img src="/img/add.png" /> ${f['formattedtrack']}</a></li>
             % endif
         % endfor
     </ul>

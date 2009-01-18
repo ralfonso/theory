@@ -15,12 +15,12 @@
     }
 </style>
 
-<h2>${c.artist} <a onclick="addAllArtistAlbums('${c.artist.replace("'","\\'")}')" style="cursor:pointer" title="add all albums"><img src="/img/add.png" /></a></h2>
+<h2>${c.artist} <a onclick="addAllArtistAlbums('${h.escape_js(c.artist)}')" style="cursor:pointer" title="add all albums"><img src="/img/add.png" /></a></h2>
 
 <div id="artistalbumart">
 	% if len(c.album_imgs) > 0:	
 		% for i in c.album_imgs[:6]:
-			<a style="cursor:pointer" onclick="albumTracks('${c.artist.replace("'","\\'")}','${i['album'].replace("'","\\'")}')"><img src="${i['imgurl']}" style="width:45px;height:45px" /></a>
+			<a style="cursor:pointer" onclick="albumTracks('${h.escape_js(c.artist)}','${h.escape_js(i['album'])}')"><img src="${i['imgurl']}" style="width:45px;height:45px" /></a>
 		% endfor
 	% endif
 </div>
@@ -35,7 +35,7 @@
 				else:
 					addclass = ''
 			%>
-            <li><a onclick="window.parent.addAlbum('${c.artist.replace("'","\\'")}','${album_utf8.replace("'","\\'")}')"><img src="/img/add.png" title="queue entire album" style="float:left;margin-right:5px;" /></a><a ${addclass} onclick="albumTracks('${c.artist.replace("'","\\'")}','${album_utf8.replace("'","\\'")}')">${album_utf8}</a></li>
+            <li><a onclick="window.parent.addAlbum('${h.escape_js(c.artist)}','${h.escape_js(album_utf8)}')"><img src="/img/add.png" title="queue entire album" style="float:left;margin-right:5px;" /></a><a ${addclass} onclick="albumTracks('${h.escape_js(c.artist)}','${h.escape_js(album_utf8)}')">${album_utf8}</a></li>
         % endfor
     </ul>
 </div>
