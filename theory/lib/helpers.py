@@ -9,6 +9,7 @@ available to Controllers. This module is available to both as 'h'.
 import datetime
 from webhelpers import util,html
 from webhelpers.html import tags
+import re
 
 def format_time(seconds):
     try:
@@ -26,6 +27,12 @@ def format_time(seconds):
 def format_filesize(bytes):        
     kb = "%02.2fKB" % (bytes / 1024.0)
     return kb
+
+def escape_js(s):
+    s = re.sub(r'\\', r'\\\\', (s or ''))
+    s = re.sub(r'\r\n|\n|\r', r'\\n', s)
+    s = re.sub(r'(["\'])', r'\\\1', s)
+    return s
 
 def timestamp_to_friendly_date(ts):
     try:
