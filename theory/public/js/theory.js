@@ -80,11 +80,13 @@ function getStatus() {
             $('#time').html(currenttime + ' / ' + totaltime);
             $('#time').show();
 
+			/* FIXME this is a big mess.  it handles track changing a little different than stream track
+			   and needs more consistency */
 			if (data.status.state == 'play' || data.status.state == 'pause') {
 				if (data.track.id != $('#currentid').val()) {
-					// track updated
+					// playing a new track or stream
 
-					// create a new slider
+					// recreate slider with new parameters (track length changed)
 					$('#position-slider').slider("destroy");
 					$('#position-slider').slider(
 						{
@@ -105,24 +107,30 @@ function getStatus() {
 						}
 					);
 
+					// set the current artist and title values to the hidden text boxes
+
 					$('#currentartist').val(data.track.artist)
 					$('#currenttitle').val(data.track.title);
 
 					if (data.track.artist && data.track.title) {
+						// we have a music file with good tags, update the appropriate stuff
                         $('#title').html('');
                         $('#title').append("<a style=\"cursor:pointer\" onclick=\"artistAlbums('" + data.track.artist.replace(/'/g,"\\'") + "')\">" + data.track.artist + "</a> - ");
+
+						// if an album is set, make the track title clickable to take you to that album
                         if (data.track.album)
                             $('#title').append("<a style=\"cursor:pointer\" onclick=\"artistAlbums('" + data.track.artist.replace(/'/g,"\\'") + "','" + data.track.album.replace(/'/g,"\\'") + "')\">" + data.track.title + "</a>");
                         else
                             $('#title').append(data.track.title);
                     }
-					else if (data.track.name && data.track.title) {
-						var title = data.track.name + ' - ' + data.track.title
-                        $('#title').html(title);
-                    }
 					else if (data.track.file) {
-						var title = data.track.file
-                        $('#title').html(title);
+						// this is for the playlist changing to a stream or a file without tags
+						$('#currentartist').val('');
+						$('#currenttitle').val('');
+						$('#currentid').val('');
+						$('#title').html(data.track.file);
+						$('#wiki').hide();
+						$('#currentart').attr('src','/img/50trans.gif');
                     }
 
 					$('#aWiki').attr('href','http://www.google.com/search?btnI=I\'m+Feeling+Lucky&q=site:en.wikipedia.org%20' + data.track.artist);
@@ -134,22 +142,27 @@ function getStatus() {
 
 					if (data.track.artist && data.track.title)
 						$(document).attr('title','theory :: ' + data.track.artist + ' - ' + data.track.title)
-					else if (data.track.name && data.track.title)
-						$(document).attr('title','theory :: ' + data.track.name + ' - ' + data.track.title)
 					else if ($('#title').html() == 'not playing')
 						$(document).attr('title','theory :: not playing');
+					else 
+						$(document).attr('title','theory');
 
 					if ($('#lyrics:visible').length)
 						loadLyrics();
 				}
-				else if (!data.track.title) {
-					$('#currentartist').val('');
-					$('#currenttitle').val('');
-					$('#currentid').val('');
-					$('#title').html(data.track.file);
-					$('#wiki').hide();
-					$('#currentart').attr('src','/img/50trans.gif');
-				}   
+                else if (data.track.name) {
+					// current id didn't change, but update every time if we're playing a stream
+                    var title = data.track.name;
+                    var pagetitle = 'theory :: ' + data.track.name;
+
+                    if (data.track.title) {
+                        title +=  ' - ' + data.track.title;
+                        pagetitle +=  ' - ' + data.track.title;
+                    }
+
+                    $('#title').html(title);
+                    $(document).attr('title',pagetitle);
+                }
 			}
 			else if (data.status.state == 'stop') {
 				if (!data.track.file) {
@@ -602,6 +615,20 @@ function playNext(id) {
             cache: false,
             success: function() {
                         window.location.reload()
+                     }
+          });
+}
+
+function addPathToPlaylist(path) {
+    var url = '/mpdcontrol/addpathtoplaylist';
+
+    $.ajax({
+            url: url,
+            type: 'POST',
+            cache: false,
+            data: 'path=' + path,
+            success: function() {
+                        window.parent.$('#frmplaylist').attr('src','/playlist')
                      }
           });
 }
