@@ -23,6 +23,8 @@ from pylons import app_globals as g
 from pylons.controllers.util import abort, redirect_to
 from pylons.decorators import jsonify
 
+from mpd import CommandError
+
 from theory.lib.base import BaseController, render
 
 log = logging.getLogger(__name__)
@@ -169,14 +171,40 @@ class MpdcontrolController(BaseController):
         m.command_list_end()
 
 
+    def addpathtoplaylist(self):
+        path = request.POST.get('path').encode('utf-8')
+
+        m = g.p.connect()
+
+        tracklist = []
+
+        lsinfo = m.lsinfo(path)
+
+        for f in lsinfo:
+            if f.has_key('file'):
+                tracklist.append(f)
+        
+        m.command_list_ok_begin()
+
+        for t in tracklist:
+            m.add(t['file'])
+
+        m.command_list_end()  
+
     def removetrack(self,id):
         m = g.p.connect()
-        m.deleteid(id)
+        try:
+            m.deleteid(id)
+        except CommandError,e: # exception if the track to be removed doesn't exist
+            return str(e)
 
     def playnow(self,id):
         m = g.p.connect()
-        m.playid(id)
-        m.play()
+        try:
+            m.playid(id)
+            m.play()
+        except CommandError,e:
+            return str(e)
         
 
     def repeat(self,id):
@@ -221,5 +249,7 @@ class MpdcontrolController(BaseController):
     def playnext(self,id):
         m = g.p.connect()
         current = m.currentsong()
+        if not current.has_key('pos'):
+            return
         m.moveid(id,int(current['pos'])+1)
 
