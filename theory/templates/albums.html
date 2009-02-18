@@ -3,6 +3,14 @@
     $(document).ready(
         function() {
             $('#list li:even a').addClass('evenrow');
+
+			 var albumimgs = $('img.albumimg');
+			 albumimgs.each(function(i) {
+				var offset = $(this).offset();
+				var id = 'mask_' + i;
+				$(this).after('<img id="' + id + '" src="/img/albumart_mask_45.png">');
+				$('#' + id).css('position','absolute').css('top',offset.top).css('left',offset.left);
+			 });
          }
     );
 </script>
@@ -20,7 +28,7 @@
 <div id="artistalbumart">
 	% if len(c.album_imgs) > 0:	
 		% for i in c.album_imgs[:6]:
-			<a style="cursor:pointer" onclick="albumTracks('${h.escape_js(c.artist)}','${h.escape_js(i['album'])}')"><img src="${i['imgurl']}" style="width:45px;height:45px" /></a>
+			<a style="cursor:pointer" onclick="albumTracks('${h.escape_js(c.artist)}','${h.escape_js(i['album'])}')"><img src="${i['imgurl']}" style="width:45px;height:45px" class="albumimg" /></a>
 		% endfor
 	% endif
 </div>

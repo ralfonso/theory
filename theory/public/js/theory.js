@@ -131,6 +131,7 @@ function getStatus() {
 						$('#title').html(data.track.file);
 						$('#wiki').hide();
 						$('#currentart').attr('src','/img/50trans.gif');
+						$('#currentartmask').attr('src','/img/50trans.gif');
                     }
 
 					$('#aWiki').attr('href','http://www.google.com/search?btnI=I\'m+Feeling+Lucky&q=site:en.wikipedia.org%20' + data.track.artist);
@@ -138,6 +139,7 @@ function getStatus() {
 					var arturl = '/fetchart?artist=' + data.track.artist + '&album=' + data.track.album
 					$('#currentartlink').attr('href',arturl)
 					$('#currentart').attr('src',arturl)
+					$('#currentartmask').attr('src','/img/albumart_mask.png');
 					$('#currentartlink').lightBox();
 
 					if (data.track.artist && data.track.title)
@@ -173,6 +175,7 @@ function getStatus() {
 					$('#title').html('not playing');
 					$('#wiki').hide();
 					$('#currentart').attr('src','/img/50trans.gif');
+					$('#currentartmask').attr('src','/img/50trans.gif');
 				}
 			}
 

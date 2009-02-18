@@ -100,6 +100,14 @@
             $('#currentartist').val('');
             $('#currenttitle').val('');
             $('#currentid').val('');
+
+			var artoffset = $('#currentartlink').offset()
+			var img = document.createElement('img')
+			img.src = '/img/albumart_mask.png';
+			img.id = 'currentartmask';
+			$('#currentartlink').append(img);
+			$('#currentartmask').css('position','absolute').css('z-index','5').css('top','18px').css('left','18px');
+
         }
     );
 
