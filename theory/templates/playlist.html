@@ -1,9 +1,16 @@
 <%inherit file="body.html"/>
 <script language="javascript">
+	function empty_playlist_background() {
+		$(document.body).css('background','#eeeeee url(/img/empty_playlist.png) fixed center no-repeat');
+	}
+
     $(document).ready(
         function() {
+			%if len(c.playlist) == 0:
+				empty_playlist_background();
+			%endif
             $('#fakeborder').height(window.innerHeight);
-            setPlaylistColors()
+            setPlaylistColors();
             $('#playlist').sortable({
                                         start: function(e,ui) {
                                                     window.parent.sliding = true;
@@ -170,9 +177,6 @@
     
 <div id="container-playlist">
     <ul id="playlist">
-        % if len(c.playlist) == 0:
-            <li>empty playlist</li>
-        % endif
         % for t in c.playlist:
             <%
                 if t.has_key('artist') and t.has_key('title'):

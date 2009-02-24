@@ -26,7 +26,7 @@ class Globals(object):
 
     def get_genres(self):
         """ load all tracks and create a list of every unique genre in the database"""
-        self.genres = []
+        self.genres = set()
 
         # this won't work before configuration
         try:
@@ -43,7 +43,6 @@ class Globals(object):
                     track_genres = [t['genre']]
 
                 for genre in track_genres:
-                    if genre not in self.genres:
-                        self.genres.append(genre)
+                    self.genres.add(genre)
         except:
             pass

@@ -143,7 +143,7 @@ function getStatus() {
 					$('#currentartlink').lightBox();
 
 					if (data.track.artist && data.track.title)
-						$(document).attr('title','theory :: ' + data.track.artist + ' - ' + data.track.title)
+						$(document).attr('title','theory :: ' + data.track.artist + ' - ' + data.track.title + ' [' + currenttime + ' / ' + totaltime + ']');
 					else if ($('#title').html() == 'not playing')
 						$(document).attr('title','theory :: not playing');
 					else 
@@ -376,6 +376,9 @@ function removeTrack(el,id) {
             success: function() {
                         $(el).parent().remove();
                         setPlaylistColors(document)
+						if ($('#playlist li').length == 0) {
+							empty_playlist_background();
+						}
                      }
           });
 }
