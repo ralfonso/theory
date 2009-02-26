@@ -45,16 +45,16 @@ def format_title(t,trackno=None):
     try:
         t['formattedtrack'] = "%02d. %s" % (int(t['track']),t['title'])
     except KeyError,e:
-        if t.has_key('title'):
+        if 'title' in t.keys():
             t['formattedtrack'] = "%s" % (t['title'])
     except ValueError,e:
-        if t.has_key('title'):
+        if 'title' in  t.keys():
             t['formattedtrack'] = "%s. %s" % (t['track'],t['title'])
         else:
-            if t.has_key('title'):
+            if 'title' in t.keys():
                 t['formattedtrack'] = "%s" % t['title']
     
-    if not t.has_key('formattedtrack'):
+    if not 'formattedtrack' in t.keys():
         if trackno:
             t['formattedtrack'] = "%d." % trackno
         else:
@@ -64,8 +64,8 @@ def format_title_search(t):
     try:
         t['formattedtrack'] = "%s - %s - %s" % (t['artist'],t['album'],t['title'])
     except KeyError,e:
-        if t.has_key('title'):
+        if 'title' in t.keys():
             t['formattedtrack'] = "%s" % (t['title'])
     
-    if not t.has_key('formattedtrack'):
+    if not 'formattedtrack' in t.keys():
         t['formattedtrack'] = "%s" % t['file']

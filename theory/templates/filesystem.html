@@ -37,9 +37,9 @@
             <li><a href="/filesystem?path=${h.html.url_escape(c.uppath)}"><img src="/img/folder_go.png" /> ..</a></li>
         % endif
         % for f in c.lsinfo:
-            % if f.has_key('directory'):
+            % if 'directory' in f.keys():
                 <li><a href="/filesystem?path=${h.html.url_escape(f['directory'])}"><img src="/img/folder_go.png" /> ${f['directory'].split('/')[-1]}</a></li>
-            % elif f.has_key('file'):
+            % elif 'file' in f.keys():
                 <% 
                     h.format_title(f)
                 %>

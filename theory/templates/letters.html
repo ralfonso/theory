@@ -33,7 +33,7 @@
         <a href="/randomizer" target="frmtracks">randomizer</a>
         &middot;
         <a>search</a>
-        %if session.has_key('user'):
+        %if 'user' in session.keys():
             &middot;
             <a href="/login/logout" target="_blank">logout</a>
         %endif

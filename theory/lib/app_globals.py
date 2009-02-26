@@ -34,7 +34,7 @@ class Globals(object):
             all_tracks = m.listallinfo()
             
             for t in all_tracks:
-                if not t.has_key('genre'):
+                if not 'genre' in t.keys():
                     continue
 
                 if type(t['genre']) == list:

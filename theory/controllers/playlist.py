@@ -42,7 +42,7 @@ class PlaylistController(BaseController):
         c.playlistid = status['playlist']
         c.playlist = m.playlistinfo()
         info = m.lsinfo()
-        c.available_playlists = [playlist['playlist'] for playlist in info if playlist.has_key('playlist')]
+        c.available_playlists = [playlist['playlist'] for playlist in info if 'playlist' in playlist.keys()]
         c.available_playlists.insert(0,'')
 
         return render('/playlist.html')
@@ -57,7 +57,7 @@ class PlaylistController(BaseController):
 
         m = g.p.connect()
         info = m.lsinfo()
-        available_playlists = [playlist['playlist'] for playlist in info if playlist.has_key('playlist')]
+        available_playlists = [playlist['playlist'] for playlist in info if 'playlist' in playlist.keys()]
 
         if name in available_playlists:
             m.rm(name)

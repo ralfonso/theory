@@ -88,7 +88,7 @@ class mpdhelper(object):
                     track = None
                     break
 
-                if track.has_key('file'):
+                if 'file' in track.keys():
                     if exclude_live:
                         if exc_re.match(track.get('album','')) or exc_re.match(track['file']):
                             skipped_live += 1
@@ -153,7 +153,7 @@ class mpdhelper(object):
         return cmp(x,y)
 
     def _sorttracktitle(self,x,y):
-        if x.has_key('title') and y.has_key('title'):   
+        if 'title' in x.keys() and 'title' in y.keys():
             return cmp(x['title'].lower(),y['title'].lower())
         else:
             return cmp(x['file'],y['file'])

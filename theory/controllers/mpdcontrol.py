@@ -70,7 +70,7 @@ class MpdcontrolController(BaseController):
             if found_current:
                 remaining_playlist.append(pl)
 
-            if current.has_key('id'):
+            if 'id' in current.keys():
                 if pl['id'] == current['id']:
                     found_current = True
            
@@ -181,7 +181,7 @@ class MpdcontrolController(BaseController):
         lsinfo = m.lsinfo(path)
 
         for f in lsinfo:
-            if f.has_key('file'):
+            if 'file' in f.keys():
                 tracklist.append(f)
         
         m.command_list_ok_begin()
@@ -230,7 +230,7 @@ class MpdcontrolController(BaseController):
         current = m.status()
         playlist = m.playlistinfo()
 
-        if not current.has_key('songid'):
+        if not 'songid' in current.keys():
             return
 
         if len(playlist) == 0:
@@ -249,7 +249,7 @@ class MpdcontrolController(BaseController):
     def playnext(self,id):
         m = g.p.connect()
         current = m.currentsong()
-        if not current.has_key('pos'):
+        if not 'pos' in current.keys():
             return
         m.moveid(id,int(current['pos'])+1)
 
