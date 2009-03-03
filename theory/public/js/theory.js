@@ -58,6 +58,7 @@ function getStatus() {
                 var totalseconds = 0;
             }
 
+
             window.ignorepositionslide = true;
             $('#position-slider').slider('moveTo',currentseconds);
 
@@ -79,6 +80,9 @@ function getStatus() {
             
             $('#time').html(currenttime + ' / ' + totaltime);
             $('#time').show();
+
+			if (data.track.artist && data.track.title)
+				$(document).attr('title','theory :: ' + data.track.artist + ' - ' + data.track.title + ' [' + currenttime + ' / ' + totaltime + ']');
 
 			/* FIXME this is a big mess.  it handles track changing a little different than stream track
 			   and needs more consistency */
