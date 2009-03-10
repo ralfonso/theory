@@ -1,3 +1,11 @@
+0.1.7
+	added current position to page title
+	removed has_key()
+	added a rounded corner masking image to album art
+	rounded form buttons
+	better song-change detection
+	path-based file adds
+
 0.1.6
 	added logo and logo generation script
 	fix for configuring a used, but invalid port

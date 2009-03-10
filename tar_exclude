@@ -22,6 +22,7 @@ theory-*/theory/public/img/art/*
 theory-*/tar_exclude
 theory-*/paster.pid
 theory-*/paster.log
+theory-*/theory.log
 theory-*/theory/tests
 *.pyc
 .*.swp
