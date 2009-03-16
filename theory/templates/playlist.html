@@ -179,7 +179,7 @@
     <ul id="playlist">
         % for t in c.playlist:
             <%
-                if 'artist' and 'title' in t.keys():
+                if 'artist' in t and 'title' in t:
                     display_title = "%s - %s" % (t['artist'],t['title'])
                 else:
                     if t['file'].lower().startswith('http://') or t['file'].lower().startswith('https://'):
@@ -194,7 +194,7 @@
             <li id="track_${t['id']}:${t['pos']}">
                 <a onclick="removeTrack(this,${t['id']})" title="remove this track" style="padding-right:1px;"><img src="/img/remove.png" /></a><a onclick="window.parent.playNow(${t['id']})" title="play this track now"><img src="/img/playnow.png" /></a>
                 ${display_title}
-                % if 'artist' and 'album' in t.keys():
+                % if 'artist' in t and 'album' in t:
                 <div class="playlist-tooltip">
                     <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}')">${t['artist']}</a>
                     <br />

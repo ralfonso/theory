@@ -74,7 +74,7 @@
     <ul id="list">
     % for t in c.random_tracks:
         <%
-            if 'artist' and 'album' and 'title' in t.keys():
+            if 'artist' in t and 'album' in t and 'title' in t:
                 display_title = "%s - %s - %s (%s)" % (t['artist'],t['album'],t['title'],t.get('genre',''))
             else:
                 display_title = t['file']

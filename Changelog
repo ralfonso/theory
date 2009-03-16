@@ -1,3 +1,6 @@
+0.1.8
+	bugfix release
+
 0.1.7
 	added current position to page title
 	removed has_key()
