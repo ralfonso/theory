@@ -37,6 +37,7 @@ class TConfig:
         self.timeout = False
         self.awskey = None
         self.streams = []
+        self.default_search = 'Any'
 
         conf = ConfigParser.ConfigParser()
         conf.read(config['localconf'])
@@ -48,6 +49,7 @@ class TConfig:
             self.password = conf.get('mpd','password')
             self.webpassword = conf.get('main','webpassword')
             self.timeout = conf.getboolean('main','timeout')
+            self.default_search = conf.get('main','default_search') 
             conf_stream = conf.get('ext','streams')
         except (ConfigParser.NoSectionError,ConfigParser.NoOptionError):
             pass
@@ -73,6 +75,7 @@ class TConfig:
         conf.add_section('main')
         conf.set('main','webpassword',self.webpassword)
         conf.set('main','timeout',self.timeout)
+        conf.set('main','default_search',self.default_search)
         conf.add_section('ext')
         conf.set('ext','streams',repr(pickle.dumps(self.streams)))
 

@@ -53,25 +53,25 @@
         <td align=right>
             MPD server host:</td>
         <td>
-            ${h.html.tags.text('server',g.tc.server)}</td>
+            ${h.html.tags.text('server',None)}</td>
     </tr>
     <tr>
         <td align=right>
             MPD server port (usually 6600):</td>
         <td>
-            ${h.html.tags.text('port',g.tc.port,size=5)}</td>
+            ${h.html.tags.text('port',None,size=5)}</td>
     </tr>
     <tr>
         <td align=right>
             MPD server password:</td>
         <td>
-            ${h.html.tags.text('password',g.tc.password,size=25)}</td>
+            ${h.html.tags.text('password',None,size=25)}</td>
     </tr>
     <tr>
         <td align=right>
             theory web password:</td>
         <td>
-            ${h.html.tags.text('webpassword',g.tc.webpassword,size=25)}</td>
+            ${h.html.tags.text('webpassword',None,size=25)}</td>
     </tr>
     <tr>
         <td align=right>
@@ -83,9 +83,15 @@
         <td align=right>
             Amazon Developer Key:</td>
         <td>
-            ${h.html.tags.text('awskey',g.tc.awskey,size=30)}<br />
+            ${h.html.tags.text('awskey',None,size=30)}<br />
             (for automatic downloading of album art)
         </td>
+    </tr>
+    <tr>
+        <td align=right>
+            Default search type:</td>
+        <td>
+            ${h.html.tags.select('default_search',None,g.searchterms,id="default_search",style_="margin-left:0px")}</td>
     </tr>
     <tr>
         <td align=center colspan=2>

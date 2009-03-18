@@ -1,7 +1,6 @@
 ## vim: set tabstop=4: set shiftwidth=4: set expandtab
 <%
     letters = '#abcdefghijklmnopqrstuvwxyz'
-    searchterms = ['Artist','Title','Album','Genre','Any']
 %>
 
 <div id="container-alpha">
@@ -14,7 +13,7 @@
 
     <div id="search" style="display:none">
         <form action="/search" method="post" target="frmtracks" style="margin:none;padding:none">
-        ${h.html.tags.select('searchtype',None,searchterms,id="searchtype")}
+        ${h.html.tags.select('searchtype',g.tc.default_search,g.searchterms,id="searchtype")}
         ${h.html.tags.text('q','',size=25)}
         <input type="submit" value="search" class="orange ui-state-default ui-corner-all" />
         <input type="button" id="searchcancel" value="cancel" class="grey ui-state-default ui-corner-all" />

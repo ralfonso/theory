@@ -5,10 +5,14 @@ from theory.model.mpdpool import QueuePool
 from theory.model.tconfig import TConfig
 from pylons import config
 
+
 class Globals(object):
     """Globals acts as a container for objects available throughout the
     life of the application
     """
+
+    searchterms = ['Artist','Title','Album','Genre','Any']
+
     def get_mpd_conn(self):
         m = mpdhelper(self)
         return m

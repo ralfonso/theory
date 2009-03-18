@@ -642,3 +642,7 @@ function addPathToPlaylist(path) {
                      }
           });
 }
+
+function setSearchType(s) {
+    $('#searchtype').val(s);
+}

@@ -136,7 +136,8 @@ class MainController(BaseController):
         if use_htmlfill:
             return formencode.htmlfill.render(render("/config.html"),{'server':g.tc.server,'port':g.tc.port,
                                                                      'password':g.tc.password,'webpassword':g.tc.webpassword,
-                                                                     'awskey':g.tc.awskey,'timeout':g.tc.timeout})
+                                                                     'awskey':g.tc.awskey,'timeout':g.tc.timeout,
+                                                                     'default_search':g.tc.default_search})
         else:
             return render("/config.html")
 
@@ -167,8 +168,8 @@ class MainController(BaseController):
 
         g.p = g.p.recreate()
         
-        return '<script language="javascript">window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>'\
-                % (reloadframes,reloadpage)
+        return '<script language="javascript">window.parent.setSearchType(\'%s\');window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>'\
+                % (g.tc.default_search,reloadframes,reloadpage)
 
 
     def lyrics(self):

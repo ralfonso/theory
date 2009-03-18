@@ -154,6 +154,10 @@ class mpdhelper(object):
 
     def _sorttracktitle(self,x,y):
         if 'title' in x and 'title' in y:
+            for track in (x,y):
+                if type(track['title']) == list:
+                    track['title'] = track['title'][0]
+
             return cmp(x['title'].lower(),y['title'].lower())
         else:
             return cmp(x['file'],y['file'])
