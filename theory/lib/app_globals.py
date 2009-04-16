@@ -23,7 +23,7 @@ class Globals(object):
         variable
         """
 
-        self.p = QueuePool(self.get_mpd_conn, max_overflow=1, pool_size=2, use_threadlocal=True,timeout=5)
+        self.p = QueuePool(self.get_mpd_conn, max_overflow=1, pool_size=2, recycle=60,use_threadlocal=True,timeout=5)
         self.tc = TConfig()
         self.get_genres()
         pass
