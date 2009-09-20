@@ -24,6 +24,13 @@ def format_time(seconds):
     except TypeError:
         return '00:00'
 
+def format_track_time(track):
+    try:
+        seconds = track['time']
+        return format_time(seconds)
+    except KeyError:
+        return '00:00'
+
 def format_filesize(bytes):        
     kb = "%02.2fKB" % (bytes / 1024.0)
     return kb

@@ -387,6 +387,43 @@ function removeTrack(el,id) {
           });
 }
 
+function removeMultipleTracks() {
+	var url = '/mpdcontrol/removemultipletracks/'
+
+	var all_ids = Array();
+	var iter = 0;
+
+	alert($('ul#playlist li.selected'));
+	$('ul#playlist li.selected').each(
+		function() {
+			var id = $(this).attr('id').split('_');
+			all_ids[iter] = id
+			id = id[1];
+			id = id.split(':');
+			id = id[0];
+			url += id + ',';
+
+			alert(id);
+
+			iter += 1;
+	    });
+
+    $.ajax({
+            url: url,
+            type: 'GET',
+            cache: false,
+            success: function() {
+						for(i = 0; i < all_ids.length(); i++) {
+							$('ul#playlist li#' + all_ids[i]).remove();
+						}
+                        setPlaylistColors(document)
+						if ($('#playlist li').length == 0) {
+							empty_playlist_background();
+						}
+                     }
+          });
+}
+
 function setPlaylistColors(scope,force) {
     var addl = '';
 

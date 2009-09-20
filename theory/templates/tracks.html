@@ -1,4 +1,5 @@
 <%inherit file="body.html"/>
+
 <script language="javascript">
     $(document).ready(
         function() {
@@ -30,7 +31,14 @@
 <div id="container-tracks">
     <ul id="list">
         % for t in c.tracks:
-            <li><a onclick="addToPlaylist('${h.html.url_escape(t['file'])}')"><img src="/img/add.png" /> ${t['formattedtrack']}</a></li>
+			<%
+				if not c.album_safe:
+					title = h.html.literal("title=\"Album: " + t['album'].replace('"','\\"') + "\"")
+				else:
+					title = ''
+			%>
+
+            <li><a ${title} onclick="addToPlaylist('${h.html.url_escape(t['file'])}')"><img src="/img/add.png" /> ${t['formattedtrack']}</a></li>
         % endfor
     </ul>
 </div>

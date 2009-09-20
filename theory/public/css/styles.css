@@ -220,8 +220,17 @@ ul#playlist li {
     cursor:move;
 }
 
+ul#playlist li.selected {
+	background-color:#aaa;
+}
+
 ul#playlist li a {
 	cursor:pointer;
+}
+
+ul#playlist li:hover span.displaytitle {
+	font-size:11px;
+	font-weight:bold;
 }
 
 ul#playlist li a img {
