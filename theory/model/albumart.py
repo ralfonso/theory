@@ -19,6 +19,10 @@ import xml.dom.minidom
 import os
 import logging
 import re
+import hashlib
+import hmac
+import base64
+import datetime
 
 from pylons import app_globals as g
 
@@ -101,13 +105,45 @@ class AlbumArt:
 
         urls = []
 
-        urls.append('http://ecs.amazonaws.com/onca/xml?Service=AWSECommerceService&AWSAccessKeyId=%s&Operation=ItemSearch&SearchIndex=Music&Version=2008-11-15&ResponseGroup=Images&Artist=%s&Title=%s' % (g.tc.awskey,artist_safe,album_safe))
-        urls.append('http://ecs.amazonaws.com/onca/xml?Service=AWSECommerceService&AWSAccessKeyId=%s&Operation=ItemSearch&SearchIndex=Music&Version=2008-11-15&ResponseGroup=Images&Artist=%s' % (g.tc.awskey,artist_safe))
+        date = datetime.datetime.utcnow()
+        date = date.replace(microsecond=0)
+        timestamp = date.isoformat()
+        query_string = {'Service': 'AWSECommerceService',
+                        'AWSAccessKeyId': g.tc.awskey,
+                        'Operation': 'ItemSearch',
+                        'SearchIndex': 'Music',
+                        'Version': '2009-10-01',
+                        'ResponseGroup': 'Images',
+                        'Artist': artist_safe,
+                        'Title': album_safe,
+                        'Timestamp': timestamp + 'Z'}
+
+        query_string_sorted = '&'.join(['='.join((k,query_string[k])) for k in sorted(query_string.iterkeys())])
+
+        urls.append({'verb': 'GET',
+                     'protocol': 'http://',
+                     'host': 'ecs.amazonaws.com',
+                     'request_uri': '/onca/xml',
+                     'query_string': query_string_sorted.replace(':','%3A')})
+
+        del query_string['Title']
+        query_string_sorted = '&'.join(['='.join((k,query_string[k])) for k in sorted(query_string.iterkeys())])
+
+        urls.append({'verb': 'GET',
+                     'protocol': 'http://',
+                     'host': 'ecs.amazonaws.com',
+                     'request_uri': '/onca/xml',
+                     'query_string': query_string_sorted.replace(':','%3A')})
 
         for url in urls:
+            encode_string = '\n'.join((url['verb'],url['host'],url['request_uri'],url['query_string']))
+            h = hmac.new(g.tc.aws_secret,encode_string,hashlib.sha256)
+            hmac_string = h.digest()
+            signature = base64.b64encode(hmac_string).replace('+','%2B').replace('=','%3D')
+            real_url = url['protocol'] + url['host'] + url['request_uri'] + '?' + url['query_string'] + '&Signature=%s' % signature
             try:
-                self.log('Fetching Amazon album image: %s' % url)
-                urlfile = urllib2.urlopen(url)
+                self.log('Fetching Amazon album image: %s' % real_url)
+                urlfile = urllib2.urlopen(real_url)
             except urllib2.URLError:
                 # there are probably other exceptions that need to be caught here.. 
                 self.log('Error fetching Amazon XML')

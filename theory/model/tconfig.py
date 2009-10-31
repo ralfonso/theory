@@ -36,6 +36,7 @@ class TConfig:
         self.webpassword = ''
         self.timeout = False
         self.awskey = None
+        self.aws_secret = None
         self.streams = []
         self.default_search = 'Any'
 
@@ -46,6 +47,7 @@ class TConfig:
             self.server = conf.get('mpd','server')
             self.port = conf.get('mpd','port')
             self.awskey = conf.get('services','awskey')
+            self.aws_secret = conf.get('services','aws_secret')
             self.password = conf.get('mpd','password')
             self.webpassword = conf.get('main','webpassword')
             self.timeout = conf.getboolean('main','timeout')
