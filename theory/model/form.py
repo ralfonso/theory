@@ -17,6 +17,7 @@ class ConfigForm(formencode.Schema):
     timeout = formencode.validators.Bool()
     default_search = formencode.validators.String(not_empty=True)
     awskey = formencode.validators.String(strip=True,not_empty=False,if_missing=None)
+    aws_secret = formencode.validators.String(strip=True,not_empty=False,if_missing=None)
 
 class StreamNameInUse(formencode.validators.FancyValidator):
     def validate_python(self, values, state):

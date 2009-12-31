@@ -27,7 +27,6 @@ from theory.lib.base import BaseController, render
 from theory.lib import helpers as h
 from theory.model.mpdpool import ConnectionClosed,IncorrectPassword,ProtocolError
 from theory.model.albumart import AlbumArt,NoArtError
-from theory.model.lyrics import *
 
 from theory.model import *
 
@@ -137,6 +136,7 @@ class MainController(BaseController):
             return formencode.htmlfill.render(render("/config.html"),{'server':g.tc.server,'port':g.tc.port,
                                                                      'password':g.tc.password,'webpassword':g.tc.webpassword,
                                                                      'awskey':g.tc.awskey,'timeout':g.tc.timeout,
+                                                                     'aws_secret':g.tc.aws_secret,
                                                                      'default_search':g.tc.default_search})
         else:
             return render("/config.html")
@@ -170,21 +170,6 @@ class MainController(BaseController):
         
         return '<script language="javascript">window.parent.setSearchType(\'%s\');window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>'\
                 % (g.tc.default_search,reloadframes,reloadpage)
-
-
-    def lyrics(self):
-        """ controller for the lyrics widget. loads lyrics from lyricswiki.org """
-
-        artist = request.GET.get('artist').encode('utf-8')
-        track = request.GET.get('track').encode('utf-8')
-   
-        try:
-            l = Lyrics(artist,track)
-            c.lyrics = l.lyrics
-        except NoLyricsError:
-            c.lyrics = 'error loading lyrics.  lyricwiki.org down?' 
-
-        return render('/lyrics.html')
 
     def stats(self):
         """ controller for the stats widget """
@@ -228,12 +213,28 @@ class MainController(BaseController):
         return render('/null.html')
 
     def search(self):
-        searchtype = request.POST.get('searchtype','Artist')
-        q = request.POST.get('q').encode('utf-8')
+        searchtype = request.GET.get('searchtype','Artist')
+        q = request.GET.get('q').encode('utf-8')
 
         if q:
             m = g.p.connect()
-            c.results = m.search(searchtype,q)
+            results = m.search(searchtype,q)
+
+            c.artists = set()
+            c.albums = set()
+            c.tracks = set()
+
+            search_string = q.lower()
+
+            for r in results:
+                if 'artist' in r.keys() and search_string in r['artist'].lower():
+                    c.artists.add(r['artist'])
+
+                if 'album' in r.keys() and search_string in r['album'].lower():
+                    c.albums.add((r['artist'],r['album']))
+
+                if 'title' in r.keys() and search_string in r['title'].lower():
+                    c.tracks.add((r['artist'],r['album'],r['title']))
 
         return render('/search.html')
 

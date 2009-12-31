@@ -683,3 +683,10 @@ function addPathToPlaylist(path) {
 function setSearchType(s) {
     $('#searchtype').val(s);
 }
+
+function performSearch() {
+   var q = $('#search input[name=q]').val(); 
+    $('#searchresults').load('/search?searchtype=Any&q=' + q,undefined,function(){
+						$('#searchresults').show('slide',{direction:'down'},1500);
+					});
+}

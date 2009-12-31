@@ -89,6 +89,13 @@
     </tr>
     <tr>
         <td align=right>
+            Amazon Developer Key (Secret):</td>
+        <td>
+            ${h.html.tags.text('aws_secret',None,size=45)}<br />
+        </td>
+    </tr>
+    <tr>
+        <td align=right>
             Default search type:</td>
         <td>
             ${h.html.tags.select('default_search',None,g.searchterms,id="default_search",style_="margin-left:0px")}</td>

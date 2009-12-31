@@ -67,7 +67,17 @@
                                                     $('#misc').slideToggle('normal',function(){$('#search').slideToggle()});
                                                });
 
+            $('#search input[name=q]').keyup(function(e) {
+                                    if(e.keyCode == 13) {
+                                        performSearch();
+                                    }
+                                  });
+
+            $('#dosearch').click(function() {
+                                   performSearch();
+                                 });
             $('#searchcancel').click(function() {
+                                        $('#searchresults').hide('slide',{direction:'up'},1500);
                                         $('#search').slideToggle('normal',function(){$('#misc').slideToggle()});
                                     });
             resizeIframes();
@@ -96,7 +106,6 @@
 				$('#debug').show();	
 			% endif
 
-			$('#lyrics').attr('src','/null.html');
             $('#currentartist').val('');
             $('#currenttitle').val('');
             $('#currentid').val('');
@@ -136,7 +145,6 @@
 <div id="debug" style="display:none"></div>
 
 <iframe id="config" name="config" src="${c.config}" ></iframe>
-<iframe id="lyrics" name="lyrics" src="/null.html" ></iframe>
 
 <%include file="letters.html"/>
 
@@ -151,5 +159,6 @@
 </div>
 
 <div id="right">
+    <div id="searchresults"></div>
     <iframe id="frmplaylist" name="frmplaylist" src="/playlist"></iframe>
 </div>

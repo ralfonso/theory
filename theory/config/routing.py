@@ -40,7 +40,6 @@ def make_map():
     map.connect('/playlist/load',controller='playlist',action='load')
     map.connect('/playlist/delete',controller='playlist',action='delete')
     map.connect('/fetchart',controller='main',action='fetchart')
-    map.connect('/lyrics',controller='main',action='lyrics')
     map.connect('/{controller}/{action}')
     map.connect('/{controller}/{action}/{id}')
     map.connect('/{controller}/{action}/{id}/{val}')
