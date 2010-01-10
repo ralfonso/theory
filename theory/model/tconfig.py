@@ -44,10 +44,10 @@ class TConfig:
         conf.read(config['localconf'])
 
         try:
-            self.server = conf.get('mpd','server')
-            self.port = conf.get('mpd','port')
             self.awskey = conf.get('services','awskey')
             self.aws_secret = conf.get('services','aws_secret')
+            self.server = conf.get('mpd','server')
+            self.port = conf.get('mpd','port')
             self.password = conf.get('mpd','password')
             self.webpassword = conf.get('main','webpassword')
             self.timeout = conf.getboolean('main','timeout')
