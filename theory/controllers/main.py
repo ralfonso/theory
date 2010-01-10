@@ -216,7 +216,7 @@ class MainController(BaseController):
         searchtype = request.GET.get('searchtype','Artist')
         q = request.GET.get('q').encode('utf-8')
 
-        if q:
+        if q and len(q) > 2:
             m = g.p.connect()
             results = m.search(searchtype,q)
 
@@ -231,10 +231,10 @@ class MainController(BaseController):
                     c.artists.add(r['artist'])
 
                 if 'album' in r.keys() and search_string in r['album'].lower():
-                    c.albums.add((r['artist'],r['album']))
+                    c.albums.add((r['artist'], r['album']))
 
                 if 'title' in r.keys() and search_string in r['title'].lower():
-                    c.tracks.add((r['artist'],r['album'],r['title']))
+                    c.tracks.add((r['artist'], r['album'], r['title'], r['file']))
 
         return render('/search.html')
 

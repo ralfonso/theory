@@ -137,7 +137,7 @@ class AlbumArt:
 
         for url in urls:
             encode_string = '\n'.join((url['verb'],url['host'],url['request_uri'],url['query_string']))
-            h = hmac.new(g.tc.aws_secret,encode_string,hashlib.sha256)
+            h = hmac.new(str(g.tc.aws_secret), str(encode_string), hashlib.sha256)
             hmac_string = h.digest()
             signature = base64.b64encode(hmac_string).replace('+','%2B').replace('=','%3D')
             real_url = url['protocol'] + url['host'] + url['request_uri'] + '?' + url['query_string'] + '&Signature=%s' % signature

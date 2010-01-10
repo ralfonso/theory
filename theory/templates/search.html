@@ -36,6 +36,22 @@
                 %>
                 <li><a onclick="artistAlbums('${h.escape_js(artist_utf8)}');albumTracks('${h.escape_js(artist_utf8)}','${h.escape_js(album_utf8)}')">${artist_utf8} - ${album_utf8}</a></li>
             % endfor
+            </ul>
+        </div>
+    % endif
+
+    % if len(c.tracks):
+        <div class="searchresultsbox">
+            <h4>tracks</h4>
+            <ul id="list">
+            % for t in c.tracks:
+                <%
+                    artist_utf8 = t[0].decode('utf-8')
+                    album_utf8 = t[1].decode('utf-8')
+                    title_utf8 = t[2].decode('utf-8')
+                %>
+                <li><a onclick="addToPlaylist('${h.html.url_escape(t[3])}')"><img src="/img/add.png" /> ${artist_utf8} - ${title_utf8}</a></li>
+            % endfor
         </ul>
     % endif
 </div>
