@@ -127,14 +127,14 @@ class MainController(BaseController):
     def config(self,use_htmlfill=True):
         """ controller for the configuration iframe """
 
-        c.firsttime = request.GET.get('firsttime',0)
+        c.firsttime = request.GET.get('firsttime','0')
         c.noconnection = request.GET.get('noconnection')
         c.error = request.GET.get('error')
         c.type = request.GET.get('type')
 
         configured_outputs = []
 
-        if c.firsttime == 0:
+        if c.firsttime == '0':
             try:
                 m = g.p.connect()
                 c.outputs = m.outputs()
@@ -149,7 +149,6 @@ class MainController(BaseController):
 
             except ConnectionClosed:
                 return render('/null.html')
-
 
         if use_htmlfill:
             values = formencode.variabledecode.variable_encode({'server':g.tc.server,'port':g.tc.port,

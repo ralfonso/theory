@@ -24,7 +24,7 @@ class ConfigForm(formencode.Schema):
     default_search = formencode.validators.String(not_empty=True)
     awskey = formencode.validators.String(strip=True,not_empty=False,if_missing=None)
     aws_secret = formencode.validators.String(strip=True,not_empty=False,if_missing=None)
-    outputs = formencode.ForEach(OutputSchema())
+    outputs = formencode.ForEach(OutputSchema(), if_missing=[])
 
 class StreamNameInUse(formencode.validators.FancyValidator):
     def validate_python(self, values, state):
