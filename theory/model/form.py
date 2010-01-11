@@ -2,9 +2,15 @@ import formencode
 import pylons
 from pylons import app_globals as g
 
-class ConfigForm(formencode.Schema):
+class OutputSchema(formencode.Schema):
     allow_extra_fields = False
+    enabled = formencode.validators.Int()
+
+class ConfigForm(formencode.Schema):
+    allow_extra_fields = True
     filter_extra_fields = True
+
+    #pre_validators = [formencode.NestedVariables()]
 
     action = formencode.validators.String(not_empty=False,if_missing=None)
     cancel = formencode.validators.String(not_empty=False,if_missing=None)
@@ -18,6 +24,7 @@ class ConfigForm(formencode.Schema):
     default_search = formencode.validators.String(not_empty=True)
     awskey = formencode.validators.String(strip=True,not_empty=False,if_missing=None)
     aws_secret = formencode.validators.String(strip=True,not_empty=False,if_missing=None)
+    outputs = formencode.ForEach(OutputSchema())
 
 class StreamNameInUse(formencode.validators.FancyValidator):
     def validate_python(self, values, state):
@@ -65,7 +72,14 @@ def validate_custom(schema, **state_kwargs):
 
     # In case of validation errors an exception is thrown. This needs to
     # be caught elsewhere.
-    return schema.to_python(pylons.request.params, state)
+
+    if state_kwargs.get('variable_decode', False):
+        params = formencode.variabledecode.variable_decode(pylons.request.params)
+        print pylons.request.params
+        print params
+    else:
+        params = pylons.request.params
+    return schema.to_python(params, state)
 
 def htmlfill(html, exception_error=None):
     """Add formencode error messages to an HTML string.
