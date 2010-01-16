@@ -245,6 +245,10 @@ class MpdcontrolController(BaseController):
         m.random(id)
         m.close()
 
+    def rescan(self):
+        m = g.p.connect()
+        m.update()
+
     def clearplaylist(self):
         m = g.p.connect()
         m.clear()
