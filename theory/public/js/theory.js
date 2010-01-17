@@ -686,7 +686,8 @@ function setSearchType(s) {
 
 function performSearch() {
    var q = $('#search input[name=q]').val(); 
-    $('#searchresults').load('/search?searchtype=Any&q=' + q,undefined,function(){
+   var searchtype = $('#searchtype').val()
+    $('#searchresults').load('/search?searchtype=' + searchtype + '&q=' + q,undefined,function(){
 						$('#searchresults').show('slide',{direction:'down'},1500);
 					});
 }

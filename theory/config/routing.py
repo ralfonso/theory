@@ -29,6 +29,8 @@ def make_map():
     map.connect('/tracks',controller='main',action='tracks')
     map.connect('/fullscreen',controller='main',action='fullscreen')
     map.connect('/randomizer',controller='main',action='randomizer')
+    map.connect('/genres',controller='main',action='genres')
+    map.connect('/genre',controller='main',action='genre')
     map.connect('/add_random',controller='main',action='add_random')
     map.connect('/filesystem',controller='main',action='filesystem')
     map.connect('/search',controller='main',action='search')

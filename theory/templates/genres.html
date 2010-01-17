@@ -1,0 +1,24 @@
+<%inherit file="body.html"/>
+<style>
+    body {
+        background-color:#eee;
+    }
+
+    #list li input {
+        padding:0;
+        margin:0;
+    }
+
+    #list li span {
+        cursor:pointer;
+    }
+</style>
+
+<div id="container-tracks">
+    <ul id="list">
+        % for g in c.genres:
+            <li><a href="/genre?genre=${h.html.url_escape(g)}">${g}</a></li>
+        % endfor
+    </ul>
+</div>
+

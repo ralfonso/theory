@@ -475,3 +475,7 @@ div#searchresults {
 	overflow-y:scroll;
 	height:400px;
 }   
+
+input#q {
+    margin-left:20px;
+}

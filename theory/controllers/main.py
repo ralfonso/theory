@@ -198,10 +198,8 @@ class MainController(BaseController):
         for o in outputs:
             if int(o['outputid']) in enabled_outputs:
                 m.enableoutput(o['outputid'])
-                print 'enabled %s' % o['outputid']
             else:
                 m.disableoutput(o['outputid'])
-                print 'disabled %s' % o['outputid']
         
         return '<script language="javascript">window.parent.setSearchType(\'%s\');window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>'\
                 % (g.tc.default_search,reloadframes,reloadpage)
@@ -334,3 +332,13 @@ class MainController(BaseController):
         c.uppath = '/'.join(c.path.split('/')[:-1])
 
         return render('/filesystem.html')
+
+    def genre(self):
+        c.genre = request.GET.get('genre','')
+        m = g.p.connect()
+        c.tracks = m.search('Genre', c.genre)
+        return render('/genre.html')
+
+    def genres(self):
+        c.genres = sorted(g.genres)
+        return render('/genres.html')
