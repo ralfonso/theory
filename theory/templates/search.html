@@ -1,24 +1,58 @@
-<%inherit file="body.html"/>
-
-
-<style>
-    body {
-        margin:0;
-        padding:0;
-        background-color:#eeeeee;
-        overflow-x:hidden;
-    }
-</style>
-
 <div id="container-tracks">
-    <ul id="list">
-        % if len(c.results) == 0:
-            <div style="margin:20px">no tracks found</div>
-        % endif
-        % for t in c.results:
-            <% h.format_title_search(t) %>
-            <li><a onclick="addToPlaylist('${h.html.url_escape(t['file'])}')"><img src="/img/add.png" /> ${t['formattedtrack']}</a></li>
-        % endfor
-    </ul>
+    % if len(c.artists) == 0 and len(c.albums) == 0 and len(c.tracks) == 0:
+        <div style="margin:20px">nothing found</div>
+    % endif
+
+    % if len(c.artists):
+        <div class="searchresultsbox">
+            <h4>artists</h4>
+            <ul id="list">
+            % for a in c.artists:
+                <%
+                    fixed_artist = a.decode('utf-8')
+
+                    try:
+                        if a.startswith(('The ','THE ','the ')):
+                            firstchar = fixed_artist[4].lower()
+                        else:
+                            firstchar = fixed_artist[0].lower()
+                    except IndexError:
+                        firstchar = ''
+                %>  
+                <li><a onclick="artistAlbums('${h.escape_js(fixed_artist)}')">${fixed_artist}</a></li>
+            % endfor
+            </ul>
+        </div>
+    % endif
+
+    % if len(c.albums):
+        <div class="searchresultsbox">
+            <h4>albums</h4>
+            <ul id="list">
+            % for a in c.albums:
+                <%
+                    artist_utf8 = a[0].decode('utf-8')
+                    album_utf8 = a[1].decode('utf-8')
+                %>
+                <li><a onclick="artistAlbums('${h.escape_js(artist_utf8)}');albumTracks('${h.escape_js(artist_utf8)}','${h.escape_js(album_utf8)}')">${artist_utf8} - ${album_utf8}</a></li>
+            % endfor
+            </ul>
+        </div>
+    % endif
+
+    % if len(c.tracks):
+        <div class="searchresultsbox">
+            <h4>tracks</h4>
+            <ul id="list">
+            % for t in c.tracks:
+                <%
+                    artist_utf8 = t[0].decode('utf-8')
+                    album_utf8 = t[1].decode('utf-8')
+                    title_utf8 = t[2].decode('utf-8')
+                %>
+                <li><a onclick="addToPlaylist('${h.html.url_escape(t[3])}')"><img src="/img/add.png" /> ${artist_utf8} - ${title_utf8}</a></li>
+            % endfor
+        </ul>
+    % endif
 </div>
 

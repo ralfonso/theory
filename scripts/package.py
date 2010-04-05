@@ -8,7 +8,7 @@ import cairo
 
 
 def main():
-    version = '0.1.8'
+    version = '0.1.9'
 
     script_location = sys.argv[0]
     script_path = os.path.abspath(script_location)

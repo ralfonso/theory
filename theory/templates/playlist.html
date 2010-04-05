@@ -119,7 +119,6 @@
 
 			$('ul#playlist li a img').hover(function() {$(this).css('opacity','1.0')},
 											function() {$(this).css('opacity','0.6')});
-												
          }
     );
 </script>
@@ -193,16 +192,22 @@
             %>
             <li id="track_${t['id']}:${t['pos']}">
                 <a onclick="removeTrack(this,${t['id']})" title="remove this track" style="padding-right:1px;"><img src="/img/remove.png" /></a><a onclick="window.parent.playNow(${t['id']})" title="play this track now"><img src="/img/playnow.png" /></a>
-                ${display_title}
+                <span class="displaytitle">${display_title}</span>
                 % if 'artist' in t and 'album' in t:
                 <div class="playlist-tooltip">
                     <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}')">${t['artist']}</a>
                     <br />
+<<<<<<< HEAD
                     % if 'album' in t:
                         <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}','${t['album'].replace("'","\\'")}')">${t['album']}</a>
                         <br />
                     % endif
                     ${h.format_time(t['time'])}
+=======
+                    <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}','${t['album'].replace("'","\\'")}')">${t['album']}</a>
+                    <br />
+                    ${h.format_track_time(t)}
+>>>>>>> d9241e01d200ca3a55f4623c0e9346538e053476
 					&lt;<a onclick="playNext(${t['id']})">play this next</a>&gt;
                 </div>
                 % endif

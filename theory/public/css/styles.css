@@ -30,6 +30,11 @@ h2 {
     color:#333;
 }
 
+h4 {
+    font-size:1.5em;
+    margin:0px;
+}
+
 td.label {
     text-align:right;
 }
@@ -220,8 +225,17 @@ ul#playlist li {
     cursor:move;
 }
 
+ul#playlist li.selected {
+	background-color:#aaa;
+}
+
 ul#playlist li a {
 	cursor:pointer;
+}
+
+ul#playlist li:hover span.displaytitle {
+	font-size:11px;
+	font-weight:bold;
 }
 
 ul#playlist li a img {
@@ -316,11 +330,11 @@ a#aWiki,a#aLyrics {
 
 #config {
 	z-index:5;
-	top:200px;
+	top:100px;
 	left:200px;
 	position:absolute;
 	width:650px;
-	height:350px;
+	height:400px;
 	display:none;
 	border:1px solid black;
 }
@@ -441,4 +455,27 @@ div#widget-tooltip {
 
 div.padded-content {
     margin:20px;
+}
+
+div.searchresultsbox {
+    margin:10px;
+    -moz-border-radius:5px;
+    border:1px solid #444444;
+    padding:5px;
+}
+
+div#searchresults {
+    margin-left:50px;
+    width:400px;
+    display:none;
+    z-index:10;
+    position:absolute;
+    background-color:#DEFFBE;
+    opacity:.93;
+	overflow-y:scroll;
+	height:400px;
+}   
+
+input#q {
+    margin-left:20px;
 }

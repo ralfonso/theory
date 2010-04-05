@@ -24,18 +24,22 @@
     }
 </style>
 
-% if c.album_safe:
-    <a href="/fetchart?artist=${c.artist_safe}&album=${c.album_safe}"><img id="albumart" style="display:none" /></a>
+<h3><a href="/genres">&lt;&lt; back</a></h3>
+
+% if c.genre:
+    <h2>${c.genre}</h2>
 % endif
 
 <div id="container-tracks">
     <ul id="list">
         % for t in c.tracks:
 			<%
-				if not c.album_safe:
-					title = h.html.literal("title=\"Album: " + t['album'].replace('"','\\"') + "\"")
-				else:
-					title = ''
+                if not c.album_safe:
+                    title = h.html.literal("title=\"Album: " + t['album'].replace('"','\\"') + "\"")
+                else:
+                    title = ''
+
+                h.format_title_search(t)                    
 			%>
 
             <li><a ${title} onclick="addToPlaylist('${h.html.url_escape(t['file'])}')"><img src="/img/add.png" /> ${t['formattedtrack']}</a></li>

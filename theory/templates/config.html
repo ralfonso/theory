@@ -71,13 +71,13 @@
         <td align=right>
             theory web password:</td>
         <td>
-            ${h.html.tags.text('webpassword',None,size=25)}</td>
+            ${h.html.tags.text('webpassword', None, size=25)}</td>
     </tr>
     <tr>
         <td align=right>
             web interface stops refreshing after ~20minutes of inactivity:</td>
         <td>
-            ${h.html.tags.checkbox('timeout',value=True,checked=True)}</td>
+            ${h.html.tags.checkbox('timeout', value=True, checked=True)}</td>
     </tr>
     <tr>
         <td align=right>
@@ -89,10 +89,28 @@
     </tr>
     <tr>
         <td align=right>
+            Amazon Developer Key (Secret):</td>
+        <td>
+            ${h.html.tags.text('aws_secret',None,size=45)}<br />
+        </td>
+    </tr>
+    <tr>
+        <td align=right>
             Default search type:</td>
         <td>
-            ${h.html.tags.select('default_search',None,g.searchterms,id="default_search",style_="margin-left:0px")}</td>
+            ${h.html.tags.select('default_search', None, g.searchterms, id="default_search", style_="margin-left:0px")}</td>
     </tr>
+    % if c.firsttime == '0':
+    <tr>
+        <td align=right>
+            outputs:</td>
+        <td>
+            % for o in c.outputs:
+                ${h.html.tags.checkbox('outputs-%s.enabled' % o['outputid'], value=o['outputid'], checked=True, label=o['outputname'])}<br />
+            % endfor
+        </td>
+    </tr>
+    % endif
     <tr>
         <td align=center colspan=2>
             <input type=submit name=action value="save config" style="border:1px solid black;background-color:limegreen" />

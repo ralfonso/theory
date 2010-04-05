@@ -43,6 +43,7 @@ class MpdcontrolController(BaseController):
         m = g.p.connect()
         current = m.currentsong()
         status = m.status()
+        m.close()
 
         return dict(track=current,status=status)
 
@@ -76,6 +77,7 @@ class MpdcontrolController(BaseController):
            
             track += 1
 
+        m.close()
         return dict(status=status,current=current,playlist=remaining_playlist)
 
     def setvolume(self,id):
@@ -87,6 +89,8 @@ class MpdcontrolController(BaseController):
         except ValueError:
             pass
 
+        m.close()
+
     def seek(self,id,val):
         m = g.p.connect()
         try:
@@ -96,17 +100,22 @@ class MpdcontrolController(BaseController):
         except ValueError:
             pass
 
+        m.close()
+
     def stop(self):
         m = g.p.connect()
         m.stop()
+        m.close()
     
     def previous(self):
         m = g.p.connect()
         m.previous()
+        m.close()
     
     def next(self):
         m = g.p.connect()
         m.next()
+        m.close()
 
     def play(self):
         m = g.p.connect()
@@ -115,10 +124,12 @@ class MpdcontrolController(BaseController):
             m.pause()
         else:
             m.play()
+        m.close()
 
     def pause(self):
         m = g.p.connect()
         m.pause()
+        m.close()
 
     def reorderplaylist(self):
         tracklist = request.POST.getall('track[]')
@@ -132,12 +143,14 @@ class MpdcontrolController(BaseController):
                 m.moveid(parts[0],iter)
                 
             iter += 1
+        m.close()
 
     def addtoplaylist(self):
         file = request.POST.get('file').encode('utf-8')
 
         m = g.p.connect()
         m.add(file)
+        m.close()
 
     def addalbumtoplaylist(self):
         artist = request.GET.get('artist').encode('utf-8')
@@ -151,6 +164,7 @@ class MpdcontrolController(BaseController):
             m.add(t['file'])
 
         m.command_list_end()
+        m.close()
 
     def addartistalbums(self):
         artist = request.GET.get('artist').encode('utf-8')
@@ -169,6 +183,7 @@ class MpdcontrolController(BaseController):
             m.add(t['file'])
 
         m.command_list_end()
+        m.close()
 
 
     def addpathtoplaylist(self):
@@ -190,6 +205,7 @@ class MpdcontrolController(BaseController):
             m.add(t['file'])
 
         m.command_list_end()  
+        m.close()
 
     def removetrack(self,id):
         m = g.p.connect()
@@ -197,6 +213,17 @@ class MpdcontrolController(BaseController):
             m.deleteid(id)
         except CommandError,e: # exception if the track to be removed doesn't exist
             return str(e)
+        finally:
+            m.close()
+
+    def removemultipletracks(self,id):
+        m = g.p.connect()
+        for id in id.split(','):
+            if id:
+                try:
+                    m.deleteid(id)
+                except CommandError,e: # exception if the track to be removed doesn't exist
+                    pass
 
     def playnow(self,id):
         m = g.p.connect()
@@ -205,24 +232,33 @@ class MpdcontrolController(BaseController):
             m.play()
         except CommandError,e:
             return str(e)
-        
+        finally:
+            m.close() 
 
     def repeat(self,id):
         m = g.p.connect()
         m.repeat(id)
+        m.close()
 
     def random(self,id):
         m = g.p.connect()
         m.random(id)
+        m.close()
+
+    def rescan(self):
+        m = g.p.connect()
+        m.update()
 
     def clearplaylist(self):
         m = g.p.connect()
         m.clear()
+        m.close()
         
     
     def shuffle(self):
         m = g.p.connect()
         m.shuffle()
+        m.close()
         
     def trimplaylist(self):
         """ trims the playlist of everything leading up to the currently playing track """
@@ -245,6 +281,7 @@ class MpdcontrolController(BaseController):
                 break
 
         m.command_list_end()
+        m.close()
 
     def playnext(self,id):
         m = g.p.connect()
@@ -252,4 +289,5 @@ class MpdcontrolController(BaseController):
         if not 'pos' in current:
             return
         m.moveid(id,int(current['pos'])+1)
+        m.close()
 

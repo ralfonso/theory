@@ -27,7 +27,6 @@ from theory.lib.base import BaseController, render
 from theory.lib import helpers as h
 from theory.model.mpdpool import ConnectionClosed,IncorrectPassword,ProtocolError
 from theory.model.albumart import AlbumArt,NoArtError
-from theory.model.lyrics import *
 
 from theory.model import *
 
@@ -128,25 +127,48 @@ class MainController(BaseController):
     def config(self,use_htmlfill=True):
         """ controller for the configuration iframe """
 
-        c.firsttime = request.GET.get('firsttime')
+        c.firsttime = request.GET.get('firsttime','0')
         c.noconnection = request.GET.get('noconnection')
         c.error = request.GET.get('error')
         c.type = request.GET.get('type')
 
+        configured_outputs = []
+
+        if c.firsttime == '0':
+            try:
+                m = g.p.connect()
+                c.outputs = m.outputs()
+
+                for o in c.outputs:
+                    if o['outputenabled'] == '1':
+                        key = 'enabled'
+                    else:
+                        key = 'disabled'
+
+                    configured_outputs.append({key: o['outputid']})
+
+            except ConnectionClosed:
+                return render('/null.html')
+
         if use_htmlfill:
-            return formencode.htmlfill.render(render("/config.html"),{'server':g.tc.server,'port':g.tc.port,
+            values = formencode.variabledecode.variable_encode({'server':g.tc.server,'port':g.tc.port,
                                                                      'password':g.tc.password,'webpassword':g.tc.webpassword,
                                                                      'awskey':g.tc.awskey,'timeout':g.tc.timeout,
-                                                                     'default_search':g.tc.default_search})
+                                                                     'aws_secret':g.tc.aws_secret,
+                                                                     'default_search':g.tc.default_search,
+                                                                     'outputs': configured_outputs})
+
+            return formencode.htmlfill.render(render("/config.html"), values)
         else:
             return render("/config.html")
 
     def saveconfig(self):
         """ controller to save the web-based configuration """ 
         try:
-            fields = validate_custom(form.ConfigForm())
+            fields = validate_custom(form.ConfigForm(), variable_decode=True)
         except formencode.api.Invalid, e:
             return form.htmlfill(self.config(use_htmlfill=False),  e)
+
 
         if fields['action'] == 'save config':
             reloadframes = 'true'
@@ -167,24 +189,20 @@ class MainController(BaseController):
             reloadframes = 'false'
 
         g.p = g.p.recreate()
+
+        m = g.p.connect()
+        outputs = m.outputs()
+
+        enabled_outputs = [x['enabled'] for x in fields['outputs']]
+
+        for o in outputs:
+            if int(o['outputid']) in enabled_outputs:
+                m.enableoutput(o['outputid'])
+            else:
+                m.disableoutput(o['outputid'])
         
         return '<script language="javascript">window.parent.setSearchType(\'%s\');window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>'\
                 % (g.tc.default_search,reloadframes,reloadpage)
-
-
-    def lyrics(self):
-        """ controller for the lyrics widget. loads lyrics from lyricswiki.org """
-
-        artist = request.GET.get('artist').encode('utf-8')
-        track = request.GET.get('track').encode('utf-8')
-   
-        try:
-            l = Lyrics(artist,track)
-            c.lyrics = l.lyrics
-        except NoLyricsError:
-            c.lyrics = 'error loading lyrics.  lyricwiki.org down?' 
-
-        return render('/lyrics.html')
 
     def stats(self):
         """ controller for the stats widget """
@@ -228,12 +246,28 @@ class MainController(BaseController):
         return render('/null.html')
 
     def search(self):
-        searchtype = request.POST.get('searchtype','Artist')
-        q = request.POST.get('q').encode('utf-8')
+        searchtype = request.GET.get('searchtype','Artist')
+        q = request.GET.get('q').encode('utf-8')
 
-        if q:
+        if q and len(q) > 2:
             m = g.p.connect()
-            c.results = m.search(searchtype,q)
+            results = m.search(searchtype,q)
+
+            c.artists = set()
+            c.albums = set()
+            c.tracks = set()
+
+            search_string = q.lower()
+
+            for r in results:
+                if 'artist' in r.keys() and search_string in r['artist'].lower():
+                    c.artists.add(r['artist'])
+
+                if 'album' in r.keys() and search_string in r['album'].lower():
+                    c.albums.add((r['artist'], r['album']))
+
+                if 'title' in r.keys() and search_string in r['title'].lower():
+                    c.tracks.add((r['artist'], r['album'], r['title'], r['file']))
 
         return render('/search.html')
 
@@ -298,3 +332,13 @@ class MainController(BaseController):
         c.uppath = '/'.join(c.path.split('/')[:-1])
 
         return render('/filesystem.html')
+
+    def genre(self):
+        c.genre = request.GET.get('genre','')
+        m = g.p.connect()
+        c.tracks = m.search('Genre', c.genre)
+        return render('/genre.html')
+
+    def genres(self):
+        c.genres = sorted(g.genres)
+        return render('/genres.html')

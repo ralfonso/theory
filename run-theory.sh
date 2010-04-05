@@ -1,6 +1,8 @@
 #!/bin/sh
 SELF=$(cd $(dirname $0); pwd -P)/
+CWD=$(pwd)
 
+cd $SELF
 
 start() {
 	if [ ! -e "$SELF/env/bin/paster" ]
@@ -29,3 +31,4 @@ case $1 in
 	;;
 esac
 
+cd $CWD
