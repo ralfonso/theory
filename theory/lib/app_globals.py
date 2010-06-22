@@ -1,7 +1,6 @@
 """The application's Globals object"""
 
-from theory.model.mpdhelper import *
-from theory.model.mpdpool import QueuePool
+from theory.model.mpdpool import MPDPool
 from theory.model.tconfig import TConfig
 from pylons import config
 
@@ -23,10 +22,10 @@ class Globals(object):
         variable
         """
 
-        self.p = QueuePool(self.get_mpd_conn, max_overflow=5, pool_size=2, recycle=60,use_threadlocal=True,timeout=5)
+        #self.p = QueuePool(self.get_mpd_conn, max_overflow=5, pool_size=2, recycle=60,use_threadlocal=True,timeout=5)
         self.tc = TConfig()
+        self.p = MPDPool(self)
         self.get_genres()
-        pass
 
     def get_genres(self):
         """ load all tracks and create a list of every unique genre in the database"""
@@ -48,5 +47,7 @@ class Globals(object):
 
                 for genre in track_genres:
                     self.genres.add(genre)
+            
+            m.disconnect()
         except:
             pass

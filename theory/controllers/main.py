@@ -18,15 +18,18 @@ import logging
 import socket
 import random
 
+import formencode.htmlfill
+
 from pylons import request, response, session
 from pylons import tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort
+from routes.util import redirect_to
 from pylons import config
 
 from theory.lib.base import BaseController, render
 from theory.lib import helpers as h
-from theory.model.mpdpool import ConnectionClosed,IncorrectPassword,ProtocolError
-from theory.model.albumart import AlbumArt,NoArtError
+from theory.model.mpdpool import ConnectionClosed, IncorrectPassword, ProtocolError, NoMPDConnection
+from theory.model.albumart import AlbumArt, NoArtError
 
 from theory.model import *
 
@@ -38,11 +41,12 @@ class MainController(BaseController):
     def index(self):
         """ the main page controller! """
 
-        c.debug = request.GET.get('debug',0)
+        c.debug = request.GET.get('debug', 0)
+        c.config = ''
         
         try:
             g.p.connect()
-        except (ProtocolError,ConnectionClosed):
+        except (ProtocolError, ConnectionClosed, NoMPDConnection):
             if g.tc.server is None:
                 g.tc = TConfig()
                 if g.tc.server is None:
@@ -59,24 +63,24 @@ class MainController(BaseController):
         """ the controller for the artists frame """
 
         try:
-            m = g.p.connect()
-        except ConnectionClosed:
+            self.m = g.p.connect()
+        except (NoMPDConnection, ConnectionClosed):
             return render('/null.html')
 
-        c.artists = m.artists()
+        c.artists = self.m.artists()
         return render('/artists.html')
 
     def albums(self):
         """ controller for the albums frame """
 
-        c.artist = request.GET.get('artist','').encode('utf-8')
-        c.album = request.GET.get('album','').encode('utf-8')
+        c.artist = request.GET.get('artist', '').encode('utf-8')
+        c.album = request.GET.get('album', '').encode('utf-8')
 
         try:
-            m = g.p.connect()
-        except ConnectionClosed:
+            self.m = g.p.connect()
+        except (NoMPDConnection, ConnectionClosed):
             return render('/null.html')
-        c.albums = m.albums(c.artist)
+        c.albums = self.m.albums(c.artist)
 
         aa = AlbumArt()
         c.album_imgs = aa.artist_art(c.artist)
@@ -86,14 +90,14 @@ class MainController(BaseController):
     def tracks(self):
         """ controller for the tracks frame """
 
-        c.artist = request.GET.get('artist','').encode('utf-8')
-        c.album = request.GET.get('album','').encode('utf-8')
+        c.artist = request.GET.get('artist', '').encode('utf-8')
+        c.album = request.GET.get('album', '').encode('utf-8')
         try:
-            m = g.p.connect()
-        except ConnectionClosed:
+            self.m = g.p.connect()
+        except (NoMPDConnection, ConnectionClosed):
             return render('/null.html')
 
-        c.tracks = m.tracks(c.artist,c.album)
+        c.tracks = self.m.tracks(c.artist, c.album)
 
         c.artist_safe = h.html.url_escape(c.artist)
         c.album_safe = h.html.url_escape(c.album)
@@ -106,25 +110,25 @@ class MainController(BaseController):
         if it doesn't exist, attempt to fetch it from Amazon and save to disk 
         """
             
-        artist = request.GET.get('artist','').encode('utf-8')
-        album = request.GET.get('album','').encode('utf-8')
+        artist = request.GET.get('artist', '').encode('utf-8')
+        album = request.GET.get('album', '').encode('utf-8')
         response.headers['Content-type'] = 'image/jpeg'
 
         try:
             aa = AlbumArt()
-            aa.album_fetch(artist,album)
+            aa.album_fetch(artist, album)
             img = aa.disk_path
         except NoArtError:
             response.headers['Content-type'] = 'image/png'
             img = 'theory/public/img/noart.png'
 
 
-        f = open(img,'rb')
+        f = open(img, 'rb')
         data = f.read()
         f.close()
         return data
     
-    def config(self,use_htmlfill=True):
+    def config(self, use_htmlfill=True):
         """ controller for the configuration iframe """
 
         c.firsttime = request.GET.get('firsttime')
@@ -133,9 +137,9 @@ class MainController(BaseController):
         c.type = request.GET.get('type')
 
         if use_htmlfill:
-            return formencode.htmlfill.render(render("/config.html"),{'server':g.tc.server,'port':g.tc.port,
-                                                                     'password':g.tc.password,'webpassword':g.tc.webpassword,
-                                                                     'awskey':g.tc.awskey,'timeout':g.tc.timeout,
+            return formencode.htmlfill.render(render("/config.html"), {'server':g.tc.server, 'port':g.tc.port,
+                                                                     'password':g.tc.password, 'webpassword':g.tc.webpassword,
+                                                                     'awskey':g.tc.awskey, 'timeout':g.tc.timeout,
                                                                      'aws_secret':g.tc.aws_secret,
                                                                      'default_search':g.tc.default_search})
         else:
@@ -153,7 +157,7 @@ class MainController(BaseController):
             reloadpage = 'true'
 
             for k in fields.keys():
-                setattr(g.tc,k,fields[k])
+                setattr(g.tc, k, fields[k])
 
             try:
                 g.tc.commit_config()
@@ -166,20 +170,20 @@ class MainController(BaseController):
             reloadpage = 'false'
             reloadframes = 'false'
 
-        g.p = g.p.recreate()
+        g.p.recreate()
         
         return '<script language="javascript">window.parent.setSearchType(\'%s\');window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>'\
-                % (g.tc.default_search,reloadframes,reloadpage)
+                % (g.tc.default_search, reloadframes, reloadpage)
 
     def stats(self):
         """ controller for the stats widget """
 
         try:
-            m = g.p.connect()
-        except ConnectionClosed:
+            self.m = g.p.connect()
+        except (NoMPDConnection, ConnectionClosed):
             return render('/null.html')
 
-        c.stats = m.stats()
+        c.stats = self.m.stats()
         aa = AlbumArt()
         c.dir_size = aa.dir_size()
 
@@ -191,34 +195,34 @@ class MainController(BaseController):
         return render('/fullscreen.html')
 
     def randomizer(self):
-        action = request.GET.get('action','')
-        c.incex = request.GET.get('incex','exclude')
+        action = request.GET.get('action', '')
+        c.incex = request.GET.get('incex', 'exclude')
         c.selected_genres = request.GET.getall('genres') 
-        c.exclude_live = request.GET.get('excludelive',not bool(len(action)))
-        c.quantity = int(request.GET.get('quantity',50))
+        c.exclude_live = request.GET.get('excludelive', not bool(len(action)))
+        c.quantity = int(request.GET.get('quantity', 50))
         c.genres = sorted(g.genres)
 
         if action:
-            m = g.p.connect()
-            c.random_tracks = m.get_random_tracks(c.incex,c.selected_genres,c.exclude_live,c.quantity)
+            self.m = g.p.connect()
+            c.random_tracks = self.m.get_random_tracks(c.incex, c.selected_genres, c.exclude_live, c.quantity)
         return render('/randomizer.html')
 
     def add_random(self):
-        m = g.p.connect()
+        self.m = g.p.connect()
         files = request.POST.getall('file')
         for f in files:
-            m.add(f.encode('utf-8'))
+            self.m.add(f.encode('utf-8'))
 
         c.content = '<script language="javascript">window.parent.frames[\'frmplaylist\'].location.reload();</script>'
         return render('/null.html')
 
     def search(self):
-        searchtype = request.GET.get('searchtype','Artist')
+        searchtype = request.GET.get('searchtype', 'Artist')
         q = request.GET.get('q').encode('utf-8')
 
         if q:
-            m = g.p.connect()
-            results = m.search(searchtype,q)
+            self.m = g.p.connect()
+            results = self.m.search(searchtype, q)
 
             c.artists = set()
             c.albums = set()
@@ -231,20 +235,20 @@ class MainController(BaseController):
                     c.artists.add(r['artist'])
 
                 if 'album' in r.keys() and search_string in r['album'].lower():
-                    c.albums.add((r['artist'],r['album']))
+                    c.albums.add((r['artist'], r['album']))
 
                 if 'title' in r.keys() and search_string in r['title'].lower():
-                    c.tracks.add((r['artist'],r['album'],r['title']))
+                    c.tracks.add((r['artist'], r['album'], r['title']))
 
         return render('/search.html')
 
-    def streams(self,use_htmlfill=True,**kwargs):
-        c.error = request.GET.get('error','')
+    def streams(self, use_htmlfill=True, **kwargs):
+        c.error = request.GET.get('error', '')
         c.streams = g.tc.streams
 
         if use_htmlfill:
-            return formencode.htmlfill.render(render("/streams.html"),{'name':kwargs.get('name',''),
-                                                                       'url':kwargs.get('url','')})
+            return formencode.htmlfill.render(render("/streams.html"), {'name':kwargs.get('name',''),
+                                                                       'url':kwargs.get('url', '')})
         else:
             return render("/streams.html")
         return render('/streams.html')
@@ -258,30 +262,30 @@ class MainController(BaseController):
 
         try:
             if fields['oldname']:
-                index = self._find_stream_index(g.tc.streams,fields['oldname'])
+                index = self._find_stream_index(g.tc.streams, fields['oldname'])
 
                 if index > -1:
                     del g.tc.streams[index]
                 
-            g.tc.streams.append([fields['name'],fields['url']])
+            g.tc.streams.append([fields['name'], fields['url']])
             g.tc.commit_config()
         except:
             redirect_to('/streams?error=1&type=save')
         
         redirect_to('/streams')
 
-    def _find_stream_index(self,streams,name):
-        for iter,s in enumerate(streams):
+    def _find_stream_index(self, streams, name):
+        for iter, s in enumerate(streams):
             if s[0] == name:
                 return iter
 
         return -1
 
     def deletestream(self):
-        delete = request.GET.get('delete','')
+        delete = request.GET.get('delete', '')
 
         if delete:
-            index = self._find_stream_index(g.tc.streams,delete)
+            index = self._find_stream_index(g.tc.streams, delete)
             if index > -1:
                 del g.tc.streams[index]
                 try:
@@ -292,9 +296,9 @@ class MainController(BaseController):
         redirect_to('/streams')
  
     def filesystem(self):
-        m = g.p.connect()
-        c.path = request.GET.get('path','/').encode('utf-8')
-        c.lsinfo = m.lsinfo(c.path)
+        self.m = g.p.connect()
+        c.path = request.GET.get('path', '/').encode('utf-8')
+        c.lsinfo = self.m.lsinfo(c.path)
 
         c.uppath = '/'.join(c.path.split('/')[:-1])
 

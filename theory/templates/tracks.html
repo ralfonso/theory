@@ -38,7 +38,7 @@
 					title = ''
 			%>
 
-            <li><a ${title} onclick="addToPlaylist('${h.html.url_escape(t['file'])}')"><img src="/img/add.png" /> ${t['formattedtrack']}</a></li>
+            <li><a ${title.encode('utf-8')} onclick="addToPlaylist('${h.html.url_escape(t['file'])}')"><img src="/img/add.png" /> ${t['formattedtrack']}</a></li>
         % endfor
     </ul>
 </div>

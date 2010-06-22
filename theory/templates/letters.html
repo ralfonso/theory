@@ -12,8 +12,8 @@
 	</ul>
 
     <div id="search" style="display:none">
-        ${h.html.tags.select('searchtype',g.tc.default_search,g.searchterms,id="searchtype")}
-        ${h.html.tags.text('q','',size=25)}
+        ${h.html.tags.select('searchtype', app_globals.tc.default_search, app_globals.searchterms, id="searchtype")}
+        ${h.html.tags.text('q', '', size=25)}
         <input type="button" id="dosearch" value="search" class="orange ui-state-default ui-corner-all" />
         <input type="button" id="searchcancel" value="cancel" class="grey ui-state-default ui-corner-all" />
     </div>

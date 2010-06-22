@@ -7,6 +7,11 @@
 </style>
 
 ## this is really dangerous but I'm lazy
-${h.html.literal(c.content)}
-
+<% 
+if 'content' in tmpl_context.__dict__:
+    content = tmpl_context.content
+else:
+    content = ''
+%>
+${h.html.literal(content)}
 <br />

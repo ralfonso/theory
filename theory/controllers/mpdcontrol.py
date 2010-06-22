@@ -20,7 +20,8 @@ import mpd
 from pylons import request, response, session
 from pylons import tmpl_context as c
 from pylons import app_globals as g
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort
+from routes.util import redirect_to
 from pylons.decorators import jsonify
 
 from mpd import CommandError
@@ -40,10 +41,10 @@ class MpdcontrolController(BaseController):
         that can be parsed by JQuery's getJSON() function
         """
             
-        m = g.p.connect()
-        current = m.currentsong()
-        status = m.status()
-        m.close()
+        self.m = g.p.connect()
+        current = self.m.currentsong()
+        status = self.m.status()
+        #m.close()
 
         return dict(track=current,status=status)
 
@@ -55,13 +56,13 @@ class MpdcontrolController(BaseController):
         """
 
         try:
-            m = g.p.connect()
+            self.m = g.p.connect()
         except ConnectionClosed:
             return render('/null.html')
 
-        status = m.status()
-        current = m.currentsong()
-        playlist = m.playlistinfo()
+        status = self.m.status()
+        current = self.m.currentsong()
+        playlist = self.m.playlistinfo()
 
         track = 0
         found_current = False
@@ -77,7 +78,7 @@ class MpdcontrolController(BaseController):
            
             track += 1
 
-        m.close()
+        #m.close()
         return dict(status=status,current=current,playlist=remaining_playlist)
 
     def setvolume(self,id):
@@ -85,51 +86,44 @@ class MpdcontrolController(BaseController):
 
         try:
             volume = id
-            m.setvol(volume)
+            self.m.setvol(volume)
         except ValueError:
             pass
 
-        m.close()
+        #m.close()
 
     def seek(self,id,val):
         m = g.p.connect()
         try:
             id = id
             pos = val
-            m.seekid(id,pos)
+            self.m.seekid(id,pos)
         except ValueError:
             pass
 
-        m.close()
-
     def stop(self):
-        m = g.p.connect()
-        m.stop()
-        m.close()
+        self.m = g.p.connect()
+        self.m.stop()
     
     def previous(self):
-        m = g.p.connect()
-        m.previous()
-        m.close()
+        self.m = g.p.connect()
+        self.m.previous()
     
     def next(self):
-        m = g.p.connect()
-        m.next()
-        m.close()
+        self.m = g.p.connect()
+        self.m.next()
 
     def play(self):
-        m = g.p.connect()
-        status = m.status()
+        self.m = g.p.connect()
+        status = self.m.status()
         if status['state'] == 'play':
-            m.pause()
+            self.m.pause()
         else:
-            m.play()
-        m.close()
+            self.m.play()
 
     def pause(self):
-        m = g.p.connect()
-        m.pause()
-        m.close()
+        self.m = g.p.connect()
+        self.m.pause()
 
     def reorderplaylist(self):
         tracklist = request.POST.getall('track[]')
@@ -140,127 +134,117 @@ class MpdcontrolController(BaseController):
         for t in tracklist:
             parts = t.split(':')
             if iter != parts[1]:
-                m.moveid(parts[0],iter)
+                self.m.moveid(parts[0],iter)
                 
             iter += 1
-        m.close()
 
     def addtoplaylist(self):
         file = request.POST.get('file').encode('utf-8')
 
-        m = g.p.connect()
-        m.add(file)
-        m.close()
+        self.m = g.p.connect()
+        self.m.add(file)
 
     def addalbumtoplaylist(self):
         artist = request.GET.get('artist').encode('utf-8')
         album = request.GET.get('album').encode('utf-8')
 
-        m = g.p.connect()
-        tracks = m.tracks(artist,album)
+        self.m = g.p.connect()
+        tracks = self.m.tracks(artist,album)
 
-        m.command_list_ok_begin()
+        self.m.command_list_ok_begin()
         for t in tracks:
-            m.add(t['file'])
+            self.m.add(t['file'])
 
-        m.command_list_end()
-        m.close()
+        self.m.command_list_end()
 
     def addartistalbums(self):
         artist = request.GET.get('artist').encode('utf-8')
 
-        m = g.p.connect()
-        albums = m.albums(artist)
+        self.m = g.p.connect()
+        albums = self.m.albums(artist)
 
         tracklist = []
 
         for album in albums:
-            tracklist.extend(m.tracks(artist,album))
+            tracklist.extend(self.m.tracks(artist,album))
         
-        m.command_list_ok_begin()
+        self.m.command_list_ok_begin()
 
         for t in tracklist:
-            m.add(t['file'])
+            self.m.add(t['file'])
 
-        m.command_list_end()
-        m.close()
+        self.m.command_list_end()
 
 
     def addpathtoplaylist(self):
         path = request.POST.get('path').encode('utf-8')
 
-        m = g.p.connect()
+        self.m = g.p.connect()
 
         tracklist = []
 
-        lsinfo = m.lsinfo(path)
+        lsinfo = self.m.lsinfo(path)
 
         for f in lsinfo:
             if 'file' in f:
                 tracklist.append(f)
         
-        m.command_list_ok_begin()
+        self.m.command_list_ok_begin()
 
         for t in tracklist:
-            m.add(t['file'])
+            self.m.add(t['file'])
 
-        m.command_list_end()  
-        m.close()
+        self.m.command_list_end()  
 
     def removetrack(self,id):
-        m = g.p.connect()
+        self.m = g.p.connect()
         try:
-            m.deleteid(id)
+            self.m.deleteid(id)
         except CommandError,e: # exception if the track to be removed doesn't exist
             return str(e)
         finally:
-            m.close()
+            pass
 
     def removemultipletracks(self,id):
-        m = g.p.connect()
+        self.m = g.p.connect()
         for id in id.split(','):
             if id:
                 try:
-                    m.deleteid(id)
+                    self.m.deleteid(id)
                 except CommandError,e: # exception if the track to be removed doesn't exist
                     pass
 
     def playnow(self,id):
-        m = g.p.connect()
+        self.m = g.p.connect()
         try:
-            m.playid(id)
-            m.play()
+            self.m.playid(id)
+            self.m.play()
         except CommandError,e:
             return str(e)
         finally:
-            m.close() 
+            pass
 
     def repeat(self,id):
-        m = g.p.connect()
-        m.repeat(id)
-        m.close()
+        self.m = g.p.connect()
+        self.m.repeat(id)
 
     def random(self,id):
-        m = g.p.connect()
-        m.random(id)
-        m.close()
+        self.m = g.p.connect()
+        self.m.random(id)
 
     def clearplaylist(self):
-        m = g.p.connect()
-        m.clear()
-        m.close()
+        self.m = g.p.connect()
+        self.m.clear()
         
-    
     def shuffle(self):
-        m = g.p.connect()
-        m.shuffle()
-        m.close()
+        self.m = g.p.connect()
+        self.m.shuffle()
         
     def trimplaylist(self):
         """ trims the playlist of everything leading up to the currently playing track """
-        m = g.p.connect()
-        current = m.status()
-        playlist = m.playlistinfo()
+        self.m = g.p.connect()
+        current = self.m.status()
+        playlist = self.m.playlistinfo()
 
         if not 'songid' in current:
             return
@@ -268,7 +252,7 @@ class MpdcontrolController(BaseController):
         if len(playlist) == 0:
             return
 
-        m.command_list_ok_begin()
+        self.m.command_list_ok_begin()
 
         for t in playlist:
             if current['songid'] != t['id']:
@@ -276,14 +260,12 @@ class MpdcontrolController(BaseController):
             else:
                 break
 
-        m.command_list_end()
-        m.close()
+        self.m.command_list_end()
 
     def playnext(self,id):
-        m = g.p.connect()
-        current = m.currentsong()
+        self.m = g.p.connect()
+        current = self.m.currentsong()
         if not 'pos' in current:
             return
-        m.moveid(id,int(current['pos'])+1)
-        m.close()
+        self.m.moveid(id,int(current['pos'])+1)
 

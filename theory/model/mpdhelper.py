@@ -9,8 +9,19 @@ from theory.lib import helpers as h
 
 log = logging.getLogger(__name__)
 
-class NoMPDConnection(Exception):
-    pass
+
+def wrap_error(fn):
+    def new(*args, **kwargs):
+        try:
+            r = fn(*args, **kwargs)
+        except mpd.ConnectionError:
+            log.debug('connectionerror, attempt reconnect')
+            args[0].connect()
+            r = fn(*args, **kwargs)
+
+        return r
+
+    return new
 
 class mpdhelper(object):
     """ 
@@ -21,21 +32,50 @@ class mpdhelper(object):
 
     mpdc = None
 
-    def __init__(self,globals): 
-        try:
-            log.debug('Attempting to connect to %s:%s' % (globals.tc.server,globals.tc.port))
-            self.mpdc = mpd.MPDClient()
-            self.mpdc.connect(globals.tc.server,globals.tc.port)
-            if globals.tc.password:
-                self.mpdc.password(globals.tc.password)
-        except (socket.gaierror,socket.error):
-            self.mpdc = None
+    def __init__(self, g): 
+        self.mpdc = None
+        self.g = g
+        self.callbacks = []
+        self.callback_param = []
 
+    def add_callback(self, func, *p):
+        #log.debug('adding callback: %s %s' % (str(func), p))
+        self.callbacks.append(func)
+        self.callback_param.append(p)
+
+    def connect(self):
+        log.debug('Attempting to connect to %s:%s' % (self.g.tc.server, self.g.tc.port))
+        self.mpdc = mpd.MPDClient()
+        self.mpdc.connect(self.g.tc.server, self.g.tc.port)
+        if self.g.tc.password:
+            self.mpdc.password(self.g.tc.password)
+            log.debug('using password')
+
+        return self                
+
+    def disconnect(self):
+        log.debug('disconnect, calling callbacks on %s' % self)
+        log.debug(self.callback_param)
+        i = 0
+
+        callbacks = self.callbacks
+        param = self.callback_param
+
+        self.callbacks = []
+        self.callback_param = []
+
+        for func in callbacks:
+            #log.debug('callback: %s (%s)' % (str(func), param[i]))
+            func(*(param[i]))
+
+
+    @wrap_error
     def artists(self):
         artists = self.list('artist')
         artists.sort(self._sortartists)
         return artists
 
+    @wrap_error
     def tracks(self,artist,album=None):
         # this is really ugly!
 
@@ -52,16 +92,18 @@ class mpdhelper(object):
         trackno = 1
 
         for t in tracks:
-            h.format_title(t,trackno)
+            h.format_title(t, trackno)
             trackno += 1
 
         return tracks
 
+    @wrap_error
     def albums(self,artist):
         albums = self.list('album',artist)
         albums.sort(lambda x,y: cmp(x.lower(),y.lower()))
         return albums
 
+    @wrap_error
     def get_random_tracks(self,incex,selected_genres,exclude_live,quantity):
         all_tracks = self.listallinfo()
 
@@ -164,7 +206,29 @@ class mpdhelper(object):
             
 
     def __getattr__(self,attr):
+        log.debug('getattr: %s' % attr)
         if self.mpdc is not None:
-            return getattr(self.mpdc,attr)
+            try:
+                return getattr(self.mpdc,attr)
+            except socket.error, e:
+                if isinstance(e.args, tuple):
+                    log.debug("errno is %d" % e[0])
+                    if e[0] == errno.EPIPE:
+                       # remote peer disconnected
+                       log.debug("Detected remote disconnect")
+                    else:
+                       # determine and handle different error
+                       pass
+                else:
+                    print "socket error ", e
+
+                log.debug('attempting reconnect')
+                self = __init__(g)
+            except mpd.ConnectionError,e:
+                log.debug('attempting reconnect')
+                self = __init__(g)
+                self.connect()
+                
+
         else:
             raise NoMPDConnection('Could not connect to the MPD server')

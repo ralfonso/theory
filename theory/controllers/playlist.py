@@ -18,11 +18,12 @@ import logging
 
 from pylons import request, response, session
 from pylons import tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort
+from routes.util import redirect_to
 from pylons import app_globals as g
 
-from theory.model.mpdpool import ConnectionClosed
 from theory.lib.base import BaseController, render
+from theory.model.mpdpool import NoMPDConnection
 #import theory.model as model
 
 log = logging.getLogger(__name__)
@@ -35,9 +36,8 @@ class PlaylistController(BaseController):
 
         try:
             m = g.p.connect()
-        except ConnectionClosed:
+        except NoMPDConnection:            
             return render('/null.html')
-
         status = m.status()
         c.playlistid = status['playlist']
         c.playlist = m.playlistinfo()
