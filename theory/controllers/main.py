@@ -197,11 +197,12 @@ class MainController(BaseController):
         outputs = self.m.outputs()
         enabled_outputs = [x['enabled'] for x in fields['outputs']]
 
-        for o in outputs:
-            if int(o['outputid']) in enabled_outputs:
-                self.m.enableoutput(o['outputid'])
-            else:
-                self.m.disableoutput(o['outputid'])
+        if len(enabled_outputs) == 0:   # this is probably a firsttime config, don't disable outputs
+            for o in outputs:
+                if int(o['outputid']) in enabled_outputs:
+                    self.m.enableoutput(o['outputid'])
+                else:
+                    self.m.disableoutput(o['outputid'])
         
         return '<script language="javascript">window.parent.setSearchType(\'%s\');window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>'\
                 % (g.tc.default_search, reloadframes, reloadpage)
