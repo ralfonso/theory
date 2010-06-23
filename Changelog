@@ -1,3 +1,8 @@
+0.1.10
+	fixes for initial config, was disabling outputs
+	rewrote connection pooling system and fixed the null album error
+	fixed bug where track without album name breaks playlist
+
 0.1.9
 	updated to Pylons 0.9.7
 	update to new Amazon API for album art fetching
