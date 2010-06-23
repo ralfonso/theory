@@ -197,17 +197,9 @@
                 <div class="playlist-tooltip">
                     <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}')">${t['artist']}</a>
                     <br />
-<<<<<<< HEAD
-                    % if 'album' in t:
-                        <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}','${t['album'].replace("'","\\'")}')">${t['album']}</a>
-                        <br />
-                    % endif
-                    ${h.format_time(t['time'])}
-=======
                     <a onclick="window.parent.artistAlbums('${t['artist'].replace("'","\\'")}','${t['album'].replace("'","\\'")}')">${t['album']}</a>
                     <br />
                     ${h.format_track_time(t)}
->>>>>>> d9241e01d200ca3a55f4623c0e9346538e053476
 					&lt;<a onclick="playNext(${t['id']})">play this next</a>&gt;
                 </div>
                 % endif
