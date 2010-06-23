@@ -74,6 +74,7 @@ class TConfig:
         conf.set("mpd", "password",self.password)
         conf.add_section("services")
         conf.set('services','awskey',self.awskey)
+        conf.set('services','aws_secret',self.aws_secret)
         conf.add_section('main')
         conf.set('main','webpassword',self.webpassword)
         conf.set('main','timeout',self.timeout)

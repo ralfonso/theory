@@ -131,26 +131,48 @@ class MainController(BaseController):
     def config(self, use_htmlfill=True):
         """ controller for the configuration iframe """
 
-        c.firsttime = request.GET.get('firsttime')
+        c.firsttime = request.GET.get('firsttime','0')
         c.noconnection = request.GET.get('noconnection')
         c.error = request.GET.get('error')
         c.type = request.GET.get('type')
 
+        configured_outputs = []
+
+        if c.firsttime == '0':
+            try:
+                self.m = g.p.connect()
+                c.outputs = self.m.outputs()
+
+                for o in c.outputs:
+                    if o['outputenabled'] == '1':
+                        key = 'enabled'
+                    else:
+                        key = 'disabled'
+
+                    configured_outputs.append({key: o['outputid']})
+
+            except ConnectionClosed:
+                return render('/null.html')
+
         if use_htmlfill:
-            return formencode.htmlfill.render(render("/config.html"), {'server':g.tc.server, 'port':g.tc.port,
-                                                                     'password':g.tc.password, 'webpassword':g.tc.webpassword,
-                                                                     'awskey':g.tc.awskey, 'timeout':g.tc.timeout,
-                                                                     'aws_secret':g.tc.aws_secret,
-                                                                     'default_search':g.tc.default_search})
+            values = formencode.variabledecode.variable_encode({'server':g.tc.server,'port':g.tc.port,
+                                                                'password':g.tc.password,'webpassword':g.tc.webpassword,
+                                                                'awskey':g.tc.awskey,'timeout':g.tc.timeout,
+                                                                'aws_secret':g.tc.aws_secret,
+                                                                'default_search':g.tc.default_search,
+                                                                'outputs': configured_outputs})
+
+            return formencode.htmlfill.render(render("/config.html"), values)
         else:
             return render("/config.html")
 
     def saveconfig(self):
         """ controller to save the web-based configuration """ 
         try:
-            fields = validate_custom(form.ConfigForm())
+            fields = validate_custom(form.ConfigForm(), variable_decode=True)
         except formencode.api.Invalid, e:
             return form.htmlfill(self.config(use_htmlfill=False),  e)
+
 
         if fields['action'] == 'save config':
             reloadframes = 'true'
@@ -171,6 +193,15 @@ class MainController(BaseController):
             reloadframes = 'false'
 
         g.p.recreate()
+        self.m = g.p.connect()
+        outputs = self.m.outputs()
+        enabled_outputs = [x['enabled'] for x in fields['outputs']]
+
+        for o in outputs:
+            if int(o['outputid']) in enabled_outputs:
+                self.m.enableoutput(o['outputid'])
+            else:
+                self.m.disableoutput(o['outputid'])
         
         return '<script language="javascript">window.parent.setSearchType(\'%s\');window.parent.hideConfig(%s,%s);document.location.replace(\'/null.html\')</script>'\
                 % (g.tc.default_search, reloadframes, reloadpage)
@@ -220,7 +251,7 @@ class MainController(BaseController):
         searchtype = request.GET.get('searchtype', 'Artist')
         q = request.GET.get('q').encode('utf-8')
 
-        if q:
+        if q and len(q) > 2:
             self.m = g.p.connect()
             results = self.m.search(searchtype, q)
 
@@ -238,7 +269,7 @@ class MainController(BaseController):
                     c.albums.add((r['artist'], r['album']))
 
                 if 'title' in r.keys() and search_string in r['title'].lower():
-                    c.tracks.add((r['artist'], r['album'], r['title']))
+                    c.tracks.add((r['artist'], r['album'], r['title'], r['file']))
 
         return render('/search.html')
 
@@ -303,3 +334,13 @@ class MainController(BaseController):
         c.uppath = '/'.join(c.path.split('/')[:-1])
 
         return render('/filesystem.html')
+
+    def genre(self):
+        c.genre = request.GET.get('genre','')
+        self.m = g.p.connect()
+        c.tracks = self.m.search('Genre', c.genre)
+        return render('/genre.html')
+
+    def genres(self):
+        c.genres = sorted(g.genres)
+        return render('/genres.html')

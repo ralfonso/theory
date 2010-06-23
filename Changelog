@@ -1,3 +1,9 @@
+0.1.9
+	updated to Pylons 0.9.7
+	update to new Amazon API for album art fetching
+	new unified search system
+	simple genre browsing
+
 0.1.8
 	bugfix release
 

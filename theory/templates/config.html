@@ -28,17 +28,17 @@
         padding:5px;
     }
 </style>
-% if c.firsttime:
+% if tmpl_context.firsttime:
     <div style="color:white;margin:auto;font-weight:bold;margin-bottom:15px">please take a moment to configure theory</div>
 % endif
 
-% if c.noconnection:
+% if tmpl_context.noconnection:
     <div style="background-color:red;padding:6px;width:400px;color:white;margin:auto;font-weight:bold;margin-bottom:15px">unable to connect to MPD server</div>
 % endif
 
 <div id="errors">
-    % if c.error:
-        % if c.type == 'save':
+    % if tmpl_context.error:
+        % if tmpl_context.type == 'save':
             <div class="error-message">error saving configuration file. please check the permissions</div>
         % endif
     % endif
@@ -100,6 +100,17 @@
         <td>
             ${h.html.tags.select('default_search', None, app_globals.searchterms, id="default_search", style_="margin-left:0px")}</td>
     </tr>
+    % if tmpl_context.firsttime == '0':
+    <tr>
+        <td align=right>
+            outputs:</td>
+        <td>
+            % for o in tmpl_context.outputs:
+                ${h.html.tags.checkbox('outputs-%s.enabled' % o['outputid'], value=o['outputid'], checked=True, label=o['outputname'])}<br />
+            % endfor
+        </td>
+    </tr>
+    % endif
     <tr>
         <td align=center colspan=2>
             <input type=submit name=action value="save config" style="border:1px solid black;background-color:limegreen" />

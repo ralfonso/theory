@@ -330,11 +330,11 @@ a#aWiki,a#aLyrics {
 
 #config {
 	z-index:5;
-	top:200px;
+	top:100px;
 	left:200px;
 	position:absolute;
 	width:650px;
-	height:350px;
+	height:400px;
 	display:none;
 	border:1px solid black;
 }
@@ -475,3 +475,7 @@ div#searchresults {
 	overflow-y:scroll;
 	height:400px;
 }   
+
+input#q {
+    margin-left:20px;
+}

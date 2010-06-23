@@ -82,7 +82,7 @@ class MpdcontrolController(BaseController):
         return dict(status=status,current=current,playlist=remaining_playlist)
 
     def setvolume(self,id):
-        m = g.p.connect()
+        self.m = g.p.connect()
 
         try:
             volume = id
@@ -93,7 +93,7 @@ class MpdcontrolController(BaseController):
         #m.close()
 
     def seek(self,id,val):
-        m = g.p.connect()
+        self.m = g.p.connect()
         try:
             id = id
             pos = val
@@ -127,7 +127,7 @@ class MpdcontrolController(BaseController):
 
     def reorderplaylist(self):
         tracklist = request.POST.getall('track[]')
-        m = g.p.connect()
+        self.m = g.p.connect()
 
         iter = 0
 
@@ -231,6 +231,10 @@ class MpdcontrolController(BaseController):
     def random(self,id):
         self.m = g.p.connect()
         self.m.random(id)
+
+    def rescan(self):
+        self.m = g.p.connect()
+        self.m.update()
 
     def clearplaylist(self):
         self.m = g.p.connect()

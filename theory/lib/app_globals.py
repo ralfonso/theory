@@ -12,17 +12,12 @@ class Globals(object):
 
     searchterms = ['Artist','Title','Album','Genre','Any']
 
-    def get_mpd_conn(self):
-        m = mpdhelper(self)
-        return m
-
     def __init__(self):
         """One instance of Globals is created during application
         initialization and is available during requests via the 'g'
         variable
         """
 
-        #self.p = QueuePool(self.get_mpd_conn, max_overflow=5, pool_size=2, recycle=60,use_threadlocal=True,timeout=5)
         self.tc = TConfig()
         self.p = MPDPool(self)
         self.get_genres()

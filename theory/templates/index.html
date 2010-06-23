@@ -62,6 +62,15 @@
                                                  }
                                        })
                                });
+            $('#rescan').click(function() {
+                                var url = '/mpdcontrol/rescan';
+                                $.ajax({
+                                        url: url,
+                                        type: 'GET',
+                                        cache: false,
+                                       })
+                               });
+
 
             $('#misc a:contains(search)').click(function() {
                                                     $('#misc').slideToggle('normal',function(){$('#search').slideToggle()});
