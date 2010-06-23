@@ -80,18 +80,20 @@ class mpdhelper(object):
         # this is really ugly!
 
         if album:
-            tracks = self.find('artist',artist,'album',album)
+            tracks = self.find('artist', artist, 'album', album)
             try:
                 tracks.sort(self._sorttrackno)
-            except (ValueError,KeyError):
+            except (ValueError, KeyError):
                 pass
         else:
-            tracks = self.find('artist',artist)
+            tracks = self.find('artist', artist)
             tracks.sort(self._sorttracktitle)
 
         trackno = 1
 
         for t in tracks:
+            if 'album' not in t:
+                t['album'] = ''
             h.format_title(t, trackno)
             trackno += 1
 
@@ -204,7 +206,7 @@ class mpdhelper(object):
         else:
             return cmp(x['file'],y['file'])
             
-
+    @wrap_error
     def __getattr__(self,attr):
         log.debug('getattr: %s' % attr)
         if self.mpdc is not None:

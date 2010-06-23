@@ -45,7 +45,7 @@ class MainController(BaseController):
         c.config = ''
         
         try:
-            g.p.connect()
+            self.m = g.p.connect()
         except (ProtocolError, ConnectionClosed, NoMPDConnection):
             if g.tc.server is None:
                 g.tc = TConfig()

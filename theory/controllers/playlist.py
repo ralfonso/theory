@@ -35,13 +35,13 @@ class PlaylistController(BaseController):
         """ controller for the playlist frame """
 
         try:
-            m = g.p.connect()
+            self.m = g.p.connect()
         except NoMPDConnection:            
             return render('/null.html')
-        status = m.status()
+        status = self.m.status()
         c.playlistid = status['playlist']
-        c.playlist = m.playlistinfo()
-        info = m.lsinfo()
+        c.playlist = self.m.playlistinfo()
+        info = self.m.lsinfo()
         c.available_playlists = [playlist['playlist'] for playlist in info if 'playlist' in playlist]
         c.available_playlists.insert(0,'')
 
@@ -55,13 +55,13 @@ class PlaylistController(BaseController):
         if name == 0:
             return ''
 
-        m = g.p.connect()
-        info = m.lsinfo()
+        self.m = g.p.connect()
+        info = self.m.lsinfo()
         available_playlists = [playlist['playlist'] for playlist in info if 'playlist' in playlist]
 
         if name in available_playlists:
-            m.rm(name)
-        m.save(name)
+            self.m.rm(name)
+        self.m.save(name)
         return 'saved!'
 
     def load(self):
@@ -71,8 +71,8 @@ class PlaylistController(BaseController):
         if name == 0:
             return ''
 
-        m = g.p.connect()
-        m.load(name)
+        self.m = g.p.connect()
+        self.m.load(name)
         return 'loaded!'
 
     def delete(self):
@@ -82,6 +82,6 @@ class PlaylistController(BaseController):
         if name == 0:
             return ''
 
-        m = g.p.connect()
-        m.rm(name)
+        self.m = g.p.connect()
+        self.m.rm(name)
         return 'deleted!'
