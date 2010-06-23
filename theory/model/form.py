@@ -14,6 +14,7 @@ class ConfigForm(formencode.Schema):
 
     action = formencode.validators.String(not_empty=False,if_missing=None)
     cancel = formencode.validators.String(not_empty=False,if_missing=None)
+    firsttime = formencode.validators.Int(not_empty=False, if_missing=0)
     server = formencode.validators.String(strip=True,not_empty=True,messages={'empty':'please enter a server host name'})
     port = formencode.validators.Int(strip=True,not_empty=True,messages={'empty':'please enter a port, MPD default is 6600',
                                                               'integer':'please enter an integer value for port, MPD default is 6600'

@@ -131,7 +131,7 @@ class MainController(BaseController):
     def config(self, use_htmlfill=True):
         """ controller for the configuration iframe """
 
-        c.firsttime = request.GET.get('firsttime','0')
+        c.firsttime = request.GET.get('firsttime', '0')
         c.noconnection = request.GET.get('noconnection')
         c.error = request.GET.get('error')
         c.type = request.GET.get('type')
@@ -155,7 +155,8 @@ class MainController(BaseController):
                 return render('/null.html')
 
         if use_htmlfill:
-            values = formencode.variabledecode.variable_encode({'server':g.tc.server,'port':g.tc.port,
+            values = formencode.variabledecode.variable_encode({'firsttime': c.firsttime, 'server':g.tc.server,
+                                                                'port':g.tc.port,
                                                                 'password':g.tc.password,'webpassword':g.tc.webpassword,
                                                                 'awskey':g.tc.awskey,'timeout':g.tc.timeout,
                                                                 'aws_secret':g.tc.aws_secret,
@@ -195,9 +196,9 @@ class MainController(BaseController):
         g.p.recreate()
         self.m = g.p.connect()
         outputs = self.m.outputs()
-        enabled_outputs = [x['enabled'] for x in fields['outputs']]
 
-        if len(enabled_outputs) == 0:   # this is probably a firsttime config, don't disable outputs
+        if fields['firsttime'] == 0:
+            enabled_outputs = [x['enabled'] for x in fields['outputs']]
             for o in outputs:
                 if int(o['outputid']) in enabled_outputs:
                     self.m.enableoutput(o['outputid'])
