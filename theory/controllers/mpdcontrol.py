@@ -197,7 +197,8 @@ class MpdcontrolController(BaseController):
         self.m.command_list_end()  
 
     def removetrack(self,id):
-        self.m = g.p.connect()
+        if not self.m:
+            self.m = g.p.connect()
         try:
             self.m.deleteid(id)
         except CommandError,e: # exception if the track to be removed doesn't exist
@@ -206,7 +207,8 @@ class MpdcontrolController(BaseController):
             pass
 
     def removemultipletracks(self,id):
-        self.m = g.p.connect()
+        if not self.m:
+            self.m = g.p.connect()
         for id in id.split(','):
             if id:
                 try:
