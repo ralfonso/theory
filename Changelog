@@ -1,3 +1,9 @@
+0.1.11
+	fix for overflow pool connections not being released
+	fixed bug with "repeatable" tasks, such as playlist trim needing too many
+	connections
+	fixed ugly template bug, I should read the pylons UPDATING docs more often
+
 0.1.10
 	fixes for initial config, was disabling outputs
 	rewrote connection pooling system and fixed the null album error
