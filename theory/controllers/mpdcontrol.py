@@ -21,7 +21,6 @@ from pylons import request, response, session
 from pylons import tmpl_context as c
 from pylons import app_globals as g
 from pylons.controllers.util import abort
-from routes.util import redirect_to
 from pylons.decorators import jsonify
 
 from mpd import CommandError

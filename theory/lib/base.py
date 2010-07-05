@@ -5,7 +5,8 @@ Provides the BaseController class for subclassing.
 import logging
 from pylons.controllers import WSGIController
 from pylons.templating import render_mako as render
-from routes.util import redirect_to
+from pylons.controllers.util import redirect
+from pylons import url
 from pylons import app_globals as g
 
 from pylons import session
@@ -22,7 +23,7 @@ class BaseController(WSGIController):
         if self.requires_auth and 'user' not in session and g.tc.webpassword != '':
             # Remember where we came from so that the user can be sent there
             # after a successful login
-            return redirect_to(controller='login',action='login')
+            return redirect(url(controller='login', action='login'))
 
     def __call__(self, environ, start_response):
         """Invoke the Controller"""

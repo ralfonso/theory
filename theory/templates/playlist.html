@@ -182,7 +182,7 @@
                     display_title = "%s - %s" % (t['artist'],t['title'])
                 else:
                     if t['file'].lower().startswith('http://') or t['file'].lower().startswith('https://'):
-                        stream_name = g.tc.get_stream_name(t['file'])
+                        stream_name = c.g.tc.get_stream_name(t['file'])
                         if stream_name:
                             display_title = "%s (stream)" % stream_name 
                         else:

@@ -23,7 +23,8 @@ import formencode.htmlfill
 from pylons import request, response, session
 from pylons import tmpl_context as c
 from pylons.controllers.util import abort
-from routes.util import redirect_to
+from pylons.controllers.util import redirect
+from pylons import url
 from pylons import config
 
 from theory.lib.base import BaseController, render
@@ -185,7 +186,7 @@ class MainController(BaseController):
             try:
                 g.tc.commit_config()
             except:
-                redirect_to('/config?error=1&type=save')
+                redirect(url('/config?error=1&type=save'))
 
             if len(g.genres) == 0:
                 g.get_genres()
@@ -303,9 +304,9 @@ class MainController(BaseController):
             g.tc.streams.append([fields['name'], fields['url']])
             g.tc.commit_config()
         except:
-            redirect_to('/streams?error=1&type=save')
+            redirect(url('/streams?error=1&type=save'))
         
-        redirect_to('/streams')
+        redirect(url('/streams'))
 
     def _find_stream_index(self, streams, name):
         for iter, s in enumerate(streams):
@@ -324,9 +325,9 @@ class MainController(BaseController):
                 try:
                     g.tc.commit_config()
                 except:
-                    redirect_to('/streams?error=1&type=save')
+                    redirect(url('/streams?error=1&type=save'))
 
-        redirect_to('/streams')
+        redirect(url('/streams'))
  
     def filesystem(self):
         self.m = g.p.connect()

@@ -19,7 +19,6 @@ import logging
 from pylons import request, response, session
 from pylons import tmpl_context as c
 from pylons.controllers.util import abort
-from routes.util import redirect_to
 from pylons import app_globals as g
 
 from theory.lib.base import BaseController, render
@@ -44,6 +43,7 @@ class PlaylistController(BaseController):
         info = self.m.lsinfo()
         c.available_playlists = [playlist['playlist'] for playlist in info if 'playlist' in playlist]
         c.available_playlists.insert(0,'')
+        c.g = g
 
         return render('/playlist.html')
  

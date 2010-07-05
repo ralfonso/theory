@@ -1,7 +1,9 @@
 import logging
 
 from pylons import request, response, session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort
+from pylons.controllers.util import redirect
+from pylons import url
 from pylons import app_globals as g
 
 from theory.lib.base import BaseController, render
@@ -31,11 +33,11 @@ class LoginController(BaseController):
        session['user'] = 'theory'
        session.save()
 
-       redirect_to(controller='main')
+       redirect(url(controller='main', action='index'))
 
    def logout(self):
        if 'user' in session:
            del session['user']
            session.save()
 
-       redirect_to(controller='main')
+       redirect(url(controller='main', action='index'))
