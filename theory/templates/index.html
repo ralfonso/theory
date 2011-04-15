@@ -39,7 +39,7 @@
 
             $('#repeat').click(function() {
                                 var val = ($(this).hasClass('enabled')) ? 0 : 1;
-                                var url = '/mpdcontrol/repeat/' + val;
+                                var url = './mpdcontrol/repeat/' + val;
                                 $.ajax({
                                         url: url,
                                         type: 'GET',
@@ -52,7 +52,7 @@
 
             $('#random').click(function() {
                                 var val = ($(this).hasClass('enabled')) ? 0 : 1;
-                                var url = '/mpdcontrol/random/' + val;
+                                var url = './mpdcontrol/random/' + val;
                                 $.ajax({
                                         url: url,
                                         type: 'GET',
@@ -63,7 +63,7 @@
                                        })
                                });
             $('#rescan').click(function() {
-                                var url = '/mpdcontrol/rescan';
+                                var url = './mpdcontrol/rescan';
                                 $.ajax({
                                         url: url,
                                         type: 'GET',
@@ -121,7 +121,7 @@
 
 			var artoffset = $('#currentartlink').offset()
 			var img = document.createElement('img')
-			img.src = '/img/albumart_mask.png';
+			img.src = './img/albumart_mask.png';
 			img.id = 'currentartmask';
 			$('#currentartlink').append(img);
 			$('#currentartmask').css('position','absolute').css('z-index','5').css('top','18px').css('left','18px');
@@ -160,7 +160,7 @@
 <div id="left">
     <div class="frameheader">artists</div>
     <div class="frameheader">albums</div>
-    <iframe id="frmartists" name="frmartists" src="/artists" ></iframe>
+    <iframe id="frmartists" name="frmartists" src="./artists" ></iframe>
     <iframe id="frmalbums" name="frmalbums" src="about:blank"></iframe>
 <br />
 
@@ -169,5 +169,5 @@
 
 <div id="right">
     <div id="searchresults"></div>
-    <iframe id="frmplaylist" name="frmplaylist" src="/playlist"></iframe>
+    <iframe id="frmplaylist" name="frmplaylist" src="./playlist"></iframe>
 </div>

@@ -64,7 +64,7 @@ body {
 #progress-img {
     height:9px;
 	/* set the following color to change the fullscreen progress bar color */
-    background:limegreen url(/img/progress-trans.png) repeat-x;
+    background:limegreen url(../img/progress-trans.png) repeat-x;
     vertical-align:baseline;
 }
 

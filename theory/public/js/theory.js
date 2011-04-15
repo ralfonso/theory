@@ -21,14 +21,14 @@ function getStatus() {
 	debug('loading status (' + window.statusloads + ')');
 
     // load the status data from the server
-    $.getJSON('/mpdcontrol/status',
+    $.getJSON('./mpdcontrol/status',
         function(data) {
             // change the icon displayed on the controls
             if (data.status.state == 'play') {
-                $('#imgPlay').attr('src','../img/pause.png');
+                $('#imgPlay').attr('src','./img/pause.png');
             }
             else if (data.status.state == 'stop' || data.status.state == 'pause') {
-                $('#imgPlay').attr('src','../img/play.png');
+                $('#imgPlay').attr('src','./img/play.png');
             }
 
             // check to see if the playlist was updated
@@ -38,7 +38,7 @@ function getStatus() {
                     window.trackremoved = false;
                 }
                 else {
-                    $('#frmplaylist').attr('src','/playlist')
+                    $('#frmplaylist').attr('src','./playlist')
                 }
                 
                 $('#playlistid').val(data.status.playlist);
@@ -134,16 +134,16 @@ function getStatus() {
 						$('#currentid').val('');
 						$('#title').html(data.track.file);
 						$('#wiki').hide();
-						$('#currentart').attr('src','/img/50trans.gif');
-						$('#currentartmask').attr('src','/img/50trans.gif');
+						$('#currentart').attr('src','./img/50trans.gif');
+						$('#currentartmask').attr('src','./img/50trans.gif');
                     }
 
 					$('#aWiki').attr('href','http://www.google.com/search?btnI=I\'m+Feeling+Lucky&q=site:en.wikipedia.org%20' + data.track.artist);
 					$('#wiki').show();
-					var arturl = '/fetchart?artist=' + data.track.artist + '&album=' + data.track.album
+					var arturl = './fetchart?artist=' + data.track.artist + '&album=' + data.track.album
 					$('#currentartlink').attr('href',arturl)
 					$('#currentart').attr('src',arturl)
-					$('#currentartmask').attr('src','/img/albumart_mask.png');
+					$('#currentartmask').attr('src','./img/albumart_mask.png');
 					$('#currentartlink').lightBox();
 
 					if (data.track.artist && data.track.title)
@@ -178,8 +178,8 @@ function getStatus() {
 					$('#currentid').val('');
 					$('#title').html('not playing');
 					$('#wiki').hide();
-					$('#currentart').attr('src','/img/50trans.gif');
-					$('#currentartmask').attr('src','/img/50trans.gif');
+					$('#currentart').attr('src','./img/50trans.gif');
+					$('#currentartmask').attr('src','./img/50trans.gif');
 				}
 			}
 
@@ -251,7 +251,7 @@ function setVolume(val) {
     // check to see if the slider was simply updated by status() if so, don't update MPD
 
     if (!window.ignorevolumeslide)
-        $.get('/mpdcontrol/setvolume/' + val);
+        $.get('./mpdcontrol/setvolume/' + val);
 
     window.ignorevolumeslide = false;
 }
@@ -260,7 +260,7 @@ function seek(id,pos) {
     // check to see if the slider was simply updated by status() if so, don't update MPD
 
     if (!window.ignorepositionslide)
-        $.get('/mpdcontrol/seek/' + id + '/' + pos);
+        $.get('./mpdcontrol/seek/' + id + '/' + pos);
     window.ignorepositionslide = false;
 }   
 
@@ -292,7 +292,7 @@ function formatTime(seconds)
 }
 
 function cmd(v) {
-    $.get('/mpdcontrol/' + v);
+    $.get('./mpdcontrol/' + v);
 	getStatus();
 }
 
@@ -300,8 +300,8 @@ function artistAlbums(artist,album) {
     if (!album)
         album = '';
 
-    window.parent.$('#frmalbums').attr('src','/albums?artist=' + encodeURIComponent(artist) + '&album=' + encodeURIComponent(album))
-    window.parent.$('#frmtracks').attr('src','/tracks?artist=' + encodeURIComponent(artist) + '&album=' + encodeURIComponent(album))
+    window.parent.$('#frmalbums').attr('src','./albums?artist=' + encodeURIComponent(artist) + '&album=' + encodeURIComponent(album))
+    window.parent.$('#frmtracks').attr('src','./tracks?artist=' + encodeURIComponent(artist) + '&album=' + encodeURIComponent(album))
 
 	
 	$('#list li:odd a',window.parent.frames['frmartists'].document).removeClass('activerow').addClass('oddrow');
@@ -313,7 +313,7 @@ function artistAlbums(artist,album) {
 		}
 	);
 
-	if (window.location.pathname != '/artists') {
+	if (window.location.pathname != './artists') {
 		if (artist.charCodeAt(0) < 65)
 			jumpa = '#';
 		else 
@@ -357,7 +357,7 @@ function resizeIframes() {
 }
 
 function addToPlaylist(file) {
-    var url = '/mpdcontrol/addtoplaylist';
+    var url = './mpdcontrol/addtoplaylist';
 
     $.ajax({
             url: url,
@@ -365,13 +365,13 @@ function addToPlaylist(file) {
             cache: false,
             data: 'file=' + file,
             success: function() {
-                        window.parent.$('#frmplaylist').attr('src','/playlist')
+                        window.parent.$('#frmplaylist').attr('src','./playlist')
                      }
           });
 }
 
 function removeTrack(el,id) {
-    var url = '/mpdcontrol/removetrack/' + id
+    var url = './mpdcontrol/removetrack/' + id
     window.parent.trackremoved = true;
     $.ajax({
             url: url,
@@ -388,7 +388,7 @@ function removeTrack(el,id) {
 }
 
 function removeMultipleTracks() {
-	var url = '/mpdcontrol/removemultipletracks/'
+	var url = './mpdcontrol/removemultipletracks/'
 
 	var all_ids = Array();
 	var iter = 0;
@@ -435,7 +435,7 @@ function setPlaylistColors(scope,force) {
 }
 
 function playNow(id) {
-    var url = '/mpdcontrol/playnow/' + id;
+    var url = './mpdcontrol/playnow/' + id;
     $.ajax({
             url: url,
             type: 'GET',
@@ -447,26 +447,26 @@ function playNow(id) {
 }
 
 function addAlbum(artist,album) {
-    var url = '/mpdcontrol/addalbumtoplaylist?artist=' + encodeURIComponent(artist) + '&album=' + encodeURIComponent(album);
+    var url = './mpdcontrol/addalbumtoplaylist?artist=' + encodeURIComponent(artist) + '&album=' + encodeURIComponent(album);
     $.ajax({
             url: url,
             type: 'GET',
             cache: false,
             success: function() {
-                        $('#frmplaylist').attr('src','/playlist')
+                        $('#frmplaylist').attr('src','./playlist')
                         getStatus()
                      }
           });
 }
 
 function addAllArtistAlbums(artist) {
-    var url = '/mpdcontrol/addartistalbums?artist=' + encodeURIComponent(artist);
+    var url = './mpdcontrol/addartistalbums?artist=' + encodeURIComponent(artist);
     $.ajax({
             url: url,
             type: 'GET',
             cache: false,
             success: function() {
-                        $('#frmplaylist').attr('src','/playlist')
+                        $('#frmplaylist').attr('src','./playlist')
                         getStatus()
                      }
           });                     
@@ -499,7 +499,7 @@ function hideConfig(reloadframes,reloadpage) {
 }
 
 function playlistAjax(func) {
-    var url = '/mpdcontrol/' + func;
+    var url = './mpdcontrol/' + func;
     $.ajax({
             url: url,
             type: 'GET',
@@ -527,7 +527,7 @@ function loadPlaylist() {
         return;
     }
 
-    var url = '/playlist/load?name=' + playlist;
+    var url = './playlist/load?name=' + playlist;
     $.ajax({
             url: url,
             type: 'GET',
@@ -550,7 +550,7 @@ function deletePlaylist() {
     if (!confirm('Are you sure you want to delete this playlist?'))
         return;
 
-    var url = '/playlist/delete?name=' + playlist;
+    var url = './playlist/delete?name=' + playlist;
     $.ajax({
             url: url,
             type: 'GET',
@@ -562,7 +562,7 @@ function deletePlaylist() {
 }
 
 function fsStatus() {
-    $.getJSON('/mpdcontrol/fs_status',
+    $.getJSON('./mpdcontrol/fs_status',
         function (data) {
             var begin_id = $('#currentid').html();
 
@@ -583,7 +583,7 @@ function fsStatus() {
                     $('#currentalbum').html(data.current.album);
                 }
 
-                var arturl = '/fetchart?artist=' + data.current.artist + '&album=' + data.current.album
+                var arturl = './fetchart?artist=' + data.current.artist + '&album=' + data.current.album
                 $('#albumart-container a').attr('href',arturl)
                 $('#albumart').attr('src',arturl)
                 $('#albumart-container a').lightBox();
@@ -655,7 +655,7 @@ function editStream(name,url) {
 }
 
 function playNext(id) {
-    var url = '/mpdcontrol/playnext/' + id;
+    var url = './mpdcontrol/playnext/' + id;
     $.ajax({
             url: url,
             type: 'GET',
@@ -667,7 +667,7 @@ function playNext(id) {
 }
 
 function addPathToPlaylist(path) {
-    var url = '/mpdcontrol/addpathtoplaylist';
+    var url = './mpdcontrol/addpathtoplaylist';
 
     $.ajax({
             url: url,
@@ -675,7 +675,7 @@ function addPathToPlaylist(path) {
             cache: false,
             data: 'path=' + path,
             success: function() {
-                        window.parent.$('#frmplaylist').attr('src','/playlist')
+                        window.parent.$('#frmplaylist').attr('src','./playlist')
                      }
           });
 }
@@ -687,7 +687,7 @@ function setSearchType(s) {
 function performSearch() {
    var q = $('#search input[name=q]').val(); 
    var searchtype = $('#searchtype').val()
-    $('#searchresults').load('/search?searchtype=' + searchtype + '&q=' + q,undefined,function(){
+    $('#searchresults').load('./search?searchtype=' + searchtype + '&q=' + q,undefined,function(){
 						$('#searchresults').show('slide',{direction:'down'},1500);
 					});
 }

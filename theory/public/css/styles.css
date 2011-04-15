@@ -274,7 +274,7 @@ ul#playlist li a img {
 }
 
 div.playlist-tooltip {
-    background:transparent url('/img/libg.png');
+    background:transparent url('../img/libg.png');
     width:200px;
     margin-top:-15px;
     right:0px;
@@ -420,7 +420,7 @@ a#aWiki,a#aLyrics {
 
 div#widget-tooltip {
     width:100%;
-    background:transparent url('/img/libg.png');
+    background:transparent url('../img/libg.png');
     color:white;
     font-size:10px;
 }

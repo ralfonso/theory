@@ -1,7 +1,7 @@
 <%inherit file="body.html"/>
 <script language="javascript">
 	function empty_playlist_background() {
-		$(document.body).css('background','#eeeeee url(/img/empty_playlist.png) fixed center no-repeat');
+		$(document.body).css('background','#eeeeee url(./img/empty_playlist.png) fixed center no-repeat');
 	}
 
     $(document).ready(
@@ -17,7 +17,7 @@
                                                },
                                         stop: function() {
                                                     setPlaylistColors()
-                                                    var url = '/mpdcontrol/reorderplaylist';
+                                                    var url = './mpdcontrol/reorderplaylist';
                                                     $.ajax({
                                                                 url: url,
                                                                 type: 'POST',
@@ -53,7 +53,7 @@
                                             }
                                         }
 
-                                        var url = '/playlist/save?name=' + val;
+                                        var url = './playlist/save?name=' + val;
                                         $.ajax({
                                                 url: url,
                                                 type: 'GET',
@@ -152,10 +152,10 @@
     <div id="playlist-controls" style="display:none">
         <div id="playlist-clear">
             <div style="padding:0px 10px">
-                <a onclick="getURL()" id="widget-addurl"><img src="/img/add_url.png" /></a>
-                <a onclick="playlistAjax('clearplaylist')" id="widget-clear"><img src="/img/clear.png" /></a>
-                <a onclick="playlistAjax('trimplaylist')" id="widget-trim"><img src="/img/trim.png" /></a>
-                <a onclick="playlistAjax('shuffle')" id="widget-shuffle"><img src="/img/shuffle.png" /></a>
+                <a onclick="getURL()" id="widget-addurl"><img src="./img/add_url.png" /></a>
+                <a onclick="playlistAjax('clearplaylist')" id="widget-clear"><img src="./img/clear.png" /></a>
+                <a onclick="playlistAjax('trimplaylist')" id="widget-trim"><img src="./img/trim.png" /></a>
+                <a onclick="playlistAjax('shuffle')" id="widget-shuffle"><img src="./img/shuffle.png" /></a>
             </div>
             <div id="widget-tooltip"></div>
         </div>
@@ -191,7 +191,7 @@
                         display_title = t['file']
             %>
             <li id="track_${t['id']}:${t['pos']}">
-                <a onclick="removeTrack(this,${t['id']})" title="remove this track" style="padding-right:1px;"><img src="/img/remove.png" /></a><a onclick="window.parent.playNow(${t['id']})" title="play this track now"><img src="/img/playnow.png" /></a>
+                <a onclick="removeTrack(this,${t['id']})" title="remove this track" style="padding-right:1px;"><img src="./img/remove.png" /></a><a onclick="window.parent.playNow(${t['id']})" title="play this track now"><img src="./img/playnow.png" /></a>
                 <span class="displaytitle">${display_title}</span>
                 % if 'artist' in t and 'album' in t:
                 <div class="playlist-tooltip">
