@@ -39,7 +39,7 @@ class AlbumArt:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.www_root = '/img/art/'
+        self.www_root = './img/art/'
         self.disk_root = 'theory/public/img/art/'
 
     def album_fetch(self,artist,album):

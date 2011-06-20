@@ -69,7 +69,7 @@ class MainController(BaseController):
             return render('/null.html')
 
         c.artists = self.m.artists()
-        return render('/artists.html')
+        return render('./artists.html')
 
     def albums(self):
         """ controller for the albums frame """

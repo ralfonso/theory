@@ -17,7 +17,7 @@
 <div id="container-tracks">
     <ul id="list">
         % for g in c.genres:
-            <li><a href="/genre?genre=${h.html.url_escape(g)}">${g}</a></li>
+            <li><a href="./genre?genre=${h.html.url_escape(g)}">${g}</a></li>
         % endfor
     </ul>
 </div>

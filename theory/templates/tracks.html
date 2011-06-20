@@ -8,7 +8,7 @@
 
             $('#albumart').load(function() {   
                                     $(this).show();
-                                }).attr('src','/fetchart?artist=${c.artist_safe}&album=${c.album_safe}');
+                                }).attr('src','./fetchart?artist=${c.artist_safe}&album=${c.album_safe}');
         }
     );
 
@@ -25,7 +25,7 @@
 </style>
 
 % if c.album_safe:
-    <a href="/fetchart?artist=${c.artist_safe}&album=${c.album_safe}"><img id="albumart" style="display:none" /></a>
+    <a href="./fetchart?artist=${c.artist_safe}&album=${c.album_safe}"><img id="albumart" style="display:none" /></a>
 % endif
 
 <div id="container-tracks">
